@@ -1,0 +1,426 @@
+#!/bin/bash
+
+# ============================================================================
+# CONTAINER MANAGEMENT UTILITY
+# Improved version with generic directive handling and better documentation
+# ============================================================================
+
+# DIRECTIVE DEFINITIONS
+# Define all available directives with their properties
+declare -A DIRECTIVES=(
+    [---it]="type=flag"
+    [---noit]="type=flag"
+    [---i]="type=flag"
+    [---quiet]="type=flag"
+    [---verbose]="type=flag"
+    [---path]="type=value"
+)
+
+DIRECTIVE_HELP=(
+    "---it:Run with interactive terminal (default)"
+    "---noit:Run without interactive terminal, capture output"
+    "---i:Interactive input only, no TTY"
+    "---quiet:Suppress command output"
+    "---verbose:Show the actual docker exec command being executed"
+    "---workdir=<dir>:Override working directory for command execution"
+)
+
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
+
+# Function to find the git root directory
+__get_git_root() {
+    local git_root
+    git_root=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [ $? -eq 0 ]; then
+        echo "$git_root"
+    fi
+    return 0
+}
+
+# Function to get command from .container-run config file
+__get_command() {
+    local input="$1"
+    local config_file
+    local git_root
+    git_root=$(__get_git_root)
+    
+    if [ -n "$git_root" ]; then
+        config_file="$git_root/.container-run"
+    fi
+    
+    if [ ! -f "$config_file" ]; then
+        return 1
+    fi
+    
+    local cmd
+    cmd=$(grep "^$input:" "$config_file" | awk -F: '{ $1=""; print substr($0, 2) }' | head -1)
+    if [ -n "$cmd" ]; then
+        echo "$cmd"
+        return 0
+    fi
+    
+    return 1
+}
+
+# Function to parse directives from arguments
+# Separates --- directives (for script control) from -- directives (for container commands)
+__parse_directives() {
+    local -n directives_ref=$1
+    local -n non_directives_ref=$2
+    local -a args=("${@:3}")
+    
+    for arg in "${args[@]}"; do
+        if [[ $arg == ---* ]]; then
+            # Extract directive name and value
+            local directive_name="${arg%%=*}"  # Get part before =
+            local directive_value="${arg#*=}"  # Get part after =
+            
+            # Check if it's a known directive
+            if [ -n "${DIRECTIVES[$directive_name]}" ]; then
+                directives_ref[$directive_name]="$directive_value"
+            else
+                echo "Warning: Unknown directive '$directive_name'" >&2
+            fi
+        else
+            # Everything else passed to container command
+            non_directives_ref+=("$arg")
+        fi
+    done
+}
+
+# Function to validate directives
+__validate_directives() {
+    local -n directives_ref=$1
+    
+    for directive in "${!directives_ref[@]}"; do
+        if [ -z "${DIRECTIVES[$directive]}" ]; then
+            echo "Warning: Unknown directive '$directive'" >&2
+            return 1
+        fi
+    done
+    return 0
+}
+
+# Function to validate path exists
+__validate_path() {
+    local path="$1"
+    if [ -n "$path" ] && [ ! -d "$path" ]; then
+        echo "Error: Path does not exist: $path" >&2
+        return 1
+    fi
+    return 0
+}
+
+# Function to check if container exists and is running
+__check_container() {
+    local container_name="$1"
+    
+    if ! docker inspect "$container_name" &>/dev/null; then
+        echo "Error: Container '$container_name' does not exist." >&2
+        return 1
+    fi
+    
+    local status=$(docker inspect -f '{{.State.Status}}' "$container_name")
+    if [[ "$status" != "running" ]]; then
+        echo "Error: Container '$container_name' is not running. Status: $status" >&2
+        return 1
+    fi
+    
+    return 0
+}
+
+# ============================================================================
+# MAIN FUNCTIONS
+# ============================================================================
+
+# Function to run command inside Docker container
+# @param $1 The command to execute (e.g., mvn@maven)
+# @param $# Additional arguments (--- directives are filtered, everything else passed to container)
+container-run() {
+    local exec_cmd="$1"
+    shift
+    
+    # Extract docker name
+    local docker_name=$(echo "$exec_cmd" | awk -F@ '{ print $2 }')
+    
+    # Check if container exists and is running
+    if ! __check_container "$docker_name"; then
+        return 1
+    fi
+    
+    # Retrieve command from config
+    local command_to_run
+    command_to_run=$(__get_command "$exec_cmd")
+    
+    if [ -z "$command_to_run" ]; then
+        echo "Error: Command not found for: $exec_cmd" >&2
+        echo "Make sure '.container-run' file exists in git root with entry: $exec_cmd" >&2
+        return 1
+    fi
+    
+    # Parse directives and regular arguments
+    declare -A directives
+    declare -a non_directives
+    __parse_directives directives non_directives "$@"
+    
+    # Validate directives
+    if ! __validate_directives directives; then
+        return 1
+    fi
+    
+    # Extract path from command or use provided path
+    local working_path=""
+    local clean_command=""
+    
+    # Extract ---workdir= from command definition
+    local cmd_array
+    IFS=' ' read -ra cmd_array <<< "$command_to_run"
+    for cmd_item in "${cmd_array[@]}"; do
+        if [[ $cmd_item == ---workdir=* ]]; then
+            working_path="${cmd_item#---workdir=}"
+        else
+            clean_command="$clean_command $cmd_item"
+        fi
+    done
+    clean_command="${clean_command# }"
+    
+    # Override with user-provided path
+    if [ -n "${directives[path]}" ]; then
+        working_path="${directives[path]}"
+    fi
+    
+    # Validate path
+    if ! __validate_path "$working_path"; then
+        return 1
+    fi
+    
+    # Build docker exec command based on directives
+    local docker_cmd="docker exec"
+    local output=""
+    local exit_code=1
+    
+    # Add TTY options
+    if [ -n "${directives[---it]}" ]; then
+        docker_cmd="$docker_cmd -it"
+    elif [ -n "${directives[---i]}" ]; then
+        docker_cmd="$docker_cmd -i"
+    elif [ -n "${directives[---noit]}" ]; then
+        docker_cmd="$docker_cmd"
+    else
+        # Default to ---it
+        docker_cmd="$docker_cmd -it"
+    fi
+    
+    # Add working directory
+    if [ -n "$working_path" ]; then
+        docker_cmd="$docker_cmd -w $working_path"
+    fi
+    
+    # Add container name and command
+    docker_cmd="$docker_cmd $docker_name $clean_command"
+    
+    # Add non-directives (including -- directives for container) as quoted args
+    for arg in "${non_directives[@]}"; do
+        docker_cmd="$docker_cmd \"$arg\""
+    done
+    
+    # Show command if verbose
+    if [ -n "${directives[---verbose]}" ]; then
+        echo "Executing: $docker_cmd" >&2
+    fi
+
+    
+    # Execute command
+    if [ -n "${directives[---noit]}" ] || [ "${directives[---quiet]}" = "true" ]; then
+        output=$(eval "$docker_cmd" 2>&1)
+        exit_code=$?
+    else
+        eval "$docker_cmd"
+        exit_code=$?
+    fi
+    
+    # Handle output
+    if [ $exit_code -ne 0 ]; then
+        echo "Error running Docker command:" >&2
+        [ -n "$output" ] && echo "$output" >&2
+    elif [ -z "${directives[---quiet]}" ] && [ -n "$output" ]; then
+        echo "$output"
+    fi
+    
+    return $exit_code
+}
+
+# Function to check container status
+container-status() {
+    local -A directives
+    local -a non_directives
+    __parse_directives directives non_directives "$@"
+    
+    local RED='\033[0;31m'
+    local GREEN='\033[0;32m'
+    local NC='\033[0m'
+    
+    for container in "${non_directives[@]}"; do
+        local status=$(docker inspect -f '{{.State.Status}}' "$container" 2>/dev/null)
+        
+        if [[ $? -ne 0 ]]; then
+            echo -e "${RED}${container} does not exist.${NC}"
+            continue
+        fi
+        
+        if [[ "$status" == "running" ]]; then
+            echo -e "${GREEN}${container} is running.${NC}"
+            
+            local internal_ip=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$container")
+            local port_mappings=$(docker inspect -f '{{.NetworkSettings.Ports}}' "$container")
+            
+            if [[ "$port_mappings" == "map[]" ]]; then
+                local port_output="No ports mapped."
+            else
+                port_output=$(echo "$port_mappings" | grep -oE '[0-9]+/(tcp|udp)' | sed -E 's/([0-9]+)\/(tcp|udp)/\1\/\2/' | tr '\n' ' ' | sed 's/ $//')
+                local port_array=($port_output)
+                if ((${#port_array[@]} > 3)); then
+                    port_output="${port_array[0]} ${port_array[1]} ${port_array[2]} ..."
+                fi
+            fi
+            
+            if [ -z "${directives[---quiet]}" ]; then
+                echo -e "  Internal IP: ${internal_ip}"
+                echo -e "  Port Mappings: ${port_output:-No ports mapped.}"
+            fi
+        else
+            echo -e "${RED}${container} is not running. Status: ${status}.${NC}"
+            
+            if [[ "$status" == "exited" ]]; then
+                echo "Recent logs:"
+                docker logs "$container" --tail 10 2>/dev/null
+            fi
+        fi
+    done
+}
+
+# Function to list available commands with directives
+container-run-commands() {
+    local config_file
+    local git_root
+    git_root=$(__get_git_root)
+    
+    if [ -n "$git_root" ]; then
+        config_file="$git_root/.container-run"
+    fi
+    
+    if [ ! -f "$config_file" ]; then
+        echo "Error: No '.container-run' file found in git root directory." >&2
+        return 1
+    fi
+    
+    local BOLD='\033[1m'
+    local BLUE='\033[0;34m'
+    local CYAN='\033[0;36m'
+    local GREEN='\033[0;32m'
+    local YELLOW='\033[0;33m'
+    local NC='\033[0m'
+    
+    echo -e "\n${BOLD}${BLUE}Available Commands:${NC}\n"
+    
+    printf "${CYAN}%-20s %-15s %-50s${NC}\n" "FUNCTION" "CONTAINER" "COMMAND"
+    printf "%-20s %-15s %-50s\n" "$(printf '=%.0s' {1..20})" "$(printf '=%.0s' {1..15})" "$(printf '=%.0s' {1..50})"
+    
+    while IFS=: read -r key_pair command; do
+        local func_name=$(echo "$key_pair" | awk -F@ '{ print $1 }' | xargs)
+        local container_name=$(echo "$key_pair" | awk -F@ '{ print $2 }' | xargs)
+        local cmd_display=$(echo "$command" | xargs)
+        
+        if [[ -z "$func_name" ]] || [[ "$func_name" =~ ^# ]]; then
+            continue
+        fi
+        
+        if [ ${#cmd_display} -gt 50 ]; then
+            cmd_display="${cmd_display:0:47}..."
+        fi
+        
+        printf "${GREEN}%-20s${NC} %-15s %s\n" "$func_name" "$container_name" "$cmd_display"
+    done < "$config_file"
+    
+    echo -e "\n${BOLD}${YELLOW}Available Script Directives (---):${NC}\n"
+    printf "${CYAN}%-15s %-60s${NC}\n" "DIRECTIVE" "DESCRIPTION"
+    printf "%-15s %-60s\n" "$(printf '=%.0s' {1..15})" "$(printf '=%.0s' {1..60})"
+    
+    for help_item in "${DIRECTIVE_HELP[@]}"; do
+        local directive=$(echo "$help_item" | cut -d: -f1)
+        local description=$(echo "$help_item" | cut -d: -f2-)
+        printf "${GREEN}%-15s${NC} %s\n" "$directive" "$description"
+    done
+    
+    echo ""
+    return 0
+}
+
+# Function to generate wrapper functions dynamically
+__generate_wrapper_function() {
+    local func_name="$1"
+    local cmd_key="$2"
+    
+    eval "
+    $func_name() {
+        container-run $cmd_key \"\$@\"
+        return \$?
+    }
+    "
+}
+
+# Function to initialize container commands from config file
+__init_container_commands() {
+    local config_file
+    local git_root
+    git_root=$(__get_git_root)
+    
+    if [ -n "$git_root" ]; then
+        config_file="$git_root/.container-run"
+    fi
+    
+    if [ ! -f "$config_file" ]; then
+        return 0
+    fi
+    
+    while IFS=: read -r key_pair rest; do
+        local func_name=$(echo "$key_pair" | awk -F@ '{ print $1 }' | xargs)
+        
+        if [[ -z "$func_name" ]] || [[ "$func_name" =~ ^# ]]; then
+            continue
+        fi
+        
+        __generate_wrapper_function "$func_name" "$key_pair"
+    done < "$config_file"
+}
+
+# Function to open interactive bash shell in container
+container-shell() {
+    local container_name="$1"
+    
+    if [ -z "$container_name" ]; then
+        echo "Usage: container-shell <container_name>" >&2
+        echo "Example: container-shell maven" >&2
+        return 1
+    fi
+    
+    if ! __check_container "$container_name"; then
+        return 1
+    fi
+    
+    docker exec -it "$container_name" bash
+    return $?
+}
+
+# ============================================================================
+# INITIALIZATION
+# ============================================================================
+
+__init_container_commands
+
+# Check container status on script load
+if command -v docker &> /dev/null; then
+    container-status maven mysql sshd mongodb 2>/dev/null || true
+fi
