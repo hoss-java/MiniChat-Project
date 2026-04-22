@@ -33,3 +33,4 @@ target/
 *.jar
 test.sh
 .DS_Store
+pm_report.json
