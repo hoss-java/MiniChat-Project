@@ -1,0 +1,41 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Message sending and receiving via data channel
+Tags: phase3, frontend, webrtc
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:29:58Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to implement sending and receiving messages through data channels with proper serialization, deserialization, and error handling.
+
+# DOD (definition of done):
+- Messages sent via data channel to peer
+- Incoming messages parsed and displayed
+- Message format consistent (JSON)
+- Error handling for send failures
+- Unsent messages buffered if channel not ready
+
+# TODO:
+- [] 1. Create message serialization format (JSON with metadata)
+- [] 2. Implement sendMessage(peerId, messageText) method
+- [] 3. Check data channel readyState before sending
+- [] 4. Handle bufferedAmount to queue messages
+- [] 5. Implement message parsing on receive
+- [] 6. Validate received message format
+- [] 7. Extract sender, receiver, text, timestamp
+- [] 8. Handle send errors gracefully
+- [] 9. Log message delivery for debugging
+
+# Reports:
+*

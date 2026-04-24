@@ -1,0 +1,47 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Key rotation & revocation mechanism
+Tags: phase4, backend, encryption, security
+Creator: Hossein
+AssignedTo:
+Priority: LOW
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:46:15Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to implement key rotation and revocation features to allow users to invalidate old keys and generate new ones for enhanced security.
+
+# DOD (definition of done):
+- POST /keys/rotate endpoint allows users to generate new keypair and deprecate old
+- Old key marked as revoked with timestamp
+- New key becomes active
+- Clients are notified of key rotation via WebSocket
+- Unit & integration tests pass
+
+# TODO:
+- [] Create KeyStatus enum: ACTIVE, REVOKED, EXPIRED
+- [] Add status and revokedAt fields to Key entity
+- [] Create @PostMapping("/keys/rotate") endpoint
+- [] Validate current user has active key
+- [] Generate new keypair via KeyGenerationService
+- [] Mark old key as REVOKED with timestamp
+- [] Save new key as ACTIVE
+- [] Broadcast WebSocket message to all peers: { type: "key_rotated", userId: "...", newFingerprint: "..." }
+- [] Send notification email to user (optional)
+- [] Return response: { oldFingerprint: "...", newFingerprint: "...", rotatedAt: "..." }
+- [] Update GET /keys/{userId} to return only ACTIVE keys
+- [] Add period check for EXPIRED status (optional)
+- [] Write unit tests for rotation logic
+- [] Write integration tests
+- [] Test that old key is no longer used for new connections
+
+# Reports:
+*

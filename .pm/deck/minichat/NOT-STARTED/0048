@@ -1,0 +1,46 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Key exchange endpoint - trust on first use (TOFU)
+Tags: phase4, backend, encryption, security
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:44:58Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to implement a key exchange mechanism that allows users to trust a peer's public key on first use with TOFU validation.
+
+# DOD (definition of done):
+- POST /keys/trust endpoint created
+- Validates peer's public key format before storing
+- Stores trusted peer key with trust timestamp
+- Returns confirmation with fingerprint
+- Prevents duplicate trusts of same peer key
+- Unit & integration tests pass
+
+# TODO:
+- [] Create @PostMapping("/keys/trust") endpoint in KeyController
+- [] Accept request body: { peerId: "...", publicKey: "..." }
+- [] Validate public key format (PEM validation)
+- [] Query if this peer's key is already trusted by current user
+- [] If already trusted: return 409 Conflict
+- [] Calculate fingerprint of peer's public key
+- [] Store trusted key relationship (create TrustedKey entity if needed)
+- [] Return response: { peerId: "...", fingerprint: "...", trustedAt: "...", status: "trusted" }
+- [] Add proper error handling (invalid key format, peer not found)
+- [] Write unit tests with mocked repository
+- [] Write integration tests
+- [] Test duplicate trust prevention
+- [] Test invalid key format rejection
+
+# Reports:
+*

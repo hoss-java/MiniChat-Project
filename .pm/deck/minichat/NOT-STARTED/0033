@@ -1,0 +1,40 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: SDP offer/answer relay refinement
+Tags: phase3, backend, signaling
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:25:55Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to refine and optimize the SDP offer/answer relay logic from Phase 2, ensuring offers and answers are correctly routed between peers without loss.
+
+# DOD (definition of done):
+- SDP offer relayed to intended peer only
+- SDP answer relayed back to offer sender
+- No offers/answers lost or duplicated
+- Validation prevents malformed SDP
+- Connection established after answer received
+
+# TODO:
+- [] 1. Review Phase 2 signaling handler code
+- [] 2. Add SDP validation (check format, required fields)
+- [] 3. Ensure offer routed to single peer (not broadcast)
+- [] 4. Ensure answer routed back to offer sender
+- [] 5. Add logging for offer/answer flow
+- [] 6. Test offer/answer sequence with two clients
+- [] 7. Handle case where peer disconnects mid-handshake
+- [] 8. Add timeout for incomplete handshake
+
+# Reports:
+*

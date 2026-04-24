@@ -1,0 +1,42 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Create/join room UI
+Tags: phase2, frontend, ui
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:19:57Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to build forms for creating new rooms and joining existing rooms with proper validation and feedback.
+
+# DOD (definition of done):
+- Create room form accepts room name
+- Join room form allows entering room ID or selecting from list
+- Form validation prevents empty/invalid input
+- Success feedback after creating/joining
+- Error messages shown for failures
+- User redirected to room chat after success
+
+# TODO:
+- [] 1. Create CreateRoomForm component
+- [] 2. Add room name input with validation
+- [] 3. Implement create room button (POST /api/rooms)
+- [] 4. Create JoinRoomForm component
+- [] 5. Add room selection/input field
+- [] 6. Implement join room button (POST /api/rooms/{id}/join)
+- [] 7. Add success toast/message
+- [] 8. Add error handling and display
+- [] 9. Clear form after successful submission
+
+# Reports:
+*

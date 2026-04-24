@@ -1,0 +1,40 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Signaling message handler (frontend)
+Tags: phase2, frontend, webrtc
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:21:18Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to listen for and handle incoming SDP offers/answers and ICE candidates from peers, triggering WebRTC connection initiation.
+
+# DOD (definition of done):
+- Frontend receives SDP offer from peer
+- Frontend receives SDP answer from peer
+- Frontend receives and processes ICE candidates
+- Received messages trigger WebRTC connection setup
+- Errors logged for debugging
+
+# TODO:
+- [] 1. Create SignalingHandler service
+- [] 2. Subscribe to WebSocket offer messages
+- [] 3. Store received offers in React state
+- [] 4. Subscribe to WebSocket answer messages
+- [] 5. Subscribe to WebSocket ICE candidate messages
+- [] 6. Implement message validation
+- [] 7. Add error handling (malformed messages, unknown peers)
+- [] 8. Log received signaling messages
+
+# Reports:
+*

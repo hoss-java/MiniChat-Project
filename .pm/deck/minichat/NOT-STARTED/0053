@@ -1,0 +1,51 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Key generation on first login (Frontend)
+Tags: phase4, frontend, encryption, ui
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:48:13Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to prompt users to generate their cryptographic keypair on first login and store the public key on the backend.
+
+# DOD (definition of done):
+- First-login detection implemented in Auth flow
+- Key generation modal displayed to new users
+- User sees option to auto-generate or manual import
+- Public key sent to backend via POST /keys/generate
+- Private key stored securely in browser
+- User can dismiss/confirm key generation
+- Unit & integration tests pass
+
+# TODO:
+- [] Detect first login: check if user has public key by calling GET /auth/me and checking keyGenerated flag
+- [] Create KeyGenerationModal component
+- [] Display prompt: "Generate your encryption keypair?" with two buttons: "Auto-Generate" and "Import Existing"
+- [] Implement "Auto-Generate" flow: call CryptoService.generateKeyPair()
+- [] Display generated public key and fingerprint for user review
+- [] Show warning: "Save your private key safely. This is your only copy."
+- [] Add button to copy public key to clipboard
+- [] Call POST /keys/generate with public key
+- [] On success: store private key in localStorage (encrypted with password or device key)
+- [] Mark user as keyGenerated in local state
+- [] Close modal and proceed to dashboard
+- [] Implement "Import Existing" flow: prompt for private key paste, validate, save locally
+- [] Add error handling (import failures, network errors)
+- [] Write unit tests for key generation flow
+- [] Write integration test: login → generate key → verify backend storage
+- [] Test modal dismissal scenarios
+- [] Test localStorage persistence of private key
+
+# Reports:
+*

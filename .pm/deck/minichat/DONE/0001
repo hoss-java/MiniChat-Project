@@ -7,8 +7,13 @@ Title: Setup repository.
 Tags:
 Creator:
 AssignedTo:
+Priority:
+Status:
+Estimate: 10m
+DueDate:
 # Time tracker settings
-tartAt:
+CreateAt:
+StartAt:
 EndAt:
 ---
 The goal of this card is to setup/initialize minichat repository.

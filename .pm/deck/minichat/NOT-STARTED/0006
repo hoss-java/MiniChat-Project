@@ -1,0 +1,41 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: User Registration Endpoint
+Tags: backend, auth, phase1
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status:
+Estimate: 1d 2h
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:47:00Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to implement the user registration endpoint with input validation, password hashing, and JWT token generation.
+
+# DOD (definition of done):
+- POST /auth/register endpoint works
+- Input validation implemented (email format, password strength)
+- Password hashing with BCrypt implemented
+- Duplicate user check implemented
+- JWT token returned on successful registration
+- Error responses for invalid input
+
+# TODO:
+- [] 1. Create User entity and repository
+- [] 2. Create registration DTO with validation
+- [] 3. Implement password hashing with BCrypt
+- [] 4. Create registration service logic
+- [] 5. Build registration controller endpoint
+- [] 6. Add duplicate user validation
+- [] 7. Generate and return JWT on success
+- [] 8. Test endpoint with Postman
+
+# Reports:
+*

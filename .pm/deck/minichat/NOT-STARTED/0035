@@ -1,0 +1,39 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Connection monitoring (optional)
+Tags: phase3, backend, monitoring
+Creator: Hossein
+AssignedTo:
+Priority: LOW
+Status: 
+Estimate: 0.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:27:09Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to optionally track P2P connection state and log connection failures for debugging and analytics purposes.
+
+# DOD (definition of done):
+- P2P connection state tracked on backend
+- Connection failures logged with details
+- Analytics data collected (connection attempts, success rate)
+- Logs useful for debugging NAT issues
+
+# TODO:
+- [] 1. Create connection monitoring service
+- [] 2. Listen for connection state changes via WebSocket
+- [] 3. Log successful P2P connections
+- [] 4. Log connection failures and reasons
+- [] 5. Track connection attempt count
+- [] 6. Calculate success/failure rate per peer
+- [] 7. Store metrics for analytics
+- [] 8. Create dashboard or log viewer (optional)
+
+# Reports:
+*

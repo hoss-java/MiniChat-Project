@@ -1,0 +1,49 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Integration tests - key exchange flow (backend)
+Tags: phase4, backend, encryption, testing
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 2d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:46:52Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to write comprehensive integration tests covering the complete key exchange flow from generation to trust to usage.
+
+# DOD (definition of done):
+- Test suite covers all key generation endpoints
+- Test suite covers key exchange (TOFU) flow
+- Test suite covers key rotation
+- Tests use real database and Spring test context
+- All tests pass with 80%+ code coverage on key-related code
+- Test cases documented for future reference
+
+# TODO:
+- [] Create KeyControllerIntegrationTest class
+- [] Test POST /keys/generate for new user (happy path)
+- [] Test POST /keys/generate for user with existing key (409 conflict)
+- [] Test GET /keys/{userId} for existing key
+- [] Test GET /keys/{userId} for non-existent user (404)
+- [] Test POST /keys/trust happy path (trust peer key)
+- [] Test POST /keys/trust with invalid key format (400 bad request)
+- [] Test POST /keys/trust duplicate trust (409 conflict)
+- [] Test two users exchanging keys and verifying fingerprints match
+- [] Test POST /keys/rotate flow
+- [] Test old key marked as revoked after rotation
+- [] Test new key used for encryption after rotation
+- [] Test E2E: User A generates key → User B fetches A's key → B trusts A's key → fingerprints match
+- [] Add performance test: key generation under load (100+ requests)
+- [] Write test documentation (test scenarios, expected outcomes)
+- [] Verify all tests run in CI/CD pipeline
+
+# Reports:
+*

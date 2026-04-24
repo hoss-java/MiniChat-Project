@@ -1,0 +1,36 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Spring WebSocket configuration
+Tags: phase2, backend, infrastructure
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:14:28Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to set up Spring WebSocket with SimpleBroker for real-time bidirectional communication between clients and server.
+
+# DOD (definition of done):
+- WebSocketConfig class created and configured
+- SimpleBroker enabled for message routing
+- Server listens on /ws endpoint
+- Client can establish WebSocket connection
+
+# TODO:
+- [] 1. Create WebSocketConfig class extending WebSocketMessageBrokerConfigurer
+- [] 2. Configure message broker (SimpleBroker)
+- [] 3. Set application destination prefix and endpoint
+- [] 4. Configure STOMP endpoints for client connection
+- [] 5. Test WebSocket connection with browser console
+
+# Reports:
+*

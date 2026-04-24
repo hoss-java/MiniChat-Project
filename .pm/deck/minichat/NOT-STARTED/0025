@@ -1,0 +1,40 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: WebSocket client setup
+Tags: phase2, frontend, infrastructure
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:18:43Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to set up WebSocket client library (SockJS + STOMP) and establish persistent connection to signaling server with proper reconnection logic.
+
+# DOD (definition of done):
+- WebSocket client connects to server on app load
+- Connection persists across page navigation
+- Auto-reconnect on disconnect
+- JWT token passed in WebSocket handshake
+- Connection state tracked in React context
+
+# TODO:
+- [] 1. Install SockJS and STOMP client libraries
+- [] 2. Create WebSocketService with connect() method
+- [] 3. Implement JWT token passing in handshake
+- [] 4. Implement auto-reconnect with exponential backoff
+- [] 5. Create WebSocket context for React state management
+- [] 6. Add connection status listener
+- [] 7. Handle connection errors gracefully
+- [] 8. Test connection in browser DevTools
+
+# Reports:
+*

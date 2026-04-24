@@ -1,0 +1,40 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Room entity and service
+Tags: phase2, backend, database
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:16:02Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to create Room entity and business logic for creating, joining, leaving, and listing rooms.
+
+# DOD (definition of done):
+- Room entity with JPA mapping exists
+- RoomService handles CRUD operations
+- Create room endpoint works
+- Join/leave room endpoints work
+- List rooms endpoint returns all available rooms
+
+# TODO:
+- [] 1. Create Room entity (id, name, createdBy, createdAt)
+- [] 2. Create RoomRepository (JPA interface)
+- [] 3. Create RoomService with business logic
+- [] 4. Implement createRoom(userId, roomName)
+- [] 5. Implement joinRoom(roomId, userId)
+- [] 6. Implement leaveRoom(roomId, userId)
+- [] 7. Implement listRooms() - return all rooms
+- [] 8. Add validation (room name not empty, user exists)
+
+# Reports:
+*

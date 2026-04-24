@@ -1,0 +1,44 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Basic Dashboard Page
+Tags: frontend, ui, phase1
+Creator: Hossein
+AssignedTo:
+Priority: MEDIUM
+Status:
+Estimate: 4h
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:54:43Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to create a basic dashboard page that displays a welcome message with user information and logout functionality.
+
+# DOD (definition of done):
+- Dashboard page renders only for authenticated users
+- Welcome message displays with username
+- User profile information displayed
+- Logout button present and functional
+- Logout clears token and redirects to login
+- Basic layout and styling applied
+- Responsive design
+
+# TODO:
+- [] 1. Create Dashboard component
+- [] 2. Get user data from auth context
+- [] 3. Display welcome message with username
+- [] 4. Show user profile information
+- [] 5. Add logout button
+- [] 6. Implement logout functionality
+- [] 7. Clear token from localStorage on logout
+- [] 8. Redirect to login after logout
+- [] 9. Style dashboard page
+- [] 10. Test logout functionality
+
+# Reports:
+*

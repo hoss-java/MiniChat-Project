@@ -1,0 +1,29 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Public key display & fingerprint UI
+Tags: phase4, frontend, encryption, ui
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:49:09Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to create UI components that display the user's public key and fingerprint for sharing and verification purposes.
+
+# DOD (definition of done):
+-
+
+# TODO:
+- [] 1.
+
+# Reports:
+*

@@ -1,0 +1,38 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: React Project Setup and Structure
+Tags: frontend, setup, phase1
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status:
+Estimate: 4h
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:50:54Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to initialize React project with proper folder structure, dependencies, and configuration for the P2P chat application.
+
+# DOD (definition of done):
+- React project created (Create React App)
+- All necessary dependencies installed (react-router, axios, Context API)
+- Folder structure organized (components, services, pages, contexts)
+- Environment configuration setup
+- Project runs without errors
+
+# TODO:
+- [] 1. Create React app with Create React App
+- [] 2. Install react-router-dom for routing
+- [] 3. Install axios for HTTP requests
+- [] 4. Create folder structure (components, services, pages, contexts, utils)
+- [] 5. Configure environment variables for API base URL
+- [] 6. Test project startup on localhost:3000
+
+# Reports:
+*

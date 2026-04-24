@@ -1,0 +1,49 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Frontend Unit Tests - Auth Service and Context
+Tags: frontend, testing, phase1
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status:
+Estimate: 2d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:56:38Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to create comprehensive unit tests for authentication service and auth context to ensure proper state management and API integration.
+
+# DOD (definition of done):
+- Unit tests for AuthContext created
+- Unit tests for login functionality
+- Unit tests for logout functionality
+- Unit tests for token storage and retrieval
+- Unit tests for API service methods
+- Tests for error cases
+- All tests passing
+- Code coverage above 80%
+
+# TODO:
+- [] 1. Setup testing library and dependencies (Jest, React Testing Library)
+- [] 2. Create test file for AuthContext
+- [] 3. Test initial auth state
+- [] 4. Test login action
+- [] 5. Test logout action
+- [] 6. Test token persistence in localStorage
+- [] 7. Test token retrieval on page refresh
+- [] 8. Create test file for API service
+- [] 9. Test login API call
+- [] 10. Test register API call
+- [] 11. Test error handling
+- [] 12. Test JWT injection in headers
+- [] 13. Run code coverage analysis
+- [] 14. Fix failing tests
+
+# Reports:
+*

@@ -1,0 +1,47 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Registration Page UI Component
+Tags: frontend, ui, phase1
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status:
+Estimate: 1d 2h
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:53:05Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to create a registration page with comprehensive form validation, password confirmation, and success messaging.
+
+# DOD (definition of done):
+- Registration form displays with email, password, and password confirmation fields
+- Password strength indicator implemented
+- Password confirmation validation
+- Email format validation
+- Duplicate user check error displayed
+- Success message shown after registration
+- Redirect to login on success
+- Responsive design
+
+# TODO:
+- [] 1. Create RegisterPage component
+- [] 2. Build registration form (email, password, confirm password)
+- [] 3. Implement password strength indicator
+- [] 4. Add password confirmation validation
+- [] 5. Implement email format validation
+- [] 6. Add error handling for duplicate emails
+- [] 7. Call register API via auth service
+- [] 8. Show success message
+- [] 9. Redirect to login page
+- [] 10. Add link to login page
+- [] 11. Style with basic CSS/Tailwind
+- [] 12. Test form submission
+
+# Reports:
+*

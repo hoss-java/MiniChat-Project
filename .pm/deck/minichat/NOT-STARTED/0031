@@ -1,0 +1,42 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Unit tests - WebSocket service
+Tags: phase2, frontend, testing
+Creator: Hossein
+AssignedTo:
+Priority: MEDIUM
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:22:34Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to write unit tests for WebSocket service, signaling handler, and connection management with mocked WebSocket to verify functionality.
+
+# DOD (definition of done):
+- WebSocket service connection tested
+- Message subscription tested
+- Message sending tested
+- Reconnection logic tested
+- Error handling tested
+- All tests pass with 80%+ coverage
+
+# TODO:
+- [] 1. Set up test environment (Jest, testing-library)
+- [] 2. Create mock WebSocket client
+- [] 3. Test connect() establishes connection
+- [] 4. Test subscribe() listens for messages
+- [] 5. Test send() sends messages correctly
+- [] 6. Test reconnect logic with exponential backoff
+- [] 7. Test error handling and disconnect
+- [] 8. Test JWT token passed in handshake
+- [] 9. Write tests for signaling handler
+
+# Reports:
+*

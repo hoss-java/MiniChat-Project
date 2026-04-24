@@ -1,0 +1,43 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Key generation service & keypair creation
+Tags: phase4, backend, encryption, security
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:42:46Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to implement a secure keypair generation service that creates Ed25519 keypairs and calculates fingerprints for users.
+
+# DOD (definition of done):
+- KeyGenerationService implemented with generateKeyPair() method
+- Ed25519 keypair generation working (using Bouncy Castle or NaCl4j)
+- Fingerprint calculation algorithm implemented (SHA256 hash of public key)
+- Service returns public key only to caller
+- Private key never exposed in logs or responses
+- Unit tests for key generation and fingerprint calculation pass
+
+# TODO:
+- [] Add Bouncy Castle or NaCl4j dependency to pom.xml
+- [] Create KeyGenerationService class
+- [] Implement generateKeyPair() method using Ed25519
+- [] Implement calculateFingerprint(publicKey) method (SHA256 hash, first 16 chars)
+- [] Add validation for generated keys
+- [] Ensure private key is NOT serialized or logged
+- [] Write unit tests for key generation
+- [] Write unit tests for fingerprint calculation (deterministic output)
+- [] Add integration test with Key entity persistence
+- [] Document key format (PEM or raw bytes decision)
+
+# Reports:
+*

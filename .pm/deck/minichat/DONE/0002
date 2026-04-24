@@ -7,8 +7,13 @@ Title: Configuer github workflows.
 Tags:
 Creator:
 AssignedTo:
+Priority:
+Status:
+Estimate: 5h
+DueDate:
 # Time tracker settings
-tartAt:
+CreateAt:
+StartAt:
 EndAt:
 ---
 The goal of this card is to configure github workflows for this repository.

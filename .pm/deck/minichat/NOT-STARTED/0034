@@ -1,0 +1,40 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: ICE candidate relay
+Tags: phase3, backend, signaling
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:26:35Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to implement WebSocket message handling for relaying ICE candidates between peers to establish optimal connection paths through NAT/firewalls.
+
+# DOD (definition of done):
+- ICE candidates relayed from sender to receiver
+- Candidates arrive in correct order
+- No candidates lost or duplicated
+- Validation prevents malformed candidates
+- Connection uses best available path
+
+# TODO:
+- [] 1. Create ICE candidate message format validation
+- [] 2. Implement @MessageMapping for ICE candidates
+- [] 3. Route candidate to specific peer (not broadcast)
+- [] 4. Handle late-arriving candidates (after answer sent)
+- [] 5. Add logging for candidate relay
+- [] 6. Implement candidate queuing if peer not ready
+- [] 7. Test candidate relay with STUN/TURN
+- [] 8. Handle candidate gathering complete signal
+
+# Reports:
+*

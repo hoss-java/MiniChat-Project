@@ -1,0 +1,40 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: STUN/TURN server configuration
+Tags: phase3, backend, infrastructure
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:25:18Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to configure STUN/TURN servers for NAT traversal and include ICE server list in WebSocket signaling response so clients can establish P2P connections.
+
+# DOD (definition of done):
+- Google STUN server configured (free, public)
+- Coturn self-hosted TURN server setup (or alternative)
+- ICE server list returned in signaling response
+- Clients receive iceServers in WebSocket message
+- P2P connections work through NAT/firewall
+
+# TODO:
+- [] 1. Research STUN vs TURN differences
+- [] 2. Add Google STUN server (stun.l.google.com:19302)
+- [] 3. Research and choose TURN solution (Coturn, Firebase, Twilio)
+- [] 4. Install and configure Coturn on server (if self-hosted)
+- [] 5. Create IceServer configuration class
+- [] 6. Add iceServers list to signaling response
+- [] 7. Return iceServers when client joins room
+- [] 8. Test STUN/TURN connectivity
+
+# Reports:
+*

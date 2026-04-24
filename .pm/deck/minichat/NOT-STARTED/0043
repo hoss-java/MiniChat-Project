@@ -1,0 +1,46 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Unit and integration tests - WebRTC
+Tags: phase3, frontend, testing
+Creator: Hossein
+AssignedTo:
+Priority: MEDIUM
+Status: 
+Estimate: 2d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:33:05Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to write unit and integration tests for WebRTC peer connection, data channel, and message flow with mocked WebRTC APIs.
+
+# DOD (definition of done):
+- Peer connection creation tested
+- Data channel creation tested
+- Message sending and receiving tested
+- localStorage persistence tested
+- Connection state changes tested
+- Error scenarios tested
+- Test coverage 75%+
+
+# TODO:
+- [] 1. Set up WebRTC mock (jest-webrtc or manual mocks)
+- [] 2. Write test for createPeerConnection()
+- [] 3. Write test for data channel creation
+- [] 4. Write test for sendMessage() through data channel
+- [] 5. Write test for receiving message
+- [] 6. Write test for message display in UI
+- [] 7. Write test for localStorage save
+- [] 8. Write test for localStorage load
+- [] 9. Write test for connection state transitions
+- [] 10. Write error handling tests
+- [] 11. Test message buffer overflow handling
+- [] 12. Calculate and verify test coverage
+
+# Reports:
+*

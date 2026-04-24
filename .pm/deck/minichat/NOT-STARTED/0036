@@ -1,0 +1,41 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Integration tests - P2P signaling
+Tags: phase3, backend, testing
+Creator: Hossein
+AssignedTo:
+Priority: MEDIUM
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:27:55Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to write integration tests that verify SDP offer/answer and ICE candidate relay works correctly between two simulated WebRTC clients.
+
+# DOD (definition of done):
+- Test offer generation and relay
+- Test answer generation and relay
+- Test ICE candidate collection and relay
+- Test complete connection handshake
+- All tests pass and are repeatable
+
+# TODO:
+- [] 1. Set up WebSocket test clients (two instances)
+- [] 2. Write test for peer A sending offer to peer B
+- [] 3. Write test for peer B receiving offer
+- [] 4. Write test for peer B sending answer
+- [] 5. Write test for peer A receiving answer
+- [] 6. Write test for ICE candidate relay both directions
+- [] 7. Write test for complete handshake flow
+- [] 8. Add error case tests (invalid SDP, malformed ICE)
+- [] 9. Test connection timeout scenarios
+
+# Reports:
+*

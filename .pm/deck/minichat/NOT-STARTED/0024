@@ -1,0 +1,41 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Integration tests - WebSocket flow
+Tags: phase2, backend, testing
+Creator: Hossein
+AssignedTo:
+Priority: MEDIUM
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:18:03Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to write integration tests that verify WebSocket connection, room join, peer discovery, and message relay work end-to-end.
+
+# DOD (definition of done):
+- Test user connects to WebSocket
+- Test user joins room and broadcasts online status
+- Test peer discovery returns correct list
+- Test SDP offer/answer relay between two peers
+- Test ICE candidate forwarding
+- All tests pass
+
+# TODO:
+- [] 1. Set up WebSocket test client (TestRestTemplate or WebSocketStompClient)
+- [] 2. Write test for WebSocket connection
+- [] 3. Write test for room join and online broadcast
+- [] 4. Write test for peer discovery endpoint
+- [] 5. Write test for offer/answer relay
+- [] 6. Write test for ICE candidate relay
+- [] 7. Write test for peer disconnect and offline broadcast
+- [] 8. Add error case tests (invalid room, unauthorized access)
+
+# Reports:
+*

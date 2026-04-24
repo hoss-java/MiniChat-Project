@@ -1,0 +1,40 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Connection state UI
+Tags: phase2, frontend, ui
+Creator: Hossein
+AssignedTo:
+Priority: MEDIUM
+Status: 
+Estimate: 0.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:21:57Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to display connection state (connecting, connected, disconnected, error) to user with visual indicators and status messages.
+
+# DOD (definition of done):
+- Connection state displays in UI (connecting, connected, error)
+- Visual indicators (spinner, checkmark, warning icon)
+- Status message explains current state
+- State updates in real-time
+- Error messages are helpful and actionable
+
+# TODO:
+- [] 1. Create ConnectionStatus component
+- [] 2. Add CSS styles for each state (colors, icons, animations)
+- [] 3. Subscribe to WebSocket connection state
+- [] 4. Show spinner during "connecting"
+- [] 5. Show checkmark for "connected"
+- [] 6. Show error icon and message for "error"
+- [] 7. Display in header or sidebar
+- [] 8. Test all state transitions
+
+# Reports:
+*

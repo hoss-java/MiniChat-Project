@@ -1,0 +1,40 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Signaling message handler
+Tags: phase2, backend, signaling
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:17:20Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to implement WebSocket message handling for relaying SDP offers/answers and ICE candidates between peers.
+
+# DOD (definition of done):
+- SDP offer/answer messages relay correctly between peers
+- ICE candidates forward from sender to receiver
+- Message format is consistent: { type, from, to, data }
+- No messages lost during relay
+- Only intended recipient receives message
+
+# TODO:
+- [] 1. Create SignalingMessage class (type, from, to, data)
+- [] 2. Create @MessageMapping handler for signaling messages
+- [] 3. Implement offer relay logic (send to specific peer)
+- [] 4. Implement answer relay logic
+- [] 5. Implement ICE candidate relay logic
+- [] 6. Add validation (sender authorized, receiver in room)
+- [] 7. Add error handling (peer not found, connection lost)
+- [] 8. Log signaling traffic for debugging
+
+# Reports:
+*

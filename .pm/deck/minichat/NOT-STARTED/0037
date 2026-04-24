@@ -1,0 +1,42 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: WebRTC peer connection setup
+Tags: phase3, frontend, webrtc
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 2d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:28:37Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to initialize RTCPeerConnection with STUN/TURN servers, handle connection state changes, and manage peer lifecycle for each connected peer.
+
+# DOD (definition of done):
+- RTCPeerConnection created with ICE servers
+- Connection state changes logged (connecting, connected, failed, disconnected)
+- Peer removed when connection closes
+- Each peer has unique connection instance
+- No memory leaks from unclosed connections
+
+# TODO:
+- [] 1. Create WebRTCService class
+- [] 2. Implement createPeerConnection(peerId, iceServers)
+- [] 3. Add onconnectionstatechange listener
+- [] 4. Add oniceconnectionstatechange listener
+- [] 5. Log state transitions for debugging
+- [] 6. Implement closePeerConnection(peerId)
+- [] 7. Handle connection failure scenarios
+- [] 8. Store peer connections in Map by peerId
+- [] 9. Clean up resources on peer disconnect
+- [] 10. Consider using simple-peer library to reduce complexity
+
+# Reports:
+*

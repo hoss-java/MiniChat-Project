@@ -1,0 +1,41 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Room list page UI
+Tags: phase2, frontend, ui
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:19:20Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to build a page that displays all available rooms with online peer count and allows users to select a room to join.
+
+# DOD (definition of done):
+- Room list page displays all rooms from backend
+- Each room shows name, creator, peer count
+- Users can click room to join
+- Real-time updates when peers join/leave room
+- Empty state shown if no rooms exist
+
+# TODO:
+- [] 1. Fetch rooms list from GET /api/rooms
+- [] 2. Create RoomList component
+- [] 3. Create RoomCard component (name, creator, peer count)
+- [] 4. Implement onClick handler to join room
+- [] 5. Subscribe to WebSocket for online status updates
+- [] 6. Update peer count in real-time
+- [] 7. Show loading state while fetching
+- [] 8. Show error message if fetch fails
+- [] 9. Add empty state UI
+
+# Reports:
+*

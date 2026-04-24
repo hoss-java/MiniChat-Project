@@ -1,0 +1,46 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Encrypted key storage at rest
+Tags: phase4, backend, encryption, security
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:45:39Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to implement encryption at rest for private keys stored in the database, ensuring keys are never stored in plaintext.
+
+# DOD (definition of done):
+- Private keys encrypted at rest using AES-256-GCM
+- Master encryption key securely managed (config or key vault)
+- Decryption works transparently for authentication flows
+- Encrypted keys cannot be read from raw database dumps
+- Unit & integration tests for encryption/decryption pass
+- Documentation of key management strategy
+
+# TODO:
+- [] Design encryption strategy (AES-256-GCM recommended)
+- [] Create EncryptionService with encrypt(plaintext, masterKey) and decrypt(ciphertext, masterKey)
+- [] Configure master key storage (environment variable or key vault - decide)
+- [] Add encrypted_private_key and encryption_iv columns to Key entity
+- [] Implement @PrePersist hook in Key entity to encrypt private key before save
+- [] Implement custom deserializer to decrypt private key on load
+- [] Update KeyGenerationService to handle encrypted storage
+- [] Ensure private key is only decrypted when needed (lazy loading)
+- [] Add audit logging for decryption events
+- [] Write unit tests for encryption/decryption
+- [] Write integration test: generate key → store encrypted → retrieve and verify
+- [] Test with database dump to confirm plaintext key is not visible
+- [] Document master key rotation procedure (if applicable)
+
+# Reports:
+*

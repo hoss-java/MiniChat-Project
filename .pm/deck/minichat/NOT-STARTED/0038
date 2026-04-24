@@ -1,0 +1,43 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Data channel creation and handling
+Tags: phase3, frontend, webrtc
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:29:22Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to create data channels for peer-to-peer messaging and implement handlers for data channel events (open, message, error, close).
+
+# DOD (definition of done):
+- Data channel created by offer initiator
+- Data channel received by answer responder
+- onopen handler called when channel ready
+- onmessage handler receives incoming messages
+- onerror handler logs errors
+- onclose handler cleans up resources
+
+# TODO:
+- [] 1. Implement createDataChannel(peerId) method
+- [] 2. Create data channel with reliable settings
+- [] 3. Implement ondatachannel listener (for receiver)
+- [] 4. Add onopen event handler
+- [] 5. Add onmessage event handler
+- [] 6. Add onerror event handler
+- [] 7. Add onclose event handler
+- [] 8. Store data channels by peerId
+- [] 9. Test data channel opens successfully
+- [] 10. Handle bufferedAmount to prevent overflow
+
+# Reports:
+*

@@ -1,0 +1,42 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Connection error handling
+Tags: phase3, frontend, ux
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:32:25Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to handle WebRTC connection failures gracefully and display user-friendly error messages for common issues (NAT problems, firewall, connection timeout).
+
+# DOD (definition of done):
+- Connection errors caught and logged
+- User-friendly error messages displayed
+- Suggestions provided for resolution
+- Retry option available
+- Fallback to server relay documented
+
+# TODO:
+- [] 1. Create error message mapper for WebRTC error codes
+- [] 2. Implement error handler in peer connection setup
+- [] 3. Detect NAT/firewall issues from error type
+- [] 4. Display error modal with message and suggestions
+- [] 5. Add "Retry Connection" button
+- [] 6. Log error details for debugging
+- [] 7. Show connection status updates (connecting → failed → retrying)
+- [] 8. Handle timeout scenarios (no answer after X seconds)
+- [] 9. Document fallback to server relay for Phase 5
+- [] 10. Test error scenarios (disconnect WiFi, block STUN)
+
+# Reports:
+*

@@ -1,0 +1,43 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Login Endpoint with JWT
+Tags: backend, auth, phase1
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status:
+Estimate: 2d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:47:42Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to implement the login endpoint with JWT token generation, refresh token logic, and proper error handling.
+
+# DOD (definition of done):
+- POST /auth/login endpoint works
+- Email and password validation implemented
+- JWT access token generated on successful login
+- Refresh token logic implemented
+- Token expiration configured
+- Error responses for invalid credentials
+- Last login timestamp updated
+
+# TODO:
+- [] 1. Create JWT utility class (generate, validate, refresh tokens)
+- [] 2. Create login DTO with email and password
+- [] 3. Implement login service with credential validation
+- [] 4. Build login controller endpoint
+- [] 5. Add refresh token generation and storage
+- [] 6. Configure token expiration times
+- [] 7. Update last_login field in User table
+- [] 8. Add error handling for wrong credentials
+- [] 9. Test with multiple login scenarios
+
+# Reports:
+*

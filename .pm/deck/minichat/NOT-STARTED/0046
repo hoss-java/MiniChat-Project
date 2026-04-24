@@ -1,0 +1,47 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: POST /keys/generate endpoint - create keypair on first login
+Tags: phase4, backend, encryption, api
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:43:29Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to create a REST endpoint that generates and stores a user's keypair on first login, returning only the public key.
+
+# DOD (definition of done):
+- POST /keys/generate endpoint created and secured with JWT
+- Endpoint checks if user already has a key, prevents duplicate generation
+- Keypair generated via KeyGenerationService
+- Public key returned to client as PEM format
+- Key stored in database with fingerprint
+- Response includes public key and fingerprint
+- Error handling for existing keys
+- Unit & integration tests pass
+
+# TODO:
+- [] Create KeyController with @PostMapping("/keys/generate")
+- [] Add JWT authentication check via @CurrentUser or SecurityContext
+- [] Query database to check if user already has a key
+- [] If exists: return 409 Conflict with message "Key already exists"
+- [] If not exists: call KeyGenerationService.generateKeyPair()
+- [] Save Key entity to database
+- [] Return response: { publicKey: "...", fingerprint: "...", keyType: "auto", createdAt: "..." }
+- [] Add error handling for service failures
+- [] Write unit test with mocked KeyGenerationService
+- [] Write integration test with real database
+- [] Test duplicate generation prevention
+- [] Test response format and validation
+
+# Reports:
+*

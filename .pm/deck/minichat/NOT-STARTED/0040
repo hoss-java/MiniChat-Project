@@ -1,0 +1,43 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Chat UI (message list, input, send button)
+Tags: phase3, frontend, ui
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:30:47Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to build the chat UI component that displays messages in a list, accepts user input, and sends messages via data channel.
+
+# DOD (definition of done):
+- Messages display in chronological order
+- Each message shows sender name, text, and timestamp
+- Input field accepts message text
+- Send button sends message to peer
+- UI scrolls to latest message
+- Empty chat shows placeholder
+
+# TODO:
+- [] 1. Create ChatWindow component
+- [] 2. Create MessageList component (renders message array)
+- [] 3. Create Message component (sender, text, time)
+- [] 4. Create MessageInput component (text input + send button)
+- [] 5. Implement onSend handler (call sendMessage service)
+- [] 6. Add scroll-to-bottom on new message
+- [] 7. Add loading state for unsent messages
+- [] 8. Show error message if send fails
+- [] 9. Clear input after send
+- [] 10. Add emoji/formatting (optional)
+
+# Reports:
+*

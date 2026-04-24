@@ -1,0 +1,42 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: localStorage persistence
+Tags: phase3, frontend, storage
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:31:48Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to save chat messages to localStorage with peer/room context key and load them on page reload or reconnect.
+
+# DOD (definition of done):
+- Messages saved to localStorage with key chat_{peerId}_{roomId}
+- Messages loaded on component mount
+- Message history persists across page reloads
+- localStorage quota respected (don't exceed limit)
+- Old messages cleaned up periodically
+
+# TODO:
+- [] 1. Create LocalStorageService for message persistence
+- [] 2. Implement saveMessage(peerId, roomId, message)
+- [] 3. Serialize message to JSON format
+- [] 4. Implement loadMessages(peerId, roomId, limit)
+- [] 5. Deserialize messages from JSON
+- [] 6. Load messages on ChatWindow mount
+- [] 7. Check localStorage quota before saving
+- [] 8. Implement clearMessages(peerId, roomId)
+- [] 9. Add expiration time for old messages (optional)
+- [] 10. Test persistence across page reloads
+
+# Reports:
+*

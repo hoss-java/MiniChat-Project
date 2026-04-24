@@ -1,0 +1,39 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Key entity & schema design
+Tags: phase4, backend, encryption, database
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:41:18Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to create the database schema and JPA entity for storing user cryptographic keys with fingerprint tracking and key type management.
+
+# DOD (definition of done):
+- Key entity created with all required fields (id, userId, publicKey, keyFingerprint, createdAt, keyType)
+- Database migration/schema applied
+- Key repository interface created
+- Unit tests for Key entity validation pass
+
+# TODO:
+- [] Design Key entity fields (id, userId, publicKey, keyFingerprint, keyType: ENUM(auto/manual), createdAt, updatedAt)
+- [] Create JPA entity class with proper annotations
+- [] Add database migration script
+- [] Create KeyRepository interface extending JpaRepository
+- [] Add unique constraint on (userId, publicKey) to prevent duplicates
+- [] Add index on userId for fast lookup
+- [] Write unit tests for entity validation
+- [] Document key format expectations (PEM vs raw bytes)
+
+# Reports:
+*

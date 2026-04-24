@@ -1,0 +1,43 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: GET /keys/{userId} endpoint - public key lookup
+Tags: phase4, backend, encryption, api
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 0.5d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:44:09Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to create a public endpoint that allows any authenticated user to retrieve another user's public key and fingerprint for encryption purposes.
+
+# DOD (definition of done):
+- GET /keys/{userId} endpoint created and accessible to authenticated users
+- Returns public key and fingerprint only (no private key)
+- Handles user not found (404)
+- Handles user has no key yet (404)
+- Response format matches POST /keys/generate
+- Unit & integration tests pass
+
+# TODO:
+- [] Create @GetMapping("/keys/{userId}") in KeyController
+- [] Add JWT authentication check
+- [] Query database for Key by userId
+- [] If not found: return 404 with message "User or key not found"
+- [] Return response: { publicKey: "...", fingerprint: "...", keyType: "auto", createdAt: "..." }
+- [] Add error handling
+- [] Write unit test (mocked repository)
+- [] Write integration test with real database
+- [] Test not found scenario
+- [] Test fingerprint consistency (same key always returns same fingerprint)
+
+# Reports:
+*

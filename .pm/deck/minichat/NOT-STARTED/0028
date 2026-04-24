@@ -1,0 +1,40 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Online users display
+Tags: phase2, frontend, ui
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:20:37Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to display real-time list of online peers in current room with visual indicators and update when peers connect/disconnect.
+
+# DOD (definition of done):
+- Online peers list shows in room UI
+- Each peer shows username and online status indicator
+- List updates in real-time when peers join/leave
+- Current user highlighted in list
+- No duplicate entries
+
+# TODO:
+- [] 1. Create OnlineUsersList component
+- [] 2. Subscribe to WebSocket online status messages
+- [] 3. Store peer list in React state
+- [] 4. Display each peer with username and status dot
+- [] 5. Highlight current user
+- [] 6. Update peer list on join event
+- [] 7. Remove peer on disconnect event
+- [] 8. Handle empty peer list (show "No peers online")
+
+# Reports:
+*

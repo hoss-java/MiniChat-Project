@@ -1,0 +1,50 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Crypto library integration & evaluation (Frontend)
+Tags: phase4, frontend, encryption, setup
+Creator: Hossein
+AssignedTo:
+Priority: HIGH
+Status: 
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:47:36Z
+StartAt:
+EndAt:
+---
+
+The goal of this card is to evaluate and integrate a JavaScript crypto library (libsodium.js or TweetNaCl.js) into the React frontend, with bundle size analysis.
+
+# DOD (definition of done):
+- Crypto library selected and integrated into React project
+- Library supports Ed25519 keypair generation
+- Library supports message encryption/decryption
+- Bundle size impact analyzed (<100KB for crypto code)
+- Crypto service wrapper created for consistent API
+- Unit tests for crypto operations pass
+- Works across browsers (Chrome, Firefox, Safari)
+
+# TODO:
+- [] Research & compare: libsodium.js vs TweetNaCl.js vs sodium-plus
+- [] Evaluate bundle size for each option (run webpack-bundle-analyzer)
+- [] Choose winner based on size + feature completeness
+- [] Install chosen library: npm install libsodium.js (or equivalent)
+- [] Create CryptoService class in frontend
+- [] Implement generateKeyPair() method
+- [] Implement encrypt(plaintext, recipientPublicKey) method
+- [] Implement decrypt(ciphertext, recipientPublicKey) method
+- [] Implement getFingerprint(publicKey) method
+- [] Add proper error handling (invalid keys, encryption failures)
+- [] Write unit tests for all crypto operations
+- [] Test encryption/decryption round-trip
+- [] Test fingerprint determinism (same input = same output)
+- [] Cross-browser test (Chrome, Firefox, Safari)
+- [] Document library choice and reasoning
+- [] Record bundle size impact in project README
+
+# Reports:
+*
