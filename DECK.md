@@ -911,3 +911,1538 @@ gantt
 > | **Phase 8: Client Apps (Electron)** | API versioning, minor adjustments | React + Electron packaging | 6-8 | 8-12 | Follow Phase 7 |
 > | | | | **~60-86 work-days** | **~86-116 calendar days** | **3-4 months realistic** |
 > </details>
+
+## 001-0005
+> **Database Schema Design** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to design and create the database schema for user authentication including User, Role, and Session entities.
+> 
+> # DOD (definition of done):
+> - User table created with all required fields (id, email, password, created_at, last_login)
+> - Role table created for user roles
+> - Session table created for tracking user sessions
+> - All tables have proper indexes
+> - Schema documented and reviewed
+> 
+> # TODO:
+> - [] 1. Design User entity (email, password hash, created_at, last_login, is_active)
+> - [] 2. Design Role entity (id, name, description)
+> - [] 3. Design Session entity (id, user_id, token, expires_at)
+> - [] 4. Create migration scripts
+> - [] 5. Set up relationships between tables
+> - [] 6. Create database indexes for performance
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0006
+> **User Registration Endpoint** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement the user registration endpoint with input validation, password hashing, and JWT token generation.
+> 
+> # DOD (definition of done):
+> - POST /auth/register endpoint works
+> - Input validation implemented (email format, password strength)
+> - Password hashing with BCrypt implemented
+> - Duplicate user check implemented
+> - JWT token returned on successful registration
+> - Error responses for invalid input
+> 
+> # TODO:
+> - [] 1. Create User entity and repository
+> - [] 2. Create registration DTO with validation
+> - [] 3. Implement password hashing with BCrypt
+> - [] 4. Create registration service logic
+> - [] 5. Build registration controller endpoint
+> - [] 6. Add duplicate user validation
+> - [] 7. Generate and return JWT on success
+> - [] 8. Test endpoint with Postman
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0007
+> **Login Endpoint with JWT** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement the login endpoint with JWT token generation, refresh token logic, and proper error handling.
+> 
+> # DOD (definition of done):
+> - POST /auth/login endpoint works
+> - Email and password validation implemented
+> - JWT access token generated on successful login
+> - Refresh token logic implemented
+> - Token expiration configured
+> - Error responses for invalid credentials
+> - Last login timestamp updated
+> 
+> # TODO:
+> - [] 1. Create JWT utility class (generate, validate, refresh tokens)
+> - [] 2. Create login DTO with email and password
+> - [] 3. Implement login service with credential validation
+> - [] 4. Build login controller endpoint
+> - [] 5. Add refresh token generation and storage
+> - [] 6. Configure token expiration times
+> - [] 7. Update last_login field in User table
+> - [] 8. Add error handling for wrong credentials
+> - [] 9. Test with multiple login scenarios
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0008
+> **JWT Filter and Token Validation** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement JWT filter to validate tokens on all protected endpoints and handle token expiration securely.
+> 
+> # DOD (definition of done):
+> - JWT filter implemented in Spring Security chain
+> - Token validation on every protected endpoint
+> - Token expiration handled properly
+> - Invalid token returns 401 Unauthorized
+> - Expired token returns 401 with clear message
+> - Token injection into request context
+> 
+> # TODO:
+> - [] 1. Create JWT filter class extending OncePerRequestFilter
+> - [] 2. Implement token extraction from Authorization header
+> - [] 3. Add token validation logic
+> - [] 4. Check token expiration time
+> - [] 5. Load user from token claims
+> - [] 6. Set authentication in SecurityContext
+> - [] 7. Configure filter in SecurityConfiguration
+> - [] 8. Add error handling for invalid tokens
+> - [] 9. Test with expired and invalid tokens
+> - [] 10. Test with valid tokens
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0009
+> **User Profile Endpoints** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement endpoints to retrieve and update user profile information with proper authorization.
+> 
+> # DOD (definition of done):
+> - GET /auth/me endpoint returns current user data
+> - PUT /auth/profile endpoint updates user information
+> - Only authenticated users can access endpoints
+> - User can only update their own profile
+> - Updated data persisted to database
+> - Proper error handling for unauthorized access
+> 
+> # TODO:
+> - [] 1. Create user profile DTO
+> - [] 2. Implement GET /auth/me service
+> - [] 3. Build GET /auth/me controller
+> - [] 4. Create update profile DTO with validation
+> - [] 5. Implement PUT /auth/profile service
+> - [] 6. Build PUT /auth/profile controller
+> - [] 7. Add authorization check (user can only update own profile)
+> - [] 8. Test both endpoints
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0010
+> **Backend Integration Tests - Auth Endpoints** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create comprehensive integration tests for all authentication endpoints to ensure security and proper functionality.
+> 
+> # DOD (definition of done):
+> - Integration tests for registration endpoint
+> - Integration tests for login endpoint
+> - Integration tests for JWT validation
+> - Integration tests for refresh token
+> - Integration tests for profile endpoints
+> - Tests for error cases (invalid input, duplicate users, wrong credentials)
+> - All tests passing
+> - Code coverage above 80%
+> 
+> # TODO:
+> - [] 1. Setup test database configuration
+> - [] 2. Create test fixtures for users
+> - [] 3. Test successful registration
+> - [] 4. Test duplicate user registration
+> - [] 5. Test invalid registration input
+> - [] 6. Test successful login
+> - [] 7. Test login with wrong credentials
+> - [] 8. Test JWT validation
+> - [] 9. Test token expiration
+> - [] 10. Test refresh token functionality
+> - [] 11. Test profile endpoints
+> - [] 12. Run code coverage analysis
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0011
+> **React Project Setup and Structure** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to initialize React project with proper folder structure, dependencies, and configuration for the P2P chat application.
+> 
+> # DOD (definition of done):
+> - React project created (Create React App)
+> - All necessary dependencies installed (react-router, axios, Context API)
+> - Folder structure organized (components, services, pages, contexts)
+> - Environment configuration setup
+> - Project runs without errors
+> 
+> # TODO:
+> - [] 1. Create React app with Create React App
+> - [] 2. Install react-router-dom for routing
+> - [] 3. Install axios for HTTP requests
+> - [] 4. Create folder structure (components, services, pages, contexts, utils)
+> - [] 5. Configure environment variables for API base URL
+> - [] 6. Test project startup on localhost:3000
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0012
+> **Auth Context and State Management** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create global authentication context for managing user state, JWT tokens, and authentication actions across the application.
+> 
+> # DOD (definition of done):
+> - AuthContext created with Context API
+> - User state stored globally
+> - JWT token stored in state and localStorage
+> - Login action implemented
+> - Logout action implemented
+> - User data persisted on page refresh
+> - Context accessible from all components
+> 
+> # TODO:
+> - [] 1. Create AuthContext.js file
+> - [] 2. Define initial auth state (user, token, isAuthenticated)
+> - [] 3. Implement login action
+> - [] 4. Implement logout action
+> - [] 5. Implement token refresh logic
+> - [] 6. Add localStorage persistence
+> - [] 7. Create AuthProvider component
+> - [] 8. Export useAuth custom hook
+> - [] 9. Wrap App with AuthProvider
+> - [] 10. Test context functionality
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0013
+> **Login Page UI Component** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create a user-friendly login page with form validation, error handling, and redirect on successful login.
+> 
+> # DOD (definition of done):
+> - Login form displays with email and password fields
+> - Form validation implemented (empty check, email format)
+> - Error messages displayed for invalid credentials
+> - Loading state shown during submission
+> - Redirect to dashboard on successful login
+> - Remember me functionality (optional)
+> - Responsive design
+> 
+> # TODO:
+> - [] 1. Create LoginPage component
+> - [] 2. Build login form with email and password inputs
+> - [] 3. Add form validation (client-side)
+> - [] 4. Implement error message display
+> - [] 5. Add loading spinner during submission
+> - [] 6. Call login API via auth service
+> - [] 7. Handle login errors (invalid credentials, network error)
+> - [] 8. Redirect to dashboard on success
+> - [] 9. Add link to registration page
+> - [] 10. Style with basic CSS/Tailwind
+> - [] 11. Test form submission
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0014
+> **Registration Page UI Component** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create a registration page with comprehensive form validation, password confirmation, and success messaging.
+> 
+> # DOD (definition of done):
+> - Registration form displays with email, password, and password confirmation fields
+> - Password strength indicator implemented
+> - Password confirmation validation
+> - Email format validation
+> - Duplicate user check error displayed
+> - Success message shown after registration
+> - Redirect to login on success
+> - Responsive design
+> 
+> # TODO:
+> - [] 1. Create RegisterPage component
+> - [] 2. Build registration form (email, password, confirm password)
+> - [] 3. Implement password strength indicator
+> - [] 4. Add password confirmation validation
+> - [] 5. Implement email format validation
+> - [] 6. Add error handling for duplicate emails
+> - [] 7. Call register API via auth service
+> - [] 8. Show success message
+> - [] 9. Redirect to login page
+> - [] 10. Add link to login page
+> - [] 11. Style with basic CSS/Tailwind
+> - [] 12. Test form submission
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0015
+> **Protected Route Wrapper** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create a ProtectedRoute component that checks authentication status and redirects unauthenticated users to the login page.
+> 
+> # DOD (definition of done):
+> - ProtectedRoute component created
+> - Authentication check implemented
+> - Redirect to login for unauthenticated users
+> - Redirect to dashboard for authenticated users trying to access login
+> - Loading state shown while checking auth
+> - All protected routes use this component
+> 
+> # TODO:
+> - [] 1. Create ProtectedRoute component
+> - [] 2. Check authentication status from context
+> - [] 3. Show loading spinner while checking
+> - [] 4. Render protected component if authenticated
+> - [] 5. Redirect to login if not authenticated
+> - [] 6. Create route configuration
+> - [] 7. Apply ProtectedRoute to dashboard route
+> - [] 8. Test with authenticated and unauthenticated users
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0016
+> **Basic Dashboard Page** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create a basic dashboard page that displays a welcome message with user information and logout functionality.
+> 
+> # DOD (definition of done):
+> - Dashboard page renders only for authenticated users
+> - Welcome message displays with username
+> - User profile information displayed
+> - Logout button present and functional
+> - Logout clears token and redirects to login
+> - Basic layout and styling applied
+> - Responsive design
+> 
+> # TODO:
+> - [] 1. Create Dashboard component
+> - [] 2. Get user data from auth context
+> - [] 3. Display welcome message with username
+> - [] 4. Show user profile information
+> - [] 5. Add logout button
+> - [] 6. Implement logout functionality
+> - [] 7. Clear token from localStorage on logout
+> - [] 8. Redirect to login after logout
+> - [] 9. Style dashboard page
+> - [] 10. Test logout functionality
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0017
+> **HTTP API Service Layer** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create an HTTP service layer with axios that handles all API calls, JWT injection, and error handling.
+> 
+> # DOD (definition of done):
+> - Axios instance created with base URL
+> - JWT token automatically injected in request headers
+> - Error handling implemented for all requests
+> - Interceptors for request and response
+> - Separate methods for each auth endpoint
+> - Error status codes handled properly
+> - Service easily testable
+> 
+> # TODO:
+> - [] 1. Create api.js or apiClient.js file
+> - [] 2. Configure axios instance with base URL
+> - [] 3. Add request interceptor for JWT injection
+> - [] 4. Add response interceptor for error handling
+> - [] 5. Create auth service methods (login, register, getProfile, updateProfile)
+> - [] 6. Handle 401 unauthorized errors
+> - [] 7. Handle 400 validation errors
+> - [] 8. Handle network errors
+> - [] 9. Create global error handler
+> - [] 10. Test all API calls
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0018
+> **Frontend Unit Tests - Auth Service and Context** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create comprehensive unit tests for authentication service and auth context to ensure proper state management and API integration.
+> 
+> # DOD (definition of done):
+> - Unit tests for AuthContext created
+> - Unit tests for login functionality
+> - Unit tests for logout functionality
+> - Unit tests for token storage and retrieval
+> - Unit tests for API service methods
+> - Tests for error cases
+> - All tests passing
+> - Code coverage above 80%
+> 
+> # TODO:
+> - [] 1. Setup testing library and dependencies (Jest, React Testing Library)
+> - [] 2. Create test file for AuthContext
+> - [] 3. Test initial auth state
+> - [] 4. Test login action
+> - [] 5. Test logout action
+> - [] 6. Test token persistence in localStorage
+> - [] 7. Test token retrieval on page refresh
+> - [] 8. Create test file for API service
+> - [] 9. Test login API call
+> - [] 10. Test register API call
+> - [] 11. Test error handling
+> - [] 12. Test JWT injection in headers
+> - [] 13. Run code coverage analysis
+> - [] 14. Fix failing tests
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0019
+> **Spring WebSocket configuration** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to set up Spring WebSocket with SimpleBroker for real-time bidirectional communication between clients and server.
+> 
+> # DOD (definition of done):
+> - WebSocketConfig class created and configured
+> - SimpleBroker enabled for message routing
+> - Server listens on /ws endpoint
+> - Client can establish WebSocket connection
+> 
+> # TODO:
+> - [] 1. Create WebSocketConfig class extending WebSocketMessageBrokerConfigurer
+> - [] 2. Configure message broker (SimpleBroker)
+> - [] 3. Set application destination prefix and endpoint
+> - [] 4. Configure STOMP endpoints for client connection
+> - [] 5. Test WebSocket connection with browser console
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0020
+> **User session tracking (online/offline)** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to track which users are online/offline in real-time and broadcast status changes to all connected clients.
+> 
+> # DOD (definition of done):
+> - In-memory user session store tracks connected users
+> - Online/offline events broadcast to room members
+> - User list updates in real-time when users join/leave
+> - Session data persists only during connection
+> 
+> # TODO:
+> - [] 1. Create UserSession class to store user connection metadata
+> - [] 2. Create SessionManager service (in-memory or Redis)
+> - [] 3. Implement user connect handler (WebSocket event)
+> - [] 4. Implement user disconnect handler (WebSocket event)
+> - [] 5. Broadcast online status to room on connect/disconnect
+> - [] 6. Handle reconnection scenarios
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0021
+> **Room entity and service** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create Room entity and business logic for creating, joining, leaving, and listing rooms.
+> 
+> # DOD (definition of done):
+> - Room entity with JPA mapping exists
+> - RoomService handles CRUD operations
+> - Create room endpoint works
+> - Join/leave room endpoints work
+> - List rooms endpoint returns all available rooms
+> 
+> # TODO:
+> - [] 1. Create Room entity (id, name, createdBy, createdAt)
+> - [] 2. Create RoomRepository (JPA interface)
+> - [] 3. Create RoomService with business logic
+> - [] 4. Implement createRoom(userId, roomName)
+> - [] 5. Implement joinRoom(roomId, userId)
+> - [] 6. Implement leaveRoom(roomId, userId)
+> - [] 7. Implement listRooms() - return all rooms
+> - [] 8. Add validation (room name not empty, user exists)
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0022
+> **Peer discovery endpoint** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create an endpoint that returns list of online peers in a room so clients know who to initiate P2P connections with.
+> 
+> # DOD (definition of done):
+> - GET /api/rooms/{roomId}/peers endpoint exists
+> - Returns list of online peers with user metadata
+> - Response includes userId, username, isOnline
+> - Works with session tracking from Phase 2 card 1
+> 
+> # TODO:
+> - [] 1. Create RoomController endpoint GET /api/rooms/{roomId}/peers
+> - [] 2. Query SessionManager for online users in room
+> - [] 3. Build peer response (userId, username, online status)
+> - [] 4. Add authentication check (JWT)
+> - [] 5. Handle room not found error
+> - [] 6. Test endpoint returns correct peer list
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0023
+> **Signaling message handler** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement WebSocket message handling for relaying SDP offers/answers and ICE candidates between peers.
+> 
+> # DOD (definition of done):
+> - SDP offer/answer messages relay correctly between peers
+> - ICE candidates forward from sender to receiver
+> - Message format is consistent: { type, from, to, data }
+> - No messages lost during relay
+> - Only intended recipient receives message
+> 
+> # TODO:
+> - [] 1. Create SignalingMessage class (type, from, to, data)
+> - [] 2. Create @MessageMapping handler for signaling messages
+> - [] 3. Implement offer relay logic (send to specific peer)
+> - [] 4. Implement answer relay logic
+> - [] 5. Implement ICE candidate relay logic
+> - [] 6. Add validation (sender authorized, receiver in room)
+> - [] 7. Add error handling (peer not found, connection lost)
+> - [] 8. Log signaling traffic for debugging
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0024
+> **Integration tests - WebSocket flow** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to write integration tests that verify WebSocket connection, room join, peer discovery, and message relay work end-to-end.
+> 
+> # DOD (definition of done):
+> - Test user connects to WebSocket
+> - Test user joins room and broadcasts online status
+> - Test peer discovery returns correct list
+> - Test SDP offer/answer relay between two peers
+> - Test ICE candidate forwarding
+> - All tests pass
+> 
+> # TODO:
+> - [] 1. Set up WebSocket test client (TestRestTemplate or WebSocketStompClient)
+> - [] 2. Write test for WebSocket connection
+> - [] 3. Write test for room join and online broadcast
+> - [] 4. Write test for peer discovery endpoint
+> - [] 5. Write test for offer/answer relay
+> - [] 6. Write test for ICE candidate relay
+> - [] 7. Write test for peer disconnect and offline broadcast
+> - [] 8. Add error case tests (invalid room, unauthorized access)
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0025
+> **WebSocket client setup** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to set up WebSocket client library (SockJS + STOMP) and establish persistent connection to signaling server with proper reconnection logic.
+> 
+> # DOD (definition of done):
+> - WebSocket client connects to server on app load
+> - Connection persists across page navigation
+> - Auto-reconnect on disconnect
+> - JWT token passed in WebSocket handshake
+> - Connection state tracked in React context
+> 
+> # TODO:
+> - [] 1. Install SockJS and STOMP client libraries
+> - [] 2. Create WebSocketService with connect() method
+> - [] 3. Implement JWT token passing in handshake
+> - [] 4. Implement auto-reconnect with exponential backoff
+> - [] 5. Create WebSocket context for React state management
+> - [] 6. Add connection status listener
+> - [] 7. Handle connection errors gracefully
+> - [] 8. Test connection in browser DevTools
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0026
+> **Room list page UI** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to build a page that displays all available rooms with online peer count and allows users to select a room to join.
+> 
+> # DOD (definition of done):
+> - Room list page displays all rooms from backend
+> - Each room shows name, creator, peer count
+> - Users can click room to join
+> - Real-time updates when peers join/leave room
+> - Empty state shown if no rooms exist
+> 
+> # TODO:
+> - [] 1. Fetch rooms list from GET /api/rooms
+> - [] 2. Create RoomList component
+> - [] 3. Create RoomCard component (name, creator, peer count)
+> - [] 4. Implement onClick handler to join room
+> - [] 5. Subscribe to WebSocket for online status updates
+> - [] 6. Update peer count in real-time
+> - [] 7. Show loading state while fetching
+> - [] 8. Show error message if fetch fails
+> - [] 9. Add empty state UI
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0027
+> **Create/join room UI** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to build forms for creating new rooms and joining existing rooms with proper validation and feedback.
+> 
+> # DOD (definition of done):
+> - Create room form accepts room name
+> - Join room form allows entering room ID or selecting from list
+> - Form validation prevents empty/invalid input
+> - Success feedback after creating/joining
+> - Error messages shown for failures
+> - User redirected to room chat after success
+> 
+> # TODO:
+> - [] 1. Create CreateRoomForm component
+> - [] 2. Add room name input with validation
+> - [] 3. Implement create room button (POST /api/rooms)
+> - [] 4. Create JoinRoomForm component
+> - [] 5. Add room selection/input field
+> - [] 6. Implement join room button (POST /api/rooms/{id}/join)
+> - [] 7. Add success toast/message
+> - [] 8. Add error handling and display
+> - [] 9. Clear form after successful submission
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0028
+> **Online users display** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to display real-time list of online peers in current room with visual indicators and update when peers connect/disconnect.
+> 
+> # DOD (definition of done):
+> - Online peers list shows in room UI
+> - Each peer shows username and online status indicator
+> - List updates in real-time when peers join/leave
+> - Current user highlighted in list
+> - No duplicate entries
+> 
+> # TODO:
+> - [] 1. Create OnlineUsersList component
+> - [] 2. Subscribe to WebSocket online status messages
+> - [] 3. Store peer list in React state
+> - [] 4. Display each peer with username and status dot
+> - [] 5. Highlight current user
+> - [] 6. Update peer list on join event
+> - [] 7. Remove peer on disconnect event
+> - [] 8. Handle empty peer list (show "No peers online")
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0029
+> **Signaling message handler (frontend)** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to listen for and handle incoming SDP offers/answers and ICE candidates from peers, triggering WebRTC connection initiation.
+> 
+> # DOD (definition of done):
+> - Frontend receives SDP offer from peer
+> - Frontend receives SDP answer from peer
+> - Frontend receives and processes ICE candidates
+> - Received messages trigger WebRTC connection setup
+> - Errors logged for debugging
+> 
+> # TODO:
+> - [] 1. Create SignalingHandler service
+> - [] 2. Subscribe to WebSocket offer messages
+> - [] 3. Store received offers in React state
+> - [] 4. Subscribe to WebSocket answer messages
+> - [] 5. Subscribe to WebSocket ICE candidate messages
+> - [] 6. Implement message validation
+> - [] 7. Add error handling (malformed messages, unknown peers)
+> - [] 8. Log received signaling messages
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0030
+> **Connection state UI** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to display connection state (connecting, connected, disconnected, error) to user with visual indicators and status messages.
+> 
+> # DOD (definition of done):
+> - Connection state displays in UI (connecting, connected, error)
+> - Visual indicators (spinner, checkmark, warning icon)
+> - Status message explains current state
+> - State updates in real-time
+> - Error messages are helpful and actionable
+> 
+> # TODO:
+> - [] 1. Create ConnectionStatus component
+> - [] 2. Add CSS styles for each state (colors, icons, animations)
+> - [] 3. Subscribe to WebSocket connection state
+> - [] 4. Show spinner during "connecting"
+> - [] 5. Show checkmark for "connected"
+> - [] 6. Show error icon and message for "error"
+> - [] 7. Display in header or sidebar
+> - [] 8. Test all state transitions
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0031
+> **Unit tests - WebSocket service** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to write unit tests for WebSocket service, signaling handler, and connection management with mocked WebSocket to verify functionality.
+> 
+> # DOD (definition of done):
+> - WebSocket service connection tested
+> - Message subscription tested
+> - Message sending tested
+> - Reconnection logic tested
+> - Error handling tested
+> - All tests pass with 80%+ coverage
+> 
+> # TODO:
+> - [] 1. Set up test environment (Jest, testing-library)
+> - [] 2. Create mock WebSocket client
+> - [] 3. Test connect() establishes connection
+> - [] 4. Test subscribe() listens for messages
+> - [] 5. Test send() sends messages correctly
+> - [] 6. Test reconnect logic with exponential backoff
+> - [] 7. Test error handling and disconnect
+> - [] 8. Test JWT token passed in handshake
+> - [] 9. Write tests for signaling handler
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0032
+> **STUN/TURN server configuration** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to configure STUN/TURN servers for NAT traversal and include ICE server list in WebSocket signaling response so clients can establish P2P connections.
+> 
+> # DOD (definition of done):
+> - Google STUN server configured (free, public)
+> - Coturn self-hosted TURN server setup (or alternative)
+> - ICE server list returned in signaling response
+> - Clients receive iceServers in WebSocket message
+> - P2P connections work through NAT/firewall
+> 
+> # TODO:
+> - [] 1. Research STUN vs TURN differences
+> - [] 2. Add Google STUN server (stun.l.google.com:19302)
+> - [] 3. Research and choose TURN solution (Coturn, Firebase, Twilio)
+> - [] 4. Install and configure Coturn on server (if self-hosted)
+> - [] 5. Create IceServer configuration class
+> - [] 6. Add iceServers list to signaling response
+> - [] 7. Return iceServers when client joins room
+> - [] 8. Test STUN/TURN connectivity
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0033
+> **SDP offer/answer relay refinement** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to refine and optimize the SDP offer/answer relay logic from Phase 2, ensuring offers and answers are correctly routed between peers without loss.
+> 
+> # DOD (definition of done):
+> - SDP offer relayed to intended peer only
+> - SDP answer relayed back to offer sender
+> - No offers/answers lost or duplicated
+> - Validation prevents malformed SDP
+> - Connection established after answer received
+> 
+> # TODO:
+> - [] 1. Review Phase 2 signaling handler code
+> - [] 2. Add SDP validation (check format, required fields)
+> - [] 3. Ensure offer routed to single peer (not broadcast)
+> - [] 4. Ensure answer routed back to offer sender
+> - [] 5. Add logging for offer/answer flow
+> - [] 6. Test offer/answer sequence with two clients
+> - [] 7. Handle case where peer disconnects mid-handshake
+> - [] 8. Add timeout for incomplete handshake
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0034
+> **ICE candidate relay** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement WebSocket message handling for relaying ICE candidates between peers to establish optimal connection paths through NAT/firewalls.
+> 
+> # DOD (definition of done):
+> - ICE candidates relayed from sender to receiver
+> - Candidates arrive in correct order
+> - No candidates lost or duplicated
+> - Validation prevents malformed candidates
+> - Connection uses best available path
+> 
+> # TODO:
+> - [] 1. Create ICE candidate message format validation
+> - [] 2. Implement @MessageMapping for ICE candidates
+> - [] 3. Route candidate to specific peer (not broadcast)
+> - [] 4. Handle late-arriving candidates (after answer sent)
+> - [] 5. Add logging for candidate relay
+> - [] 6. Implement candidate queuing if peer not ready
+> - [] 7. Test candidate relay with STUN/TURN
+> - [] 8. Handle candidate gathering complete signal
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0035
+> **Connection monitoring (optional)** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to optionally track P2P connection state and log connection failures for debugging and analytics purposes.
+> 
+> # DOD (definition of done):
+> - P2P connection state tracked on backend
+> - Connection failures logged with details
+> - Analytics data collected (connection attempts, success rate)
+> - Logs useful for debugging NAT issues
+> 
+> # TODO:
+> - [] 1. Create connection monitoring service
+> - [] 2. Listen for connection state changes via WebSocket
+> - [] 3. Log successful P2P connections
+> - [] 4. Log connection failures and reasons
+> - [] 5. Track connection attempt count
+> - [] 6. Calculate success/failure rate per peer
+> - [] 7. Store metrics for analytics
+> - [] 8. Create dashboard or log viewer (optional)
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0036
+> **Integration tests - P2P signaling** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to write integration tests that verify SDP offer/answer and ICE candidate relay works correctly between two simulated WebRTC clients.
+> 
+> # DOD (definition of done):
+> - Test offer generation and relay
+> - Test answer generation and relay
+> - Test ICE candidate collection and relay
+> - Test complete connection handshake
+> - All tests pass and are repeatable
+> 
+> # TODO:
+> - [] 1. Set up WebSocket test clients (two instances)
+> - [] 2. Write test for peer A sending offer to peer B
+> - [] 3. Write test for peer B receiving offer
+> - [] 4. Write test for peer B sending answer
+> - [] 5. Write test for peer A receiving answer
+> - [] 6. Write test for ICE candidate relay both directions
+> - [] 7. Write test for complete handshake flow
+> - [] 8. Add error case tests (invalid SDP, malformed ICE)
+> - [] 9. Test connection timeout scenarios
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0037
+> **WebRTC peer connection setup** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to initialize RTCPeerConnection with STUN/TURN servers, handle connection state changes, and manage peer lifecycle for each connected peer.
+> 
+> # DOD (definition of done):
+> - RTCPeerConnection created with ICE servers
+> - Connection state changes logged (connecting, connected, failed, disconnected)
+> - Peer removed when connection closes
+> - Each peer has unique connection instance
+> - No memory leaks from unclosed connections
+> 
+> # TODO:
+> - [] 1. Create WebRTCService class
+> - [] 2. Implement createPeerConnection(peerId, iceServers)
+> - [] 3. Add onconnectionstatechange listener
+> - [] 4. Add oniceconnectionstatechange listener
+> - [] 5. Log state transitions for debugging
+> - [] 6. Implement closePeerConnection(peerId)
+> - [] 7. Handle connection failure scenarios
+> - [] 8. Store peer connections in Map by peerId
+> - [] 9. Clean up resources on peer disconnect
+> - [] 10. Consider using simple-peer library to reduce complexity
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0038
+> **Data channel creation and handling** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create data channels for peer-to-peer messaging and implement handlers for data channel events (open, message, error, close).
+> 
+> # DOD (definition of done):
+> - Data channel created by offer initiator
+> - Data channel received by answer responder
+> - onopen handler called when channel ready
+> - onmessage handler receives incoming messages
+> - onerror handler logs errors
+> - onclose handler cleans up resources
+> 
+> # TODO:
+> - [] 1. Implement createDataChannel(peerId) method
+> - [] 2. Create data channel with reliable settings
+> - [] 3. Implement ondatachannel listener (for receiver)
+> - [] 4. Add onopen event handler
+> - [] 5. Add onmessage event handler
+> - [] 6. Add onerror event handler
+> - [] 7. Add onclose event handler
+> - [] 8. Store data channels by peerId
+> - [] 9. Test data channel opens successfully
+> - [] 10. Handle bufferedAmount to prevent overflow
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0039
+> **Message sending and receiving via data channel** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement sending and receiving messages through data channels with proper serialization, deserialization, and error handling.
+> 
+> # DOD (definition of done):
+> - Messages sent via data channel to peer
+> - Incoming messages parsed and displayed
+> - Message format consistent (JSON)
+> - Error handling for send failures
+> - Unsent messages buffered if channel not ready
+> 
+> # TODO:
+> - [] 1. Create message serialization format (JSON with metadata)
+> - [] 2. Implement sendMessage(peerId, messageText) method
+> - [] 3. Check data channel readyState before sending
+> - [] 4. Handle bufferedAmount to queue messages
+> - [] 5. Implement message parsing on receive
+> - [] 6. Validate received message format
+> - [] 7. Extract sender, receiver, text, timestamp
+> - [] 8. Handle send errors gracefully
+> - [] 9. Log message delivery for debugging
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0040
+> **Chat UI (message list, input, send button)** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to build the chat UI component that displays messages in a list, accepts user input, and sends messages via data channel.
+> 
+> # DOD (definition of done):
+> - Messages display in chronological order
+> - Each message shows sender name, text, and timestamp
+> - Input field accepts message text
+> - Send button sends message to peer
+> - UI scrolls to latest message
+> - Empty chat shows placeholder
+> 
+> # TODO:
+> - [] 1. Create ChatWindow component
+> - [] 2. Create MessageList component (renders message array)
+> - [] 3. Create Message component (sender, text, time)
+> - [] 4. Create MessageInput component (text input + send button)
+> - [] 5. Implement onSend handler (call sendMessage service)
+> - [] 6. Add scroll-to-bottom on new message
+> - [] 7. Add loading state for unsent messages
+> - [] 8. Show error message if send fails
+> - [] 9. Clear input after send
+> - [] 10. Add emoji/formatting (optional)
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0041
+> **localStorage persistence** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to save chat messages to localStorage with peer/room context key and load them on page reload or reconnect.
+> 
+> # DOD (definition of done):
+> - Messages saved to localStorage with key chat_{peerId}_{roomId}
+> - Messages loaded on component mount
+> - Message history persists across page reloads
+> - localStorage quota respected (don't exceed limit)
+> - Old messages cleaned up periodically
+> 
+> # TODO:
+> - [] 1. Create LocalStorageService for message persistence
+> - [] 2. Implement saveMessage(peerId, roomId, message)
+> - [] 3. Serialize message to JSON format
+> - [] 4. Implement loadMessages(peerId, roomId, limit)
+> - [] 5. Deserialize messages from JSON
+> - [] 6. Load messages on ChatWindow mount
+> - [] 7. Check localStorage quota before saving
+> - [] 8. Implement clearMessages(peerId, roomId)
+> - [] 9. Add expiration time for old messages (optional)
+> - [] 10. Test persistence across page reloads
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0042
+> **Connection error handling** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to handle WebRTC connection failures gracefully and display user-friendly error messages for common issues (NAT problems, firewall, connection timeout).
+> 
+> # DOD (definition of done):
+> - Connection errors caught and logged
+> - User-friendly error messages displayed
+> - Suggestions provided for resolution
+> - Retry option available
+> - Fallback to server relay documented
+> 
+> # TODO:
+> - [] 1. Create error message mapper for WebRTC error codes
+> - [] 2. Implement error handler in peer connection setup
+> - [] 3. Detect NAT/firewall issues from error type
+> - [] 4. Display error modal with message and suggestions
+> - [] 5. Add "Retry Connection" button
+> - [] 6. Log error details for debugging
+> - [] 7. Show connection status updates (connecting → failed → retrying)
+> - [] 8. Handle timeout scenarios (no answer after X seconds)
+> - [] 9. Document fallback to server relay for Phase 5
+> - [] 10. Test error scenarios (disconnect WiFi, block STUN)
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0043
+> **Unit and integration tests - WebRTC** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to write unit and integration tests for WebRTC peer connection, data channel, and message flow with mocked WebRTC APIs.
+> 
+> # DOD (definition of done):
+> - Peer connection creation tested
+> - Data channel creation tested
+> - Message sending and receiving tested
+> - localStorage persistence tested
+> - Connection state changes tested
+> - Error scenarios tested
+> - Test coverage 75%+
+> 
+> # TODO:
+> - [] 1. Set up WebRTC mock (jest-webrtc or manual mocks)
+> - [] 2. Write test for createPeerConnection()
+> - [] 3. Write test for data channel creation
+> - [] 4. Write test for sendMessage() through data channel
+> - [] 5. Write test for receiving message
+> - [] 6. Write test for message display in UI
+> - [] 7. Write test for localStorage save
+> - [] 8. Write test for localStorage load
+> - [] 9. Write test for connection state transitions
+> - [] 10. Write error handling tests
+> - [] 11. Test message buffer overflow handling
+> - [] 12. Calculate and verify test coverage
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0044
+> **Key entity & schema design** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create the database schema and JPA entity for storing user cryptographic keys with fingerprint tracking and key type management.
+> 
+> # DOD (definition of done):
+> - Key entity created with all required fields (id, userId, publicKey, keyFingerprint, createdAt, keyType)
+> - Database migration/schema applied
+> - Key repository interface created
+> - Unit tests for Key entity validation pass
+> 
+> # TODO:
+> - [] Design Key entity fields (id, userId, publicKey, keyFingerprint, keyType: ENUM(auto/manual), createdAt, updatedAt)
+> - [] Create JPA entity class with proper annotations
+> - [] Add database migration script
+> - [] Create KeyRepository interface extending JpaRepository
+> - [] Add unique constraint on (userId, publicKey) to prevent duplicates
+> - [] Add index on userId for fast lookup
+> - [] Write unit tests for entity validation
+> - [] Document key format expectations (PEM vs raw bytes)
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0045
+> **Key generation service & keypair creation** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement a secure keypair generation service that creates Ed25519 keypairs and calculates fingerprints for users.
+> 
+> # DOD (definition of done):
+> - KeyGenerationService implemented with generateKeyPair() method
+> - Ed25519 keypair generation working (using Bouncy Castle or NaCl4j)
+> - Fingerprint calculation algorithm implemented (SHA256 hash of public key)
+> - Service returns public key only to caller
+> - Private key never exposed in logs or responses
+> - Unit tests for key generation and fingerprint calculation pass
+> 
+> # TODO:
+> - [] Add Bouncy Castle or NaCl4j dependency to pom.xml
+> - [] Create KeyGenerationService class
+> - [] Implement generateKeyPair() method using Ed25519
+> - [] Implement calculateFingerprint(publicKey) method (SHA256 hash, first 16 chars)
+> - [] Add validation for generated keys
+> - [] Ensure private key is NOT serialized or logged
+> - [] Write unit tests for key generation
+> - [] Write unit tests for fingerprint calculation (deterministic output)
+> - [] Add integration test with Key entity persistence
+> - [] Document key format (PEM or raw bytes decision)
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0046
+> **POST /keys/generate endpoint - create keypair on first login** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create a REST endpoint that generates and stores a user's keypair on first login, returning only the public key.
+> 
+> # DOD (definition of done):
+> - POST /keys/generate endpoint created and secured with JWT
+> - Endpoint checks if user already has a key, prevents duplicate generation
+> - Keypair generated via KeyGenerationService
+> - Public key returned to client as PEM format
+> - Key stored in database with fingerprint
+> - Response includes public key and fingerprint
+> - Error handling for existing keys
+> - Unit & integration tests pass
+> 
+> # TODO:
+> - [] Create KeyController with @PostMapping("/keys/generate")
+> - [] Add JWT authentication check via @CurrentUser or SecurityContext
+> - [] Query database to check if user already has a key
+> - [] If exists: return 409 Conflict with message "Key already exists"
+> - [] If not exists: call KeyGenerationService.generateKeyPair()
+> - [] Save Key entity to database
+> - [] Return response: { publicKey: "...", fingerprint: "...", keyType: "auto", createdAt: "..." }
+> - [] Add error handling for service failures
+> - [] Write unit test with mocked KeyGenerationService
+> - [] Write integration test with real database
+> - [] Test duplicate generation prevention
+> - [] Test response format and validation
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0047
+> **GET /keys/{userId} endpoint - public key lookup** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create a public endpoint that allows any authenticated user to retrieve another user's public key and fingerprint for encryption purposes.
+> 
+> # DOD (definition of done):
+> - GET /keys/{userId} endpoint created and accessible to authenticated users
+> - Returns public key and fingerprint only (no private key)
+> - Handles user not found (404)
+> - Handles user has no key yet (404)
+> - Response format matches POST /keys/generate
+> - Unit & integration tests pass
+> 
+> # TODO:
+> - [] Create @GetMapping("/keys/{userId}") in KeyController
+> - [] Add JWT authentication check
+> - [] Query database for Key by userId
+> - [] If not found: return 404 with message "User or key not found"
+> - [] Return response: { publicKey: "...", fingerprint: "...", keyType: "auto", createdAt: "..." }
+> - [] Add error handling
+> - [] Write unit test (mocked repository)
+> - [] Write integration test with real database
+> - [] Test not found scenario
+> - [] Test fingerprint consistency (same key always returns same fingerprint)
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0048
+> **Key exchange endpoint - trust on first use (TOFU)** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement a key exchange mechanism that allows users to trust a peer's public key on first use with TOFU validation.
+> 
+> # DOD (definition of done):
+> - POST /keys/trust endpoint created
+> - Validates peer's public key format before storing
+> - Stores trusted peer key with trust timestamp
+> - Returns confirmation with fingerprint
+> - Prevents duplicate trusts of same peer key
+> - Unit & integration tests pass
+> 
+> # TODO:
+> - [] Create @PostMapping("/keys/trust") endpoint in KeyController
+> - [] Accept request body: { peerId: "...", publicKey: "..." }
+> - [] Validate public key format (PEM validation)
+> - [] Query if this peer's key is already trusted by current user
+> - [] If already trusted: return 409 Conflict
+> - [] Calculate fingerprint of peer's public key
+> - [] Store trusted key relationship (create TrustedKey entity if needed)
+> - [] Return response: { peerId: "...", fingerprint: "...", trustedAt: "...", status: "trusted" }
+> - [] Add proper error handling (invalid key format, peer not found)
+> - [] Write unit tests with mocked repository
+> - [] Write integration tests
+> - [] Test duplicate trust prevention
+> - [] Test invalid key format rejection
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0049
+> **Encrypted key storage at rest** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement encryption at rest for private keys stored in the database, ensuring keys are never stored in plaintext.
+> 
+> # DOD (definition of done):
+> - Private keys encrypted at rest using AES-256-GCM
+> - Master encryption key securely managed (config or key vault)
+> - Decryption works transparently for authentication flows
+> - Encrypted keys cannot be read from raw database dumps
+> - Unit & integration tests for encryption/decryption pass
+> - Documentation of key management strategy
+> 
+> # TODO:
+> - [] Design encryption strategy (AES-256-GCM recommended)
+> - [] Create EncryptionService with encrypt(plaintext, masterKey) and decrypt(ciphertext, masterKey)
+> - [] Configure master key storage (environment variable or key vault - decide)
+> - [] Add encrypted_private_key and encryption_iv columns to Key entity
+> - [] Implement @PrePersist hook in Key entity to encrypt private key before save
+> - [] Implement custom deserializer to decrypt private key on load
+> - [] Update KeyGenerationService to handle encrypted storage
+> - [] Ensure private key is only decrypted when needed (lazy loading)
+> - [] Add audit logging for decryption events
+> - [] Write unit tests for encryption/decryption
+> - [] Write integration test: generate key → store encrypted → retrieve and verify
+> - [] Test with database dump to confirm plaintext key is not visible
+> - [] Document master key rotation procedure (if applicable)
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0050
+> **Key rotation & revocation mechanism** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement key rotation and revocation features to allow users to invalidate old keys and generate new ones for enhanced security.
+> 
+> # DOD (definition of done):
+> - POST /keys/rotate endpoint allows users to generate new keypair and deprecate old
+> - Old key marked as revoked with timestamp
+> - New key becomes active
+> - Clients are notified of key rotation via WebSocket
+> - Unit & integration tests pass
+> 
+> # TODO:
+> - [] Create KeyStatus enum: ACTIVE, REVOKED, EXPIRED
+> - [] Add status and revokedAt fields to Key entity
+> - [] Create @PostMapping("/keys/rotate") endpoint
+> - [] Validate current user has active key
+> - [] Generate new keypair via KeyGenerationService
+> - [] Mark old key as REVOKED with timestamp
+> - [] Save new key as ACTIVE
+> - [] Broadcast WebSocket message to all peers: { type: "key_rotated", userId: "...", newFingerprint: "..." }
+> - [] Send notification email to user (optional)
+> - [] Return response: { oldFingerprint: "...", newFingerprint: "...", rotatedAt: "..." }
+> - [] Update GET /keys/{userId} to return only ACTIVE keys
+> - [] Add period check for EXPIRED status (optional)
+> - [] Write unit tests for rotation logic
+> - [] Write integration tests
+> - [] Test that old key is no longer used for new connections
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0051
+> **Integration tests - key exchange flow (backend)** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to write comprehensive integration tests covering the complete key exchange flow from generation to trust to usage.
+> 
+> # DOD (definition of done):
+> - Test suite covers all key generation endpoints
+> - Test suite covers key exchange (TOFU) flow
+> - Test suite covers key rotation
+> - Tests use real database and Spring test context
+> - All tests pass with 80%+ code coverage on key-related code
+> - Test cases documented for future reference
+> 
+> # TODO:
+> - [] Create KeyControllerIntegrationTest class
+> - [] Test POST /keys/generate for new user (happy path)
+> - [] Test POST /keys/generate for user with existing key (409 conflict)
+> - [] Test GET /keys/{userId} for existing key
+> - [] Test GET /keys/{userId} for non-existent user (404)
+> - [] Test POST /keys/trust happy path (trust peer key)
+> - [] Test POST /keys/trust with invalid key format (400 bad request)
+> - [] Test POST /keys/trust duplicate trust (409 conflict)
+> - [] Test two users exchanging keys and verifying fingerprints match
+> - [] Test POST /keys/rotate flow
+> - [] Test old key marked as revoked after rotation
+> - [] Test new key used for encryption after rotation
+> - [] Test E2E: User A generates key → User B fetches A's key → B trusts A's key → fingerprints match
+> - [] Add performance test: key generation under load (100+ requests)
+> - [] Write test documentation (test scenarios, expected outcomes)
+> - [] Verify all tests run in CI/CD pipeline
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0052
+> **Crypto library integration & evaluation (Frontend)** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to evaluate and integrate a JavaScript crypto library (libsodium.js or TweetNaCl.js) into the React frontend, with bundle size analysis.
+> 
+> # DOD (definition of done):
+> - Crypto library selected and integrated into React project
+> - Library supports Ed25519 keypair generation
+> - Library supports message encryption/decryption
+> - Bundle size impact analyzed (<100KB for crypto code)
+> - Crypto service wrapper created for consistent API
+> - Unit tests for crypto operations pass
+> - Works across browsers (Chrome, Firefox, Safari)
+> 
+> # TODO:
+> - [] Research & compare: libsodium.js vs TweetNaCl.js vs sodium-plus
+> - [] Evaluate bundle size for each option (run webpack-bundle-analyzer)
+> - [] Choose winner based on size + feature completeness
+> - [] Install chosen library: npm install libsodium.js (or equivalent)
+> - [] Create CryptoService class in frontend
+> - [] Implement generateKeyPair() method
+> - [] Implement encrypt(plaintext, recipientPublicKey) method
+> - [] Implement decrypt(ciphertext, recipientPublicKey) method
+> - [] Implement getFingerprint(publicKey) method
+> - [] Add proper error handling (invalid keys, encryption failures)
+> - [] Write unit tests for all crypto operations
+> - [] Test encryption/decryption round-trip
+> - [] Test fingerprint determinism (same input = same output)
+> - [] Cross-browser test (Chrome, Firefox, Safari)
+> - [] Document library choice and reasoning
+> - [] Record bundle size impact in project README
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0053
+> **Key generation on first login (Frontend)** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to prompt users to generate their cryptographic keypair on first login and store the public key on the backend.
+> 
+> # DOD (definition of done):
+> - First-login detection implemented in Auth flow
+> - Key generation modal displayed to new users
+> - User sees option to auto-generate or manual import
+> - Public key sent to backend via POST /keys/generate
+> - Private key stored securely in browser
+> - User can dismiss/confirm key generation
+> - Unit & integration tests pass
+> 
+> # TODO:
+> - [] Detect first login: check if user has public key by calling GET /auth/me and checking keyGenerated flag
+> - [] Create KeyGenerationModal component
+> - [] Display prompt: "Generate your encryption keypair?" with two buttons: "Auto-Generate" and "Import Existing"
+> - [] Implement "Auto-Generate" flow: call CryptoService.generateKeyPair()
+> - [] Display generated public key and fingerprint for user review
+> - [] Show warning: "Save your private key safely. This is your only copy."
+> - [] Add button to copy public key to clipboard
+> - [] Call POST /keys/generate with public key
+> - [] On success: store private key in localStorage (encrypted with password or device key)
+> - [] Mark user as keyGenerated in local state
+> - [] Close modal and proceed to dashboard
+> - [] Implement "Import Existing" flow: prompt for private key paste, validate, save locally
+> - [] Add error handling (import failures, network errors)
+> - [] Write unit tests for key generation flow
+> - [] Write integration test: login → generate key → verify backend storage
+> - [] Test modal dismissal scenarios
+> - [] Test localStorage persistence of private key
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0054
+> **Public key display & fingerprint UI** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to create UI components that display the user's public key and fingerprint for sharing and verification purposes.
+> 
+> # DOD (definition of done):
+> -
+> 
+> # TODO:
+> - [] 1.
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0004
+> **Spring Boot Project Setup** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
+> <details open>
+>     <summary>Details</summary>
+> 
+> The goal of this card is to initialize the Spring Boot project with all necessary dependencies and folder structure for the minichat P2P system.
+> 
+> # DOD (definition of done):
+> - Spring Boot project created with Maven
+> - All required dependencies added (Spring Web, WebSocket, Security, JPA, MySQL)
+> - Project structure organized (controllers, services, models, config folders)
+> - Application runs without errors
+> - Database connection configured (MySQL)
+> 
+> # TODO:
+> - [] 1. Create Spring Boot Maven project
+> - [] 2. Add Spring Web, Security, JPA, WebSocket dependencies
+> - [] 3. Configure application.properties for database
+> - [] 4. Create base folder structure
+> - [] 5. Test project startup
+> 
+> # Reports:
+> *
+> </details>
