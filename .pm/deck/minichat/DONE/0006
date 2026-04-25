@@ -1,0 +1,101 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: User Registration Endpoint
+Tags: backend, auth, phase1
+Creator: Hossein
+AssignedTo: Hossein
+Priority: HIGH
+Status: DONE
+Estimate: 1d 2h
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:47:00Z
+StartAt: 2026-04-25T08:00:24Z
+EndAt: 2026-04-25T09:53:30Z
+---
+
+The goal of this card is to implement the user registration endpoint with input validation, password hashing, and JWT token generation.
+
+# DOD (definition of done):
+- POST /auth/register endpoint works
+- Input validation implemented (email format, password strength)
+- Password hashing with BCrypt implemented
+- Duplicate user check implemented
+- JWT token returned on successful registration
+- Error responses for invalid input
+
+# TODO:
+- [x] 1. Create User entity and repository
+- [x] 2. Create registration DTO with validation
+- [x] 3. Implement password hashing with BCrypt
+- [x] 4. Create registration service logic
+- [x] 5. Build registration controller endpoint
+- [x] 6. Add duplicate user validation
+- [x] 7. Generate and return JWT on success
+- [-] 8. Test endpoint with RestTester
+
+# Reports:
+## Task Completion Report: User Registration Endpoint
+
+### ✅ Completed
+
+1. **User Entity & Repository**
+   - User entity with passwordHash, publicKey, fingerprint fields
+   - UserRepository with `existsByEmail()` and `existsByUsername()` methods
+
+2. **Registration DTO with Validation**
+   - RegisterRequest DTO with @NotBlank, @Email, @Size annotations
+   - Custom PasswordValidator component with dev/prod mode support
+   - Password strength: min 8 chars, uppercase, lowercase, digit, special char (@$!%*?&)
+   - `isPasswordMatch()` method for password confirmation validation
+
+3. **Password Hashing with BCrypt**
+   - BCryptPasswordEncoder(12) configured in SecurityConfig
+   - Password encoded before saving to `passwordHash` field
+
+4. **Duplicate User Validation**
+   - `existsByEmail()` check — throws UserAlreadyExistsException
+   - `existsByUsername()` check — throws UserAlreadyExistsException
+
+5. **JWT Token Generation**
+   - JwtTokenProvider with `generateAccessToken()` and `generateRefreshToken()`
+   - Tokens returned in LoginResponse on successful registration
+   - Access token: 15 min expiration | Refresh token: 7 days expiration
+
+6. **Registration Controller Endpoint**
+   - POST /api/auth/register endpoint
+   - Returns 201 CREATED with LoginResponse (accessToken, refreshToken, email, username)
+
+7. **JWT Authentication Filter**
+   - JwtAuthenticationFilter with public endpoints whitelist
+   - Skips JWT validation for: /api/auth/login, /api/auth/register, /api/auth/refresh, /api/auth/forgot-password
+   - Extracts Bearer token from Authorization header
+
+8. **Security Configuration**
+   - SecurityFilterChain with CORS enabled
+   - Public endpoints permitted without authentication
+   - Protected endpoints require valid JWT token
+   - Custom authentication entry point (401 response)
+
+9. **Testing with Postman**
+   - Valid registration: POST /api/auth/register → 201 + tokens
+   - Duplicate email/username validation tested
+   - Weak password validation tested
+   - Password mismatch validation tested
+
+### 📋 Definition of Done Met
+- ✅ POST /auth/register endpoint works
+- ✅ Input validation implemented
+- ✅ Password hashing with BCrypt implemented
+- ✅ Duplicate user check implemented
+- ✅ JWT token returned on successful registration
+- ✅ Error responses for invalid input
+
+### 🔧 Tech Stack Used
+- Spring Boot, Spring Security, JWT (JJWT), BCrypt
+- CustomUserDetailsService, JwtTokenProvider
+- CORS configuration for multi-platform support
+

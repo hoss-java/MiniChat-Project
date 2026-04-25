@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniChat</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="theme-toggle-container">
+        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle between light and dark theme">
+            <span class="toggle-icon">🌙</span>
+        </button>
+    </div>
+
+    <div class="container">
+        <h1>MiniChat API Proxy</h1>
+        
+        <div class="form-group">
+            <label for="method">HTTP Method:</label>
+            <select id="method">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="endpoint">Endpoint:</label>
+            <input type="text" id="endpoint" placeholder="e.g., register, users, orders" value="products">
+        </div>
+
+        <div class="form-group">
+            <label for="body">Request Body (JSON):</label>
+            <textarea id="body" placeholder='{"name": "Product", "price": 100}'></textarea>
+        </div>
+
+        <button id="send-btn" class="send-button">Send Request</button>
+
+        <div id="response" class="response">
+            <h3>Response:</h3>
+            <pre id="responseBody"></pre>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

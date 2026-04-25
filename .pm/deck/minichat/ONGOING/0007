@@ -6,14 +6,14 @@
 Title: Login Endpoint with JWT
 Tags: backend, auth, phase1
 Creator: Hossein
-AssignedTo:
+AssignedTo: Hossein
 Priority: HIGH
-Status:
+Status: START
 Estimate: 2d
 DueDate:
 # Time tracker settings
 CreateAt: 2026-04-24T03:47:42Z
-StartAt:
+StartAt: 2026-04-25T09:53:39Z
 EndAt:
 ---
 

@@ -1,6 +1,7 @@
 package com.minichat.service;
 
 import com.minichat.dto.RegisterRequest;
+import com.minichat.dto.RegisterResponse;
 import com.minichat.dto.LoginRequest;
 import com.minichat.dto.LoginResponse;
 import com.minichat.dto.UserProfileDto;
@@ -12,6 +13,11 @@ import com.minichat.repository.UserRepository;
 import com.minichat.repository.SessionRepository;
 import com.minichat.exception.UserAlreadyExistsException;
 import com.minichat.exception.UnauthorizedException;
+import com.minichat.exception.InvalidPasswordException;
+import com.minichat.exception.PasswordMismatchException;
+import com.minichat.exception.RoleNotFoundException;
+import com.minichat.repository.RoleRepository;
+import com.minichat.util.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,14 +38,36 @@ public class AuthService {
     private SessionRepository sessionRepository;
 
     @Autowired
+    private PasswordValidator passwordValidator;
+
+    @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     private JwtService jwtService;
 
-    public LoginResponse register(RegisterRequest request) {
+    public RegisterResponse register(RegisterRequest request) {
+        // Validate password strength
+        if (!passwordValidator.isValidPassword(request.getPassword())) {
+            throw new InvalidPasswordException(passwordValidator.getPasswordRequirements());
+        }
+        
+        // Validate passwords match
+        if (!request.isPasswordMatch()) {
+            throw new PasswordMismatchException("Passwords do not match");
+        }
+        
+        // Check duplicate email
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException("Email already registered");
+        }
+        
+        // Check duplicate username
+        if (userRepository.existsByUsername(request.getUsername())) {
+            throw new UserAlreadyExistsException("Username already registered");
         }
 
         User user = new User();
@@ -48,10 +76,10 @@ public class AuthService {
         user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         user.setIsActive(true);
         
-        Role userRole = new Role();
-        userRole.setId(2L);
-        userRole.setName(RoleType.USER);
+        Role userRole = roleRepository.findByName(RoleType.USER)
+            .orElseThrow(() -> new RoleNotFoundException("USER role not found"));
         user.setRoles(new HashSet<>(Set.of(userRole)));
+
 
         User savedUser = userRepository.save(user);
 
@@ -60,13 +88,14 @@ public class AuthService {
 
         saveSession(savedUser, refreshToken);
 
-        return LoginResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .userId(savedUser.getId())
-                .email(savedUser.getEmail())
-                .username(savedUser.getUsername())
-                .build();
+        return RegisterResponse.builder()
+            .id(savedUser.getId())
+            .username(savedUser.getUsername())
+            .email(savedUser.getEmail())
+            .accessToken(accessToken)
+            .refreshToken(refreshToken)
+            .createdAt(savedUser.getCreatedAt())
+            .build();
     }
 
     public LoginResponse login(LoginRequest request) {
