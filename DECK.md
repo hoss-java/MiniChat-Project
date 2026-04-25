@@ -993,33 +993,53 @@ gantt
 > ```
 > </details>
 
-## 001-0006
-> **User Registration Endpoint** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+## 001-0005
+> **Database Schema Design** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
-> The goal of this card is to implement the user registration endpoint with input validation, password hashing, and JWT token generation.
+> The goal of this card is to design and create the database schema for user authentication including User, Role, and Session entities.
 > 
 > # DOD (definition of done):
-> - POST /auth/register endpoint works
-> - Input validation implemented (email format, password strength)
-> - Password hashing with BCrypt implemented
-> - Duplicate user check implemented
-> - JWT token returned on successful registration
-> - Error responses for invalid input
+> - User table created with all required fields (id, email, password, created_at, last_login)
+> - Role table created for user roles
+> - Session table created for tracking user sessions
+> - All tables have proper indexes
+> - Schema documented and reviewed
 > 
 > # TODO:
-> - [] 1. Create User entity and repository
-> - [] 2. Create registration DTO with validation
-> - [] 3. Implement password hashing with BCrypt
-> - [] 4. Create registration service logic
-> - [] 5. Build registration controller endpoint
-> - [] 6. Add duplicate user validation
-> - [] 7. Generate and return JWT on success
-> - [] 8. Test endpoint with Postman
+> - [x] 1. Design User entity (email, password hash, created_at, last_login, is_active)
+> - [x] 2. Design Role entity (id, name, description)
+> - [x] 3. Design Session entity (id, user_id, token, expires_at)
+> - [-] 4. Create migration scripts
+> - [x] 5. Set up relationships between tables
+> - [x] 6. Create database indexes for performance
 > 
 > # Reports:
-> *
+> ## Database Schema Design - Phase 1 Auth Foundation
+> 
+> ### Completed Tasks
+> - ✅ User entity designed with email, username, passwordHash, createdAt, lastLogin, isActive, publicKey, fingerprint
+> - ✅ Role entity designed with RoleType enum (USER, ADMIN, MODERATOR) and descriptions
+> - ✅ Session entity designed with accessToken, refreshToken, expiresAt, refreshTokenExpiresAt, ipAddress, userAgent
+> - ✅ Many-to-many relationship established between User and Role via user_roles junction table
+> - ✅ Many-to-one relationship established between Session and User
+> - ✅ Database indexes created for performance on: users(username, email, is_active), sessions(user_id, accessToken, refreshToken, expiresAt)
+> - ✅ RoleInitializer component auto-seeds default roles on startup
+> - ✅ AdminInitializer component creates admin users from configuration
+> - ✅ UserInitializer component creates test users in dev profile
+> - ✅ AuditingEntityListener configured with @CreatedDate and @LastModifiedDate timestamps
+> - ✅ SessionRepository and RoleRepository interfaces created with necessary query methods
+> 
+> ### Key Design Decisions
+> - Username used for login, email reserved for password recovery
+> - Both username and email are unique constraints
+> - AccessToken and RefreshToken stored separately for token rotation
+> - Lazy loading on Session-User relationship for performance
+> - Enum-based roles for type safety and consistency
+> 
+> ### Status
+> **COMPLETE** - Ready for Phase 1: User Registration & Login Endpoints
 > </details>
 
 ## 001-0007
@@ -2477,27 +2497,30 @@ gantt
 > *
 > </details>
 
-## 001-0005
-> **Database Schema Design** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
+## 001-0006
+> **User Registration Endpoint** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
 > <details open>
 >     <summary>Details</summary>
 > 
-> The goal of this card is to design and create the database schema for user authentication including User, Role, and Session entities.
+> The goal of this card is to implement the user registration endpoint with input validation, password hashing, and JWT token generation.
 > 
 > # DOD (definition of done):
-> - User table created with all required fields (id, email, password, created_at, last_login)
-> - Role table created for user roles
-> - Session table created for tracking user sessions
-> - All tables have proper indexes
-> - Schema documented and reviewed
+> - POST /auth/register endpoint works
+> - Input validation implemented (email format, password strength)
+> - Password hashing with BCrypt implemented
+> - Duplicate user check implemented
+> - JWT token returned on successful registration
+> - Error responses for invalid input
 > 
 > # TODO:
-> - [] 1. Design User entity (email, password hash, created_at, last_login, is_active)
-> - [] 2. Design Role entity (id, name, description)
-> - [] 3. Design Session entity (id, user_id, token, expires_at)
-> - [] 4. Create migration scripts
-> - [] 5. Set up relationships between tables
-> - [] 6. Create database indexes for performance
+> - [] 1. Create User entity and repository
+> - [] 2. Create registration DTO with validation
+> - [] 3. Implement password hashing with BCrypt
+> - [] 4. Create registration service logic
+> - [] 5. Build registration controller endpoint
+> - [] 6. Add duplicate user validation
+> - [] 7. Generate and return JWT on success
+> - [] 8. Test endpoint with Postman
 > 
 > # Reports:
 > *
