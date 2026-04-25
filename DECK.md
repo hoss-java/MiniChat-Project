@@ -912,30 +912,85 @@ gantt
 > | | | | **~60-86 work-days** | **~86-116 calendar days** | **3-4 months realistic** |
 > </details>
 
-## 001-0005
-> **Database Schema Design** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+## 001-0004
+> **Spring Boot Project Setup** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
-> The goal of this card is to design and create the database schema for user authentication including User, Role, and Session entities.
+> The goal of this card is to initialize the Spring Boot project with all necessary dependencies and folder structure for the minichat P2P system.
 > 
 > # DOD (definition of done):
-> - User table created with all required fields (id, email, password, created_at, last_login)
-> - Role table created for user roles
-> - Session table created for tracking user sessions
-> - All tables have proper indexes
-> - Schema documented and reviewed
+> - Spring Boot project created with Maven
+> - All required dependencies added (Spring Web, WebSocket, Security, JPA, MySQL)
+> - Project structure organized (controllers, services, models, config folders)
+> - Application runs without errors
+> - Database connection configured (MySQL)
 > 
 > # TODO:
-> - [] 1. Design User entity (email, password hash, created_at, last_login, is_active)
-> - [] 2. Design Role entity (id, name, description)
-> - [] 3. Design Session entity (id, user_id, token, expires_at)
-> - [] 4. Create migration scripts
-> - [] 5. Set up relationships between tables
-> - [] 6. Create database indexes for performance
+> - [x] 1. Create Spring Boot Maven project
+> - [x] 2. Add Spring Web, Security, JPA, WebSocket dependencies
+> - [x] 3. Configure application.properties for database
+> - [x] 4. Create base folder structure
+> - [x] 5. Test project startup
 > 
 > # Reports:
-> *
+> * To run/test server
+> >```
+> >mvn spring-boot:run -Dspring-boot.run.arguments="--spring>.profiles.active=dev"
+> >
+> >mvn test -Dspring.profiles.active=test
+> >mvn test -Dspring.profiles.active=test >-Dtest=MiniChatAppTest
+> >```
+> * File map
+> ```
+> src/main/java/com/minichat/
+> ├── MiniChatApplication.java
+> ├── config/
+> │   ├── SecurityConfig.java
+> │   ├── WebSocketConfig.java
+> │   └── JpaConfig.java
+> ├── controller/
+> │   └── AuthController.java
+> ├── service/
+> │   ├── AuthService.java
+> │   └── JwtService.java
+> ├── entity/
+> │   ├── User.java
+> │   ├── Role.java
+> │   ├── RoleType.java
+> │   └── Session.java
+> ├── repository/
+> │   ├── UserRepository.java
+> │   └── SessionRepository.java
+> ├── dto/
+> │   ├── RegisterRequest.java
+> │   ├── LoginRequest.java
+> │   ├── LoginResponse.java
+> │   ├── UserProfileDto.java
+> │   └── JwtTokenDto.java
+> ├── security/
+> │   ├── JwtTokenProvider.java
+> │   ├── JwtAuthenticationFilter.java
+> │   └── CustomUserDetailsService.java
+> ├── exception/
+> │   ├── GlobalExceptionHandler.java
+> │   ├── UnauthorizedException.java
+> │   └── UserAlreadyExistsException.java
+> └── util/
+>     └── PasswordEncoder.java
+> 
+> 
+> src/main/resources/
+> ├── application.properties (already done)
+> ├── application-dev.properties
+> └── application-test.properties
+> 
+> src/test/java/com/minichat/
+> └── MiniChatApplicationTest.java (placeholder)
+> 
+> pom.xml (already updated with dependencies)
+> 
+> ```
 > </details>
 
 ## 001-0006
@@ -2422,33 +2477,28 @@ gantt
 > *
 > </details>
 
-## 001-0004
-> **Spring Boot Project Setup** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
+## 001-0005
+> **Database Schema Design** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
 > <details open>
 >     <summary>Details</summary>
 > 
-> The goal of this card is to initialize the Spring Boot project with all necessary dependencies and folder structure for the minichat P2P system.
+> The goal of this card is to design and create the database schema for user authentication including User, Role, and Session entities.
 > 
 > # DOD (definition of done):
-> - Spring Boot project created with Maven
-> - All required dependencies added (Spring Web, WebSocket, Security, JPA, MySQL)
-> - Project structure organized (controllers, services, models, config folders)
-> - Application runs without errors
-> - Database connection configured (MySQL)
+> - User table created with all required fields (id, email, password, created_at, last_login)
+> - Role table created for user roles
+> - Session table created for tracking user sessions
+> - All tables have proper indexes
+> - Schema documented and reviewed
 > 
 > # TODO:
-> - [x] 1. Create Spring Boot Maven project
-> - [ ] 2. Add Spring Web, Security, JPA, WebSocket dependencies
-> - [ ] 3. Configure application.properties for database
-> - [ ] 4. Create base folder structure
-> - [ ] 5. Test project startup
+> - [] 1. Design User entity (email, password hash, created_at, last_login, is_active)
+> - [] 2. Design Role entity (id, name, description)
+> - [] 3. Design Session entity (id, user_id, token, expires_at)
+> - [] 4. Create migration scripts
+> - [] 5. Set up relationships between tables
+> - [] 6. Create database indexes for performance
 > 
 > # Reports:
-> * To run/test server
-> >```
-> >mvn spring-boot:run -Dspring-boot.run.arguments="--spring>.profiles.active=dev"
-> >
-> >mvn test -Dspring.profiles.active=test
-> >mvn test -Dspring.profiles.active=test >-Dtest=MiniChatAppTest
-> >```
+> *
 > </details>
