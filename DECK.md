@@ -1130,6 +1130,37 @@ gantt
 > - CORS configuration for multi-platform support
 > </details>
 
+## 001-0007
+> **Login Endpoint with JWT** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to implement the login endpoint with JWT token generation, refresh token logic, and proper error handling.
+> 
+> # DOD (definition of done):
+> - POST /auth/login endpoint works
+> - Email and password validation implemented
+> - JWT access token generated on successful login
+> - Refresh token logic implemented
+> - Token expiration configured
+> - Error responses for invalid credentials
+> - Last login timestamp updated
+> 
+> # TODO:
+> - [x] 1. Create JWT utility class (generate, validate, refresh tokens)
+> - [x] 2. Create login DTO with username and password
+> - [x] 3. Implement login service with credential validation
+> - [x] 4. Build login controller endpoint
+> - [x] 5. Add refresh token generation and storage
+> - [x] 6. Configure token expiration times
+> - [x] 7. Update last_login field in User table
+> - [x] 8. Add error handling for wrong credentials
+> - [x] 9. Test with multiple login scenarios
+> 
+> # Reports:
+> *
+> </details>
+
 ## 001-0008
 > **JWT Filter and Token Validation** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
 > <details >
@@ -2549,37 +2580,6 @@ gantt
 > 
 > # TODO:
 > - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
-## 001-0007
-> **Login Endpoint with JWT** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
-> <details open>
->     <summary>Details</summary>
-> 
-> The goal of this card is to implement the login endpoint with JWT token generation, refresh token logic, and proper error handling.
-> 
-> # DOD (definition of done):
-> - POST /auth/login endpoint works
-> - Email and password validation implemented
-> - JWT access token generated on successful login
-> - Refresh token logic implemented
-> - Token expiration configured
-> - Error responses for invalid credentials
-> - Last login timestamp updated
-> 
-> # TODO:
-> - [] 1. Create JWT utility class (generate, validate, refresh tokens)
-> - [] 2. Create login DTO with email and password
-> - [] 3. Implement login service with credential validation
-> - [] 4. Build login controller endpoint
-> - [] 5. Add refresh token generation and storage
-> - [] 6. Configure token expiration times
-> - [] 7. Update last_login field in User table
-> - [] 8. Add error handling for wrong credentials
-> - [] 9. Test with multiple login scenarios
 > 
 > # Reports:
 > *
