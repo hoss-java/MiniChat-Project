@@ -40,6 +40,7 @@ public class UserInitializer implements ApplicationRunner {
     }
 
     private void initializeUsersByRole(List<UserProperties.UserConfig> users, RoleType roleType) {
+
         if (users == null || users.isEmpty()) {
             return;
         }

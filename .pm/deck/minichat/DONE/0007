@@ -8,13 +8,13 @@ Tags: backend, auth, phase1
 Creator: Hossein
 AssignedTo: Hossein
 Priority: HIGH
-Status: START
+Status: DONE
 Estimate: 2d
 DueDate:
 # Time tracker settings
 CreateAt: 2026-04-24T03:47:42Z
 StartAt: 2026-04-25T09:53:39Z
-EndAt:
+EndAt: 2026-04-25T14:24:36Z
 ---
 
 The goal of this card is to implement the login endpoint with JWT token generation, refresh token logic, and proper error handling.
@@ -29,15 +29,15 @@ The goal of this card is to implement the login endpoint with JWT token generati
 - Last login timestamp updated
 
 # TODO:
-- [] 1. Create JWT utility class (generate, validate, refresh tokens)
-- [] 2. Create login DTO with email and password
-- [] 3. Implement login service with credential validation
-- [] 4. Build login controller endpoint
-- [] 5. Add refresh token generation and storage
-- [] 6. Configure token expiration times
-- [] 7. Update last_login field in User table
-- [] 8. Add error handling for wrong credentials
-- [] 9. Test with multiple login scenarios
+- [x] 1. Create JWT utility class (generate, validate, refresh tokens)
+- [x] 2. Create login DTO with username and password
+- [x] 3. Implement login service with credential validation
+- [x] 4. Build login controller endpoint
+- [x] 5. Add refresh token generation and storage
+- [x] 6. Configure token expiration times
+- [x] 7. Update last_login field in User table
+- [x] 8. Add error handling for wrong credentials
+- [x] 9. Test with multiple login scenarios
 
 # Reports:
 *

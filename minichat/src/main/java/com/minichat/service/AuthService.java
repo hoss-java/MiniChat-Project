@@ -18,18 +18,27 @@ import com.minichat.exception.PasswordMismatchException;
 import com.minichat.exception.RoleNotFoundException;
 import com.minichat.repository.RoleRepository;
 import com.minichat.util.PasswordValidator;
+import com.minichat.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.time.Duration;
 
 @Service
 @Transactional
 public class AuthService {
+
+    @Value("${jwt.access-token-expiration}")
+    private long accessTokenExpiration;
+
+    @Value("${jwt.refresh-token-expiration}")
+    private long refreshTokenExpiration;
 
     @Autowired
     private UserRepository userRepository;
@@ -47,7 +56,8 @@ public class AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private JwtService jwtService;
+    private JwtTokenProvider jwtTokenProvider;
+
 
     public RegisterResponse register(RegisterRequest request) {
         // Validate password strength
@@ -83,10 +93,10 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        String accessToken = jwtService.generateAccessToken(savedUser);
-        String refreshToken = jwtService.generateRefreshToken(savedUser);
+        String accessToken = jwtTokenProvider.generateAccessToken(savedUser.getUsername(), savedUser.getId());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(savedUser.getUsername(), savedUser.getId());
 
-        saveSession(savedUser, refreshToken);
+        saveSession(user, accessToken, refreshToken);
 
         return RegisterResponse.builder()
             .id(savedUser.getId())
@@ -99,11 +109,22 @@ public class AuthService {
     }
 
     public LoginResponse login(LoginRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new UnauthorizedException("Invalid email or password"));
+        System.out.println("Login attempt: " + request.getUsername());
+        
+        User user = userRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new UnauthorizedException("Invalid username or password"));
+        
+        System.out.println("User found: " + user.getUsername());
+        System.out.println("Password match: " + passwordEncoder.matches(request.getPassword(), user.getPasswordHash()));
+        System.out.println("Is active: " + user.getIsActive());
+
+        System.out.println("User found: " + user.getUsername());
+        System.out.println("Raw password: " + request.getPassword());
+        System.out.println("Hashed password: " + user.getPasswordHash());
+        System.out.println("Password match: " + passwordEncoder.matches(request.getPassword(), user.getPasswordHash()));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new UnauthorizedException("Invalid email or password");
+            throw new UnauthorizedException("Invalid username or password");
         }
 
         if (!user.getIsActive()) {
@@ -113,10 +134,10 @@ public class AuthService {
         user.setLastLogin(LocalDateTime.now());
         userRepository.save(user);
 
-        String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername(), user.getId());
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername(), user.getId());
 
-        saveSession(user, refreshToken);
+        saveSession(user, accessToken, refreshToken);
 
         return LoginResponse.builder()
                 .accessToken(accessToken)
@@ -127,8 +148,9 @@ public class AuthService {
                 .build();
     }
 
+
     public LoginResponse refreshToken(String refreshToken) {
-        if (!jwtService.validateToken(refreshToken)) {
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
             throw new UnauthorizedException("Invalid or expired refresh token");
         }
 
@@ -140,13 +162,13 @@ public class AuthService {
         }
 
         User user = session.getUser();
-        String accessToken = jwtService.generateAccessToken(user);
-        String newRefreshToken = jwtService.generateRefreshToken(user);
+        String accessToken = jwtTokenProvider.generateAccessToken(user.getUsername(), user.getId());
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername(), user.getId());
 
         session.setActive(false);
         sessionRepository.save(session);
 
-        saveSession(user, newRefreshToken);
+        saveSession(user, accessToken, newRefreshToken);
 
         return LoginResponse.builder()
                 .accessToken(accessToken)
@@ -191,11 +213,13 @@ public class AuthService {
                 .build();
     }
 
-    private void saveSession(User user, String refreshToken) {
+    private void saveSession(User user, String accessToken, String refreshToken) {
         Session session = new Session();
         session.setUser(user);
+        session.setAccessToken(accessToken);  // ← Add this
         session.setRefreshToken(refreshToken);
-        session.setExpiresAt(LocalDateTime.now().plusDays(7));
+        session.setExpiresAt(LocalDateTime.now().plus(Duration.ofMillis(accessTokenExpiration)));
+        session.setRefreshTokenExpiresAt(LocalDateTime.now().plus(Duration.ofMillis(refreshTokenExpiration)));
         session.setActive(true);
         sessionRepository.save(session);
     }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@ConfigurationProperties(prefix = "app.users")
+@ConfigurationProperties(prefix = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,5 +26,6 @@ public class UserProperties {
         private String username;
         private String email;
         private String password;
+        private boolean active;
     }
 }
