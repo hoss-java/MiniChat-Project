@@ -1,0 +1,88 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Backend Integration Tests - Auth Endpoints
+Tags: backend, testing, phase1
+Creator: Hossein
+AssignedTo: Hossein
+Priority: HIGH
+Status: DONE
+Estimate: 2d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:50:03Z
+StartAt: 2026-04-26T08:28:15Z
+EndAt: 2026-04-26T17:34:06Z
+---
+
+The goal of this card is to create comprehensive integration tests for all authentication endpoints to ensure security and proper functionality.
+
+# DOD (definition of done):
+- Integration tests for registration endpoint
+- Integration tests for login endpoint
+- Integration tests for JWT validation
+- Integration tests for refresh token
+- Integration tests for profile endpoints
+- Tests for error cases (invalid input, duplicate users, wrong credentials)
+- All tests passing
+- Code coverage above 80%
+
+# TODO:
+- [x] 1. Setup test database configuration
+- [x] 2. Create test fixtures for users
+- [x] 3. Test successful registration
+- [x] 4. Test duplicate user registration
+- [x] 5. Test invalid registration input
+- [x] 6. Test successful login
+- [x] 7. Test login with wrong credentials
+- [x] 8. Test JWT validation
+- [x] 9. Test token expiration
+- [x] 10. Test refresh token functionality
+- [x] 11. Test profile endpoints
+- [x] 12. Run code coverage analysis
+
+# Reports:
+
+## Unit Tests
+
+- AuthServiceUnitTest.java ✅
+- CustomUserDetailsServiceUnitTest.java ✅
+- JwtTokenProviderUnitTest.java ✅ 
+- PasswordEncoderUnitTest.java ✅ 
+- PasswordValidatorUnitTest.java ✅ 
+- JwtAuthenticationFilterUnitTest.java ✅
+- UserUnitTest.java ✅
+- SessionUnitTest.java ✅
+- RoleUnitTest.java ✅
+
+## Integration Tests
+
+- AuthControllerIntegrationTest.java ✅
+- CustomUserDetailsServiceIntegrationTest.java (not not should be done later)
+
+## Backend tests files map
+```
+└── java
+    └── com
+        └── minichat
+            ├── controller
+            │ └── AuthControllerIntegrationTest.java
+            ├── dto
+            ├── entity
+            │ ├── RoleUnitTest.java
+            │ ├── SessionUnitTest.java
+            │ └── UserUnitTest.java
+            ├── MiniChatAppTest.java
+            ├── security
+            │ ├── JwtAuthenticationFilterUnitTest.java
+            │ └── JwtTokenProviderUnitTest.java
+            ├── service
+            │ ├── AuthServiceIntegrationTest.java
+            │ ├── AuthServiceUnitTest.java
+            │ └── CustomUserDetailsServiceUnitTest.java
+            └── util
+                ├── PasswordEncoderUnitTest.java
+                └── PasswordValidatorUnitTest.java
+```

@@ -149,9 +149,8 @@ public class AuthService {
                 .build();
     }
 
-
     public LoginResponse refreshToken(String refreshToken) {
-        if (!jwtTokenProvider.validateToken(refreshToken)) {
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
             throw new UnauthorizedException("Invalid or expired refresh token");
         }
 
@@ -232,7 +231,7 @@ public class AuthService {
     private void saveSession(User user, String accessToken, String refreshToken) {
         Session session = new Session();
         session.setUser(user);
-        session.setAccessToken(accessToken);  // ← Add this
+        session.setAccessToken(accessToken);
         session.setRefreshToken(refreshToken);
         session.setExpiresAt(LocalDateTime.now().plus(Duration.ofMillis(accessTokenExpiration)));
         session.setRefreshTokenExpiresAt(LocalDateTime.now().plus(Duration.ofMillis(refreshTokenExpiration)));

@@ -22,7 +22,7 @@ import org.springframework.http.HttpMethod;
 import jakarta.servlet.http.HttpServletResponse;
 
 import com.minichat.security.JwtAuthenticationFilter;
-import com.minichat.security.CustomUserDetailsService;
+import com.minichat.service.CustomUserDetailsService;
 
 import java.util.Arrays;
 

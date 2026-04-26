@@ -1,6 +1,7 @@
 package com.minichat.security;
 
 import com.minichat.security.JwtTokenProvider;
+import com.minichat.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -81,7 +82,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
         } catch (Exception ex) {
-            log.error("Authentication error", ex);
+            log.error("Authentication error", ex.getMessage());
             sendUnauthorizedError(response, "Authentication failed: " + ex.getMessage());
             return;
         }

@@ -1,4 +1,4 @@
-package com.minichat.security;
+package com.minichat.service;
 
 import com.minichat.entity.User;
 import com.minichat.repository.UserRepository;

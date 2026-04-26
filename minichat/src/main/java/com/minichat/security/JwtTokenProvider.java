@@ -16,6 +16,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class JwtTokenProvider {
@@ -49,6 +50,9 @@ public class JwtTokenProvider {
     private String createToken(Map<String, Object> claims, String subject, long expiration) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expiration);
+
+        // Add unique identifier to ensure different tokens even if generated at same time
+        claims.put("jti", UUID.randomUUID().toString());
 
         return Jwts.builder()
                 .setClaims(claims)
