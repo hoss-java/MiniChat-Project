@@ -1569,23 +1569,8 @@ gantt
 > ```
 > </details>
 
-## 001-0002
-> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> The goal of this card is to configure github workflows for this repository.
-> 
-> # DOD (definition of done):
-> 
-> # TODO:
-> - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0011
-> **React Project Setup and Structure** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **React Project Setup and Structure** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -1605,6 +1590,21 @@ gantt
 > - [] 4. Create folder structure (components, services, pages, contexts, utils)
 > - [] 5. Configure environment variables for API base URL
 > - [] 6. Test project startup on localhost:3000
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0002
+> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> The goal of this card is to configure github workflows for this repository.
+> 
+> # DOD (definition of done):
+> 
+> # TODO:
+> - [] 1.
 > 
 > # Reports:
 > *
