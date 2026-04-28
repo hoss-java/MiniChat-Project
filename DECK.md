@@ -1816,23 +1816,8 @@ gantt
 > **No working solution found yet.** The PHP proxy exists and can forward requests to Node.js, but httplight's request routing mechanism prevents asset requests from reaching the proxy.
 > </details>
 
-## 001-0002
-> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> The goal of this card is to configure github workflows for this repository.
-> 
-> # DOD (definition of done):
-> 
-> # TODO:
-> - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0012
-> **Auth Context and State Management** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **Auth Context and State Management** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -1848,16 +1833,249 @@ gantt
 > - Context accessible from all components
 > 
 > # TODO:
-> - [] 1. Create AuthContext.js file
-> - [] 2. Define initial auth state (user, token, isAuthenticated)
-> - [] 3. Implement login action
-> - [] 4. Implement logout action
-> - [] 5. Implement token refresh logic
-> - [] 6. Add localStorage persistence
-> - [] 7. Create AuthProvider component
-> - [] 8. Export useAuth custom hook
-> - [] 9. Wrap App with AuthProvider
-> - [] 10. Test context functionality
+> - [x] 1. Create AuthContext.js file
+> - [x] 2. Define initial auth state (user, token, isAuthenticated)
+> - [x] 3. Implement login action
+> - [x] 4. Implement logout action
+> - [x] 5. Implement token refresh logic
+> - [x] 6. Add localStorage persistence
+> - [x] 7. Create AuthProvider component
+> - [x] 8. Export useAuth custom hook
+> - [x] 9. Wrap App with AuthProvider
+> - [x] 10. Test context functionality
+> 
+> # Reports:
+> ## How to code and test react project
+> 
+> 1. Run `npm start` — dev server starts on `http://localhost:3000`
+> > * In my case `react-minichat start` instead `npm start`
+> 2. Make changes to any file and save
+> 3. Browser auto-refreshes automatically (HMR)
+> 4. No manual restart needed
+> 
+> **Note:** Large changes (like adding dependencies) may require stopping the server (`Ctrl+C`) and restarting with `npm start`.
+> 
+> 
+> ## **React File Structure & Entry Point**
+> 
+> 1. **index.html** — HTML file with `<div id="root"></div>`
+> 2. **src/index.tsx** — Entry point. Renders your app into `<div id="root">`
+> 3. **src/App.tsx** — Root component. Your app starts here
+> 4. **src/components/** — Reusable components
+> 5. **src/pages/** — Page components
+> 6. **src/services/** — API/business logic
+> 7. **src/contexts/** — Context API for global state
+> 
+> **Flow:**
+> ```
+> index.html → index.tsx → App.tsx → rest of app
+> ```
+> 
+> **Start here:** Open `src/App.tsx` and build your components.
+> 
+> 
+> ## **React + TypeScript Testing Setup Guide**
+> 
+> ### **1. Installation**
+> 
+> ```bash
+> npm install --save-dev ts-jest @types/jest @testing-library/jest-dom @testing-library/react
+> ```
+> 
+> 
+> ### **2. Jest Configuration (jest.config.js)**
+> 
+> ```javascript
+> module.exports = {
+>   preset: 'ts-jest',
+>   testEnvironment: 'jsdom',
+>   moduleNameMapper: {
+>     '\.(css|less|scss|sass)$': '<rootDir>/mocks/styleMock.js',
+>     '\.(svg|png|jpg|jpeg|gif)$': '<rootDir>/mocks/fileMock.js',
+>   },
+> };
+> ```
+> 
+> **What each setting does:**
+> - `preset: 'ts-jest'` - Transforms TypeScript to JavaScript
+> - `testEnvironment: 'jsdom'` - Simulates browser environment
+> - `moduleNameMapper` - Mocks CSS/image imports
+> 
+> 
+> ### **3. Mock Files**
+> 
+> **mocks/styleMock.js:**
+> ```javascript
+> module.exports = {};
+> ```
+> 
+> **mocks/fileMock.js:**
+> ```javascript
+> module.exports = 'test-file-stub';
+> ```
+> 
+> 
+> ### **4. Project Structure**
+> 
+> ```
+> src/
+> ├── components/
+> │   ├── Button.tsx
+> │   └── Button.test.tsx          ← Test file
+> ├── contexts/
+> │   ├── AuthContext.tsx
+> │   └── AuthContext.test.tsx     ← Test file
+> ├── services/
+> │   └── ApiClient.ts
+> └── App.tsx
+> 
+> mocks/
+> ├── styleMock.js
+> └── fileMock.js
+> 
+> jest.config.js
+> ```
+> 
+> **Rule:** Store `.test.tsx` files **next to the code they test**.
+> 
+> 
+> ### **5. Test File Structure**
+> 
+> ```typescript
+> import React from 'react';
+> import { render, screen, waitFor } from '@testing-library/react';
+> import '@testing-library/jest-dom';
+> import userEvent from '@testing-library/user-event';
+> import { AuthProvider, useAuth } from './AuthContext';
+> import { apiClient } from '../services/ApiClient';
+> 
+> // Mock external dependencies
+> jest.mock('../services/ApiClient');
+> 
+> // Optional: Helper component for testing hooks
+> const TestComponent = () => {
+>   const { state, login, logout } = useAuth();
+>   return (
+>     <div>
+>       <div data-testid="username">{state.user?.username || 'Not logged in'}</div>
+>       <button onClick={() => login('user', 'pass')}>Login</button>
+>       <button onClick={() => logout()}>Logout</button>
+>     </div>
+>   );
+> };
+> 
+> describe('AuthContext', () => {
+>   beforeEach(() => {
+>     localStorage.clear();
+>     jest.clearAllMocks();
+>   });
+> 
+>   test('initial state should be logged out', () => {
+>     render(
+>       <AuthProvider>
+>         <TestComponent />
+>       </AuthProvider>
+>     );
+>     expect(screen.getByTestId('username')).toHaveTextContent('Not logged in');
+>   });
+> 
+>   test('login should update state', async () => {
+>     (apiClient.post as jest.Mock).mockResolvedValue({
+>       user: { id: '1', username: 'testuser' },
+>       token: 'mock-token',
+>     });
+> 
+>     render(
+>       <AuthProvider>
+>         <TestComponent />
+>       </AuthProvider>
+>     );
+> 
+>     await userEvent.click(screen.getByText('Login'));
+> 
+>     await waitFor(() => {
+>       expect(screen.getByTestId('username')).toHaveTextContent('testuser');
+>     });
+>   });
+> });
+> ```
+> 
+> ### **6. Key Testing Patterns**
+> 
+> | Pattern | Purpose |
+> |---------|---------|
+> | `render()` | Renders React component |
+> | `screen.getByText()` | Find element by text |
+> | `screen.getByTestId()` | Find element by data-testid |
+> | `await userEvent.click()` | Simulate user click (handles act) |
+> | `await waitFor()` | Wait for async updates |
+> | `jest.mock()` | Mock API/services |
+> | `beforeEach()` | Reset state before each test |
+> 
+> 
+> ### **7. Run Tests**
+> 
+> ```bash
+> jest-minichat
+> ```
+> 
+> ### Update `.container-run`
+> 
+> ```bash
+> ts-jest@nodejs:npx ---workdir=/home/<user>/<github>/MiniChat-Project/clients/minichat ts-jest 
+> jest-minichat@nodejs:npx ---workdir=/home/<user>/<github>/MiniChat-Project/clients/minichat jest --rootDir="."
+> ```
+> 
+> 
+> * the current Frontend files map
+> ```
+> ├── .env
+> ├── .gitignore
+> ├── package.json
+> ├── package-lock.json
+> ├── public
+> │ ├── favicon.ico
+> │ ├── index.html
+> │ ├── logo192.png
+> │ ├── logo512.png
+> │ ├── manifest.json
+> │ └── robots.txt
+> ├── README.md
+> ├── setup-folders.sh
+> ├── src
+> │ ├── App.css
+> │ ├── App.test.tsx
+> │ ├── App.tsx
+> │ ├── components
+> │ │ └── .gitkeep
+> │ ├── contexts
+> │ │ └── .gitkeep
+> │ ├── index.css
+> │ ├── index.tsx
+> │ ├── logo.svg
+> │ ├── pages
+> │ │ └── .gitkeep
+> │ ├── react-app-env.d.ts
+> │ ├── reportWebVitals.ts
+> │ ├── services
+> │ │ └── .gitkeep
+> │ ├── setupTests.ts
+> │ └── utils
+> │     └── .gitkeep
+> └── tsconfig.json
+> ```
+> </details>
+
+## 001-0002
+> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> The goal of this card is to configure github workflows for this repository.
+> 
+> # DOD (definition of done):
+> 
+> # TODO:
+> - [] 1.
 > 
 > # Reports:
 > *
