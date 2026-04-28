@@ -3133,34 +3133,3 @@ gantt
 > # Reports:
 > *
 > </details>
-
-## 001-0004
-> **Spring Boot Project Setup** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
-> <details open>
->     <summary>Details</summary>
-> 
-> The goal of this card is to initialize the Spring Boot project with all necessary dependencies and folder structure for the minichat P2P system.
-> 
-> # DOD (definition of done):
-> - Spring Boot project created with Maven
-> - All required dependencies added (Spring Web, WebSocket, Security, JPA, MySQL)
-> - Project structure organized (controllers, services, models, config folders)
-> - Application runs without errors
-> - Database connection configured (MySQL)
-> 
-> # TODO:
-> - [x] 1. Create Spring Boot Maven project
-> - [ ] 2. Add Spring Web, Security, JPA, WebSocket dependencies
-> - [ ] 3. Configure application.properties for database
-> - [ ] 4. Create base folder structure
-> - [ ] 5. Test project startup
-> 
-> # Reports:
-> * To run/test server
-> >```
-> >mvn spring-boot:run -Dspring-boot.run.arguments="--spring>.profiles.active=dev"
-> >
-> >mvn test -Dspring.profiles.active=test
-> >mvn test -Dspring.profiles.active=test >-Dtest=MiniChatAppTest
-> >```
-> </details>
