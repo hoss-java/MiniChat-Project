@@ -1584,15 +1584,236 @@ gantt
 > - Project runs without errors
 > 
 > # TODO:
-> - [] 1. Create React app with Create React App
-> - [] 2. Install react-router-dom for routing
-> - [] 3. Install axios for HTTP requests
-> - [] 4. Create folder structure (components, services, pages, contexts, utils)
-> - [] 5. Configure environment variables for API base URL
-> - [] 6. Test project startup on localhost:3000
+> - [x] 1. Create React app with Create React App
+> - [x] 2. Install react-router-dom for routing
+> - [x] 3. Install axios for HTTP requests
+> - [x] 4. Create folder structure (components, services, pages, contexts, utils)
+> - [x] 5. Configure environment variables for API base URL
+> - [x] 6. Test project startup on localhost:3000
 > 
 > # Reports:
-> *
+> 
+> ## Summary: React App Setup
+> 
+> | Step | Command/Action | Result |
+> |------|----------------|--------|
+> | 1 | `npx create-react-app minichat --template typescript --skip-git` | Created TypeScript React app in `minichat/` folder |
+> | 2 | `react-minichat install react-router-dom` | Installed routing library in `minichat/node_modules/` |
+> | 3 | `react-minichat install axios` | Installed HTTP client in `minichat/node_modules/` |
+> | 4 | `mkdir -p src/{components,services,pages,contexts,utils}` | Created organized folder structure for code |
+> | 5 | Created `.env` file with `REACT_APP_API_BASE_URL=http://localhost:8080/api` | Configured environment variables for backend API |
+> 
+> 
+> ### You're Ready For
+> 
+> ✅ Step 6: `react-minichat start` to test on localhost:3000
+> 
+> The app now has routing (React Router), HTTP requests (Axios), organized structure, and API configuration ready to use.
+> 
+> ## Update env and creating react app
+> 
+> ### NPX Command Setup
+> * There is a npx command added to `.container-run` settings. The command can be used to create React projects
+>   ```
+>   npx@nodejs:npx ---workdir=/home/<user>/<github>/>MiniChat-Project/clients
+>   ```
+> 
+> ### Creating a React App
+> 
+> #### With Create React App (CRA) - JavaScript
+> * **Create React App** is the official tool for scaffolding React projects with zero configuration
+>   ```
+>   # To create a react project inside of clients/
+>   npx create-react-app minichat
+>   cd minichat
+>   
+>   # To avoid creating git settings
+>   npx create-react-app minichat --template cra-template --skip-git
+>   ```
+> 
+> #### With Create React App - TypeScript
+> * **TypeScript** adds static type checking to JavaScript, catching errors at development time rather than runtime
+>   ```
+>   # Create a TypeScript-based React project
+>   npx create-react-app minichat --template typescript --skip-git
+>   cd minichat
+>   ```
+>   * All `.js` files become `.tsx` (for components) or `.ts` (for utilities)
+>   * Provides better IDE support and prevents type-related bugs
+> 
+> #### With Vite - JavaScript
+> * **Vite** is a modern, lightweight build tool that's significantly faster than CRA
+>   ```
+>   npm create vite@latest minichat -- --template react
+>   cd minichat
+>   npm install
+>   ```
+> 
+> #### With Vite - TypeScript
+> * Combines Vite's speed with TypeScript's type safety
+>   ```
+>   npm create vite@latest minichat -- --template react-ts
+>   cd minichat
+>   npm install
+>   ```
+> 
+> ### NPM Command Alias for React Project
+> 
+> * A custom command named `react-minichat` was added to `.container-run` to simplify running npm scripts
+>   ```
+>   react-minichat@nodejs:npm ---workdir=/home/<user>/<github>/MiniChat-Project/clients/minichat
+>   ```
+> 
+> * Use this alias to run React commands:
+>   ```
+>   react-minichat start      # Start development server
+>   react-minichat run build  # Build for production
+>   react-minichat test       # Run tests
+>   ```
+> 
+> * To accees to react app dev server from the host : localhost:3000
+> 
+> 
+> ## Git Ignore Precedence in Nested Folders - How It Works
+> 
+> When you have **multiple `.gitignore` files** in a Git repository, Git reads them in a **hierarchical order**:
+> 
+> 1. **Root `.gitignore`** — applies to the entire repository
+> 2. **Nested `.gitignore`** (in react app folder) — applies only to that folder and its subfolders, **overriding the root rules**
+> 
+> ### Example Structure
+> ```
+> MiniChat-Project/
+> ├── .gitignore          (root - applies to everything)
+> ├── .git/
+> ├── clients/
+> │   └── minichat/
+> │       ├── .gitignore  (nested - applies only here, overrides root)
+> │       ├── node_modules/
+> │       └── src/
+> ```
+> 
+> 
+> ## Key Behaviors
+> 
+> | Scenario | Result |
+> |----------|--------|
+> | File ignored by root `.gitignore` only | Ignored everywhere |
+> | File ignored by nested `.gitignore` only | Ignored only in that folder |
+> | File **allowed** in nested (with `!`) but ignored in root | **Allowed** in nested folder only |
+> | File in both `.gitignore` files with same rule | Ignored everywhere |
+> 
+> 
+> ## Practical Example
+> 
+> ### Root `.gitignore`
+> ```
+> node_modules/
+> *.log
+> ```
+> 
+> ### Nested `minichat/.gitignore`
+> ```
+> # Allow node_modules in this specific folder (override root)
+> !node_modules/
+> 
+> # But keep .log files ignored
+> ```
+> 
+> **Result:** `node_modules/` is tracked in `minichat/` but ignored elsewhere.
+> 
+> 
+> ## Best Practice
+> 
+> **Keep it simple:** Usually you should **delete or merge** the nested `.gitignore` into the root one to avoid confusion.
+> 
+> ```bash
+> # Option 1: Merge nested rules into root, then delete nested
+> cat clients/minichat/.gitignore >> .gitignore
+> rm clients/minichat/.gitignore
+> 
+> # Option 2: Just delete nested if it duplicates root rules
+> rm clients/minichat/.gitignore
+> ```
+> 
+> The React app's default `.gitignore` is mostly standard (`node_modules/`, `build/`, etc.), which your root likely already has.
+> 
+> 
+> ## Development Environment & React Proxy Integration Report
+> 
+> ### Environment Overview
+> 
+> **Architecture:**
+> - Isolated Docker container network with no external access
+> - **Entry point:** httplight container (PHP server) with mapped port to host
+> - **Internal containers:** Node.js, Maven/Spring Boot, MySQL, Redis (accessible only within network)
+> - **Access pattern:** Browser → httplight (mapped port) → internal containers via proxy
+> 
+> **Current Setup:**
+> - Using PHP proxy on httplight to route requests between containers
+> - Transitioning from plain JavaScript to React development on Node.js container
+> - Node.js dev server runs on `172.32.0.13:3000` (internal only)
+> - httplight mapped to `http://localhost:3280` on host
+> 
+> 
+> ### Problem Statement
+> 
+> **Goal:** Access React dev server running on Node.js container from host browser through httplight proxy at `/react/` path.
+> 
+> **Challenge:**
+> React dev server generates HTML with asset references like:
+> ```html
+> <script src="/static/js/bundle.js"></script>
+> ```
+> 
+> When httplight serves this HTML, the browser requests `/static/js/bundle.js` directly from httplight's file system, not through the proxy to Node.js. Since these files don't physically exist on httplight, requests return 404.
+> 
+> **Current Behavior:**
+> - Browser requests: `http://localhost:3280/react/` → httplight serves index.html (proxied from Node.js)
+> - Browser then requests: `http://localhost:3280/static/js/bundle.js` → httplight looks for file on disk → 404 (file is on Node.js, not httplight)
+> 
+> **Error Log:**
+> ```
+> GET http://localhost:3280/react/static/js/bundle.js
+> [HTTP/1.1 404 Not Found 1ms]
+> 
+> Loading failed for the <script> with source "http://localhost:3280/react/static/js/bundle.js"
+> ```
+> 
+> 
+> ### Root Cause
+> 
+> httplight is serving the HTML file directly without routing subsequent asset requests through the proxy. The PHP proxy intercepts the initial request but httplight then serves files from its own file system instead of forwarding all `/react/*` requests through the proxy to Node.js.
+> 
+> 
+> ### Attempted Solutions (Unsuccessful)
+> 
+> 1. **PHP proxy file with HTML rewriting** ❌ 
+>    - Rewrites asset paths in HTML but httplight still serves files directly instead of routing through proxy
+> 
+> 2. **`.htaccess` rewrite rules** ❌ 
+>    - httplight doesn't use Apache, so `.htaccess` is not supported
+> 
+> 3. **`PUBLIC_URL` environment variables** ❌ 
+>    - Rejected due to container limitations; doesn't work in this setup
+> 
+> 4. **Query parameter approach** ❌ 
+>    - httplight still serves files from disk instead of routing through proxy
+> 
+> 
+> ### Critical Missing Information
+> 
+> To find a working solution, we need to understand:
+> 1. How is httplight configured to route requests?
+> 2. Does httplight have URL routing/rewriting capabilities?
+> 3. What is the exact httplight startup command or configuration?
+> 4. Where is `proxy.php` file currently located?
+> 5. How does httplight determine whether to serve a file directly vs. route to a script?
+> 
+> 
+> ### Current Status
+> 
+> **No working solution found yet.** The PHP proxy exists and can forward requests to Node.js, but httplight's request routing mechanism prevents asset requests from reaching the proxy.
 > </details>
 
 ## 001-0002
@@ -2942,251 +3163,4 @@ gantt
 > >mvn test -Dspring.profiles.active=test
 > >mvn test -Dspring.profiles.active=test >-Dtest=MiniChatAppTest
 > >```
-> </details>
-
-## 001-0011
-> **React Project Setup and Structure** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
-> <details open>
->     <summary>Details</summary>
-> 
-> The goal of this card is to initialize React project with proper folder structure, dependencies, and configuration for the P2P chat application.
-> 
-> # DOD (definition of done):
-> - React project created (Create React App)
-> - All necessary dependencies installed (react-router, axios, Context API)
-> - Folder structure organized (components, services, pages, contexts)
-> - Environment configuration setup
-> - Project runs without errors
-> 
-> # TODO:
-> - [x] 1. Create React app with Create React App
-> - [x] 2. Install react-router-dom for routing
-> - [x] 3. Install axios for HTTP requests
-> - [x] 4. Create folder structure (components, services, pages, contexts, utils)
-> - [x] 5. Configure environment variables for API base URL
-> - [x] 6. Test project startup on localhost:3000
-> 
-> # Reports:
-> 
-> ## Summary: React App Setup
-> 
-> | Step | Command/Action | Result |
-> |------|----------------|--------|
-> | 1 | `npx create-react-app minichat --template typescript --skip-git` | Created TypeScript React app in `minichat/` folder |
-> | 2 | `react-minichat install react-router-dom` | Installed routing library in `minichat/node_modules/` |
-> | 3 | `react-minichat install axios` | Installed HTTP client in `minichat/node_modules/` |
-> | 4 | `mkdir -p src/{components,services,pages,contexts,utils}` | Created organized folder structure for code |
-> | 5 | Created `.env` file with `REACT_APP_API_BASE_URL=http://localhost:8080/api` | Configured environment variables for backend API |
-> 
-> 
-> ### You're Ready For
-> 
-> ✅ Step 6: `react-minichat start` to test on localhost:3000
-> 
-> The app now has routing (React Router), HTTP requests (Axios), organized structure, and API configuration ready to use.
-> 
-> ## Update env and creating react app
-> 
-> ### NPX Command Setup
-> * There is a npx command added to `.container-run` settings. The command can be used to create React projects
->   ```
->   npx@nodejs:npx ---workdir=/home/<user>/<github>/>MiniChat-Project/clients
->   ```
-> 
-> ### Creating a React App
-> 
-> #### With Create React App (CRA) - JavaScript
-> * **Create React App** is the official tool for scaffolding React projects with zero configuration
->   ```
->   # To create a react project inside of clients/
->   npx create-react-app minichat
->   cd minichat
->   
->   # To avoid creating git settings
->   npx create-react-app minichat --template cra-template --skip-git
->   ```
-> 
-> #### With Create React App - TypeScript
-> * **TypeScript** adds static type checking to JavaScript, catching errors at development time rather than runtime
->   ```
->   # Create a TypeScript-based React project
->   npx create-react-app minichat --template typescript --skip-git
->   cd minichat
->   ```
->   * All `.js` files become `.tsx` (for components) or `.ts` (for utilities)
->   * Provides better IDE support and prevents type-related bugs
-> 
-> #### With Vite - JavaScript
-> * **Vite** is a modern, lightweight build tool that's significantly faster than CRA
->   ```
->   npm create vite@latest minichat -- --template react
->   cd minichat
->   npm install
->   ```
-> 
-> #### With Vite - TypeScript
-> * Combines Vite's speed with TypeScript's type safety
->   ```
->   npm create vite@latest minichat -- --template react-ts
->   cd minichat
->   npm install
->   ```
-> 
-> ### NPM Command Alias for React Project
-> 
-> * A custom command named `react-minichat` was added to `.container-run` to simplify running npm scripts
->   ```
->   react-minichat@nodejs:npm ---workdir=/home/<user>/<github>/MiniChat-Project/clients/minichat
->   ```
-> 
-> * Use this alias to run React commands:
->   ```
->   react-minichat start      # Start development server
->   react-minichat run build  # Build for production
->   react-minichat test       # Run tests
->   ```
-> 
-> * To accees to react app dev server from the host : localhost:3000
-> 
-> 
-> ## Git Ignore Precedence in Nested Folders - How It Works
-> 
-> When you have **multiple `.gitignore` files** in a Git repository, Git reads them in a **hierarchical order**:
-> 
-> 1. **Root `.gitignore`** — applies to the entire repository
-> 2. **Nested `.gitignore`** (in react app folder) — applies only to that folder and its subfolders, **overriding the root rules**
-> 
-> ### Example Structure
-> ```
-> MiniChat-Project/
-> ├── .gitignore          (root - applies to everything)
-> ├── .git/
-> ├── clients/
-> │   └── minichat/
-> │       ├── .gitignore  (nested - applies only here, overrides root)
-> │       ├── node_modules/
-> │       └── src/
-> ```
-> 
-> 
-> ## Key Behaviors
-> 
-> | Scenario | Result |
-> |----------|--------|
-> | File ignored by root `.gitignore` only | Ignored everywhere |
-> | File ignored by nested `.gitignore` only | Ignored only in that folder |
-> | File **allowed** in nested (with `!`) but ignored in root | **Allowed** in nested folder only |
-> | File in both `.gitignore` files with same rule | Ignored everywhere |
-> 
-> 
-> ## Practical Example
-> 
-> ### Root `.gitignore`
-> ```
-> node_modules/
-> *.log
-> ```
-> 
-> ### Nested `minichat/.gitignore`
-> ```
-> # Allow node_modules in this specific folder (override root)
-> !node_modules/
-> 
-> # But keep .log files ignored
-> ```
-> 
-> **Result:** `node_modules/` is tracked in `minichat/` but ignored elsewhere.
-> 
-> 
-> ## Best Practice
-> 
-> **Keep it simple:** Usually you should **delete or merge** the nested `.gitignore` into the root one to avoid confusion.
-> 
-> ```bash
-> # Option 1: Merge nested rules into root, then delete nested
-> cat clients/minichat/.gitignore >> .gitignore
-> rm clients/minichat/.gitignore
-> 
-> # Option 2: Just delete nested if it duplicates root rules
-> rm clients/minichat/.gitignore
-> ```
-> 
-> The React app's default `.gitignore` is mostly standard (`node_modules/`, `build/`, etc.), which your root likely already has.
-> 
-> 
-> ## Development Environment & React Proxy Integration Report
-> 
-> ### Environment Overview
-> 
-> **Architecture:**
-> - Isolated Docker container network with no external access
-> - **Entry point:** httplight container (PHP server) with mapped port to host
-> - **Internal containers:** Node.js, Maven/Spring Boot, MySQL, Redis (accessible only within network)
-> - **Access pattern:** Browser → httplight (mapped port) → internal containers via proxy
-> 
-> **Current Setup:**
-> - Using PHP proxy on httplight to route requests between containers
-> - Transitioning from plain JavaScript to React development on Node.js container
-> - Node.js dev server runs on `172.32.0.13:3000` (internal only)
-> - httplight mapped to `http://localhost:3280` on host
-> 
-> 
-> ### Problem Statement
-> 
-> **Goal:** Access React dev server running on Node.js container from host browser through httplight proxy at `/react/` path.
-> 
-> **Challenge:**
-> React dev server generates HTML with asset references like:
-> ```html
-> <script src="/static/js/bundle.js"></script>
-> ```
-> 
-> When httplight serves this HTML, the browser requests `/static/js/bundle.js` directly from httplight's file system, not through the proxy to Node.js. Since these files don't physically exist on httplight, requests return 404.
-> 
-> **Current Behavior:**
-> - Browser requests: `http://localhost:3280/react/` → httplight serves index.html (proxied from Node.js)
-> - Browser then requests: `http://localhost:3280/static/js/bundle.js` → httplight looks for file on disk → 404 (file is on Node.js, not httplight)
-> 
-> **Error Log:**
-> ```
-> GET http://localhost:3280/react/static/js/bundle.js
-> [HTTP/1.1 404 Not Found 1ms]
-> 
-> Loading failed for the <script> with source "http://localhost:3280/react/static/js/bundle.js"
-> ```
-> 
-> 
-> ### Root Cause
-> 
-> httplight is serving the HTML file directly without routing subsequent asset requests through the proxy. The PHP proxy intercepts the initial request but httplight then serves files from its own file system instead of forwarding all `/react/*` requests through the proxy to Node.js.
-> 
-> 
-> ### Attempted Solutions (Unsuccessful)
-> 
-> 1. **PHP proxy file with HTML rewriting** ❌ 
->    - Rewrites asset paths in HTML but httplight still serves files directly instead of routing through proxy
-> 
-> 2. **`.htaccess` rewrite rules** ❌ 
->    - httplight doesn't use Apache, so `.htaccess` is not supported
-> 
-> 3. **`PUBLIC_URL` environment variables** ❌ 
->    - Rejected due to container limitations; doesn't work in this setup
-> 
-> 4. **Query parameter approach** ❌ 
->    - httplight still serves files from disk instead of routing through proxy
-> 
-> 
-> ### Critical Missing Information
-> 
-> To find a working solution, we need to understand:
-> 1. How is httplight configured to route requests?
-> 2. Does httplight have URL routing/rewriting capabilities?
-> 3. What is the exact httplight startup command or configuration?
-> 4. Where is `proxy.php` file currently located?
-> 5. How does httplight determine whether to serve a file directly vs. route to a script?
-> 
-> 
-> ### Current Status
-> 
-> **No working solution found yet.** The PHP proxy exists and can forward requests to Node.js, but httplight's request routing mechanism prevents asset requests from reaching the proxy.
 > </details>
