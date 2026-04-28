@@ -1,0 +1,16 @@
+mvn@maven:mvn -f MiniChat-Project/minichat
+javac@maven:javac -d ./classes
+mysql@mysql:mysql -u root -pmypass
+cli@sshd:bash
+remotemysql@sshd:mysql -u eventman -peventmanpass -h 172.32.0.16
+mongosh@sshd:mongo 172.32.0.17:27017
+cssh@sshd:ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null
+mongo@mongodb:mongo
+node@nodejs:node ---workdir=/home/<user>/<github>/MiniChat-Project/clients
+npm@nodejs:npm
+react-minichat@nodejs:npm ---workdir=/home/<user>/<github>/MiniChat-Project/clients/minichat
+npx@nodejs:npx ---workdir=/home/<user>/<github>/MiniChat-Project/clients
+jest@nodejs:npx ---workdir=/home/<user>/<github>/MiniChat-Project/clients jest --rootDir="."
+npbash@nodejs:bash ---workdir=/home/<user>/<github>/MiniChat-Project/clients
+vite@nodejs:npm ---workdir=/home/<user>/<github>/MiniChat-Project/clients
+vite-minichat@nodejs:npm ---workdir=/home/<user>/<github>/MiniChat-Project/clients/minichat

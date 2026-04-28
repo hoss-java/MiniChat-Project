@@ -3,6 +3,8 @@
 # dependencies
 /node_modules
 /.node_modules
+**/node_modules/
+**/.node_modules/
 /.pnp
 .pnp.js
 .failed_tests
@@ -34,3 +36,4 @@ target/
 test.sh
 .DS_Store
 pm_report.json
+#.container-run
