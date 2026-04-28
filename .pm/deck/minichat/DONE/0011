@@ -6,15 +6,15 @@
 Title: React Project Setup and Structure
 Tags: frontend, setup, phase1
 Creator: Hossein
-AssignedTo:
+AssignedTo: Hossein
 Priority: HIGH
-Status:
+Status: DONE
 Estimate: 4h
 DueDate:
 # Time tracker settings
 CreateAt: 2026-04-24T03:50:54Z
-StartAt:
-EndAt:
+StartAt: 2026-04-28T08:12:44Z
+EndAt: 2026-04-28T08:12:44Z
 ---
 
 The goal of this card is to initialize React project with proper folder structure, dependencies, and configuration for the P2P chat application.
