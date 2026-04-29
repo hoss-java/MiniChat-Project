@@ -117,22 +117,42 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 	/**
 	 * login(username, password)
-	 * Authenticates user and stores JWT token
-	 * Calls backend POST /auth/login through ApiClient
+	 * Authenticates user with username and password, stores JWT token.
+	 * Calls backend POST /auth/login through ApiClient.
+	 * Differentiates error types (invalid credentials, network, server).
 	 * 
 	 * @param username - User's username
 	 * @param password - User's password
+	 * @throws {Error} "Invalid username or password" (401)
+	 * @throws {Error} "Network error. Check your connection" (network failure)
+	 * @throws {Error} "Login failed. Try again later" (5xx)
 	 */
 	const login = async (username: string, password: string): Promise<void> => {
-	  const response = await apiClient.post('/auth/login', { username, password });
-	  const newState: AuthState = {
-	    user: response.user,
-	    token: response.token,
-	    isAuthenticated: true,
-	  };
-	  setState(newState);
-	  saveToLocalStorage(newState);
+	  try {
+	    const response = await apiClient.post('/auth/login', { username, password });
+	    const newState: AuthState = {
+	      user: response.user,
+	      token: response.token,
+	      isAuthenticated: true,
+	    };
+	    setState(newState);
+	    saveToLocalStorage(newState);
+	  } catch (error: any) {
+	    const status = error.response?.status;
+	    const message = error.response?.data?.message;
+
+	    if (status === 401) {
+	      throw new Error('Invalid username or password');
+	    } else if (status === 400) {
+	      throw new Error(message || 'Invalid input');
+	    } else if (!error.response) {
+	      throw new Error('Network error. Check your connection');
+	    } else {
+	      throw new Error('Login failed. Try again later');
+	    }
+	  }
 	};
+
 
   /**
    * logout()

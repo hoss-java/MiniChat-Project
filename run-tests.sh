@@ -25,21 +25,25 @@ NC='\033[0m'
 declare -A FILE_PATTERNS=(
     ["java"]="*Test.java|*Tests.java"
     ["js"]="*.test.js|*.spec.js"
+    ["ts"]="*.test.ts|*.spec.ts|*.test.tsx|*.spec.tsx"
 )
 
 declare -A TEST_DIRECTORIES=(
     ["java"]="$SCRIPT_DIR/minichat/src/test"
     ["js"]="$SCRIPT_DIR/clients/webclientv1/tests"
+    ["ts"]="$SCRIPT_DIR/clients/minichat/src"
 )
 
 declare -A TEST_RUNNERS=(
     ["java"]="run_maven_test"
     ["js"]="run_jest_test"
+    ["ts"]="run_ts_jest_test"
 )
 
 declare -A TEST_METHODS_EXTRACTORS=(
     ["java"]="extract_java_test_methods"
     ["js"]="extract_js_test_methods"
+    ["ts"]="extract_ts_test_methods"
 )
 
 # Runtime variables
@@ -201,6 +205,132 @@ discover_tests() {
     echo "${discovered_tests[@]}"
 }
 
+# ============================================================================
+# GENERIC HELPER FUNCTIONS FOR JS-LIKE LANGUAGES (JS and TS)
+# ============================================================================
+
+# Generic helper to find test file by type
+find_test_file() {
+    local test_name=$1
+    local file_type=$2
+    local test_dir="${TEST_DIRECTORIES[$file_type]}"  # ← Use the correct directory!
+
+    case "$file_type" in
+        ts)
+            find "$test_dir" -name "${test_name}.test.tsx" -o -name "${test_name}.spec.tsx" | head -1
+            ;;
+        js)
+            find "$test_dir" -name "${test_name}.test.js" -o -name "${test_name}.spec.js" | head -1
+            ;;
+    esac
+}
+
+# Generic helper to extract test name from test file
+extract_test_name() {
+    local test_file=$1
+    local file_type=$2
+
+    case "$file_type" in
+        ts)
+            test_file="${test_file%.test.tsx}"
+            test_file="${test_file%.spec.tsx}"
+            ;;
+        js)
+            test_file="${test_file%.test.js}"
+            test_file="${test_file%.spec.js}"
+            test_file="${test_file%.js}"
+            ;;
+    esac
+
+    echo "$test_file"
+}
+
+# Generic helper to get the test runner command
+get_test_runner_command() {
+    local file_type=$1
+
+    case "$file_type" in
+        ts)
+            echo "tsx-jest"
+            ;;
+        js)
+            echo "jest"
+            ;;
+    esac
+}
+
+# Generic extractor for JS-like languages (JS and TS)
+extract_js_like_test_methods() {
+    local test_file=$1
+    local file_type=$2
+
+    local test_name=$(extract_test_name "$test_file" "$file_type")
+    local test_dir="${TEST_DIRECTORIES[$file_type]}"
+
+    local full_path=$(find_test_file "$test_name" "$file_type")
+
+    if [ -z "$full_path" ] || [ ! -f "$full_path" ]; then
+        return
+    fi
+
+    # Only match test() or it() that are NOT preceded by // (comments)
+    grep -E "^\s*(it|test)\(\s*['\"]" "$full_path" | sed "s/.*['\"\`]\([^'\"]*\)['\"\`].*/\1/" | sort -u
+}
+
+# Generic runner for JS-like languages (JS and TS)
+run_js_like_test() {
+    local test=$1
+    local file_type=$2
+
+    local test_name=$(extract_test_name "$test" "$file_type")
+    local test_file=$(find_test_file "$test_name" "$file_type")
+
+    if [ -z "$test_file" ] || [ ! -f "$test_file" ]; then
+        echo "Test file not found: $test"
+        return 1
+    fi
+
+    local runner=$(get_test_runner_command "$file_type")
+    local output=$($runner "$test_file" --no-cache 2>&1)
+    local exit_code=$?
+
+    parse_jest_output "$test" "$output" "$file_type"  # ← Pass file_type here
+
+    if [ "$VERBOSE_MODE" = true ]; then
+        echo "$output"
+    fi
+
+    return $exit_code
+}
+
+
+# ============================================================================
+# TYPE-SPECIFIC WRAPPER FUNCTIONS (Thin delegators to generic helpers)
+# ============================================================================
+
+# Extract test methods from JavaScript test file
+extract_js_test_methods() {
+    extract_js_like_test_methods "$1" "js"
+}
+
+# Extract test methods from TypeScript test file
+extract_ts_test_methods() {
+    extract_js_like_test_methods "$1" "ts"
+}
+
+# Run Jest test (JavaScript)
+run_jest_test() {
+    run_js_like_test "$1" "js"
+}
+
+# Run ts-jest test (TypeScript)
+run_ts_jest_test() {
+    run_js_like_test "$1" "ts"
+}
+
+# ============================================================================
+# JAVA-SPECIFIC FUNCTIONS
+# ============================================================================
 
 # Extract test methods from Java test file
 extract_java_test_methods() {
@@ -225,27 +355,91 @@ extract_java_test_methods() {
     | sort -u
 }
 
-# Extract test methods from JavaScript test file
-extract_js_test_methods() {
-    local test_file=$1
+# Run Maven test
+run_maven_test() {
+    local test=$1
+    local output
 
-    # Remove file extensions
-    test_file="${test_file%.test.js}"
-    test_file="${test_file%.spec.js}"
-    test_file="${test_file%.js}"
+    output=$(mvn test -Dspring.profiles.active=test -Dtest=$test -DparallelForks=$PARALLEL_THREADS 2>&1)
+    local exit_code=$?
+    
+    parse_maven_output "$test" "$output"
+    
+    if [ "$VERBOSE_MODE" = true ]; then
+        echo "$output"
+    fi
+    
+    return $exit_code
+}
 
-    local test_dir="${TEST_DIRECTORIES[js]}"
+# ============================================================================
+# OUTPUT PARSING FUNCTIONS
+# ============================================================================
 
-    # Search for the file recursively in the test directory
-    local full_path=$(find "$test_dir" -name "${test_file}.test.js" -o -name "${test_file}.spec.js" | head -1)
+parse_maven_output() {
+    local test_class=$1
+    local output=$2
+    local passed=0
+    local failed=0
 
-    if [ -z "$full_path" ] || [ ! -f "$full_path" ]; then
-        return
+    local class_name="${test_class%.java}"
+
+    if [[ $output =~ Tests\ run:\ ([0-9]+),\ Failures:\ ([0-9]+),\ Errors:\ ([0-9]+) ]]; then
+        passed=$((${BASH_REMATCH[1]} - ${BASH_REMATCH[2]} - ${BASH_REMATCH[3]}))
+        failed=$((${BASH_REMATCH[2]} + ${BASH_REMATCH[3]}))
     fi
 
-    # Only match test() or it() that are NOT preceded by // (comments)
-    grep -E "^\s*(it|test)\(\s*['\"]" "$full_path" | sed "s/.*['\"\`]\([^'\"]*\)['\"\`].*/\1/" | sort -u
+    # Extract failed test method names
+    local failures=$(echo "$output" | grep "Failures:" -A 100 | grep "${class_name}" | grep -oP "\.\K[a-zA-Z0-9_]+(?=:)" | tr '\n' ',' | sed 's/,$//')
+
+    TEST_COUNTS["$test_class"]="$passed/$((passed + failed))"
+    if [ -n "$failures" ]; then
+        TEST_FAILURES["$test_class"]="$failures"
+    fi
+
+    echo "$failures"
 }
+
+# Parse Jest test output
+parse_jest_output() {
+    local test_class=$1
+    local output=$2
+    local file_type=$3  # ← Add this parameter
+
+    # Extract failed test method names - remove newlines, carriage returns, and ANSI codes
+    local failures=$(echo "$output" | grep "●.*›" | sed 's/.*› //' | tr '\n' ',' | sed 's/,$//' | tr -d '\r' | sed 's/\x1b\[[0-9;]*m//g')
+
+    if [ -n "$failures" ]; then
+        TEST_FAILURES["$test_class"]="$failures"
+    fi
+
+    # Count total tests and failed tests from the test file itself
+    local extractor="${TEST_METHODS_EXTRACTORS[$file_type]}"  # ← Now uses correct file_type
+
+    # Get all test methods
+    local all_methods=()
+    while IFS= read -r method; do
+        if [ -n "$method" ]; then
+            all_methods+=("$method")
+        fi
+    done < <($extractor "$test_class")
+
+    local total=${#all_methods[@]}
+
+    # Count failures
+    local failed=0
+    if [ -n "$failures" ]; then
+        failed=$(echo "$failures" | tr ',' '\n' | grep -v '^$' | wc -l)
+    fi
+
+    local passed=$((total - failed))
+
+    TEST_COUNTS["$test_class"]="$passed/$total"
+}
+
+# ============================================================================
+# FILTER AND UTILITY FUNCTIONS
+# ============================================================================
 
 # Function to filter tests based on criteria
 filter_tests() {
@@ -297,117 +491,6 @@ save_failed_tests() {
     done
 }
 
-parse_maven_output() {
-    local test_class=$1
-    local output=$2
-    local passed=0
-    local failed=0
-
-    local class_name="${test_class%.java}"
-
-    if [[ $output =~ Tests\ run:\ ([0-9]+),\ Failures:\ ([0-9]+),\ Errors:\ ([0-9]+) ]]; then
-        passed=$((${BASH_REMATCH[1]} - ${BASH_REMATCH[2]} - ${BASH_REMATCH[3]}))
-        failed=$((${BASH_REMATCH[2]} + ${BASH_REMATCH[3]}))
-    fi
-
-    # Extract failed test method names
-    local failures=$(echo "$output" | grep "Failures:" -A 100 | grep "${class_name}" | grep -oP "\.\K[a-zA-Z0-9_]+(?=:)" | tr '\n' ',' | sed 's/,$//')
-
-    TEST_COUNTS["$test_class"]="$passed/$((passed + failed))"
-    if [ -n "$failures" ]; then
-        TEST_FAILURES["$test_class"]="$failures"
-    fi
-
-    echo "$failures"
-}
-
-
-# Parse Jest test output
-parse_jest_output() {
-    local test_class=$1
-    local output=$2
-
-    # Extract failed test method names - remove newlines, carriage returns, and ANSI codes
-    local failures=$(echo "$output" | grep "●.*›" | sed 's/.*› //' | tr '\n' ',' | sed 's/,$//' | tr -d '\r' | sed 's/\x1b\[[0-9;]*m//g')
-
-    if [ -n "$failures" ]; then
-        TEST_FAILURES["$test_class"]="$failures"
-    fi
-
-    # Count total tests and failed tests from the test file itself
-    local file_type="js"
-    local extractor="${TEST_METHODS_EXTRACTORS[$file_type]}"
-
-    # Get all test methods
-    local all_methods=()
-    while IFS= read -r method; do
-        if [ -n "$method" ]; then
-            all_methods+=("$method")
-        fi
-    done < <($extractor "$test_class")
-
-    local total=${#all_methods[@]}
-
-    # Count failures
-    local failed=0
-    if [ -n "$failures" ]; then
-        failed=$(echo "$failures" | tr ',' '\n' | grep -v '^$' | wc -l)
-    fi
-
-    local passed=$((total - failed))
-
-    TEST_COUNTS["$test_class"]="$passed/$total"
-}
-
-
-# Run Maven test
-run_maven_test() {
-    local test=$1
-    local output
-
-    output=$(mvn test -Dspring.profiles.active=test -Dtest=$test -DparallelForks=$PARALLEL_THREADS 2>&1)
-    local exit_code=$?
-    
-    parse_maven_output "$test" "$output"
-    
-    if [ "$VERBOSE_MODE" = true ]; then
-        echo "$output"
-    fi
-    
-    return $exit_code
-}
-
-# Run Jest test
-run_jest_test() {
-    local test=$1
-
-    local test_name="${test%.test.js}"
-    test_name="${test_name%.spec.js}"
-
-    local test_dir="${TEST_DIRECTORIES[js]}"
-
-    local output
-
-    local test_file=$(find "$test_dir" -name "${test_name}.test.js" -o -name "${test_name}.spec.js" | head -1)
-
-    if [ -z "$test_file" ] || [ ! -f "$test_file" ]; then
-        echo "Test file not found: $test"
-        return 1
-    fi
-
-    output=$(jest "$test_file" --no-cache 2>&1)  # ← Add --no-cache here
-    local exit_code=$?
-
-    parse_jest_output "$test" "$output"
-
-    if [ "$VERBOSE_MODE" = true ]; then
-        echo "$output"
-    fi
-
-    return $exit_code
-}
-
-
 # Run a single test (dispatches to appropriate runner)
 run_test() {
     local test_entry=$1
@@ -425,6 +508,10 @@ run_test() {
     # Call the appropriate runner
     $runner_func "$test"
 }
+
+# ============================================================================
+# DISPLAY FUNCTIONS
+# ============================================================================
 
 # Display test list with methods
 display_test_list() {
@@ -576,7 +663,10 @@ show_test_methods() {
     done < <($extractor "$test")
 }
 
-# Main script execution
+# ============================================================================
+# MAIN SCRIPT EXECUTION
+# ============================================================================
+
 main() {
     parse_arguments "$@"
 

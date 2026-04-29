@@ -4,22 +4,23 @@ const tsJestTransformCfg = createDefaultPreset().transform;
 
 /** @type {import("jest").Config} **/
 module.exports = {
-  testEnvironment: "node",
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
   transform: {
-    ...tsJestTransformCfg,
+    '^.+\\.tsx?$': ['ts-jest', {
+      tsconfig: {
+        jsx: 'react',
+        esModuleInterop: true,
+      },
+    }],
   },
-};
-
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'jsdom',
-};
-
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'jsdom',
   moduleNameMapper: {
+    '^react-router-dom$': '<rootDir>/mocks/react-router-dom.ts',
     '\\.(css|less|scss|sass)$': '<rootDir>/mocks/styleMock.js',
     '\\.(svg|png|jpg|jpeg|gif)$': '<rootDir>/mocks/fileMock.js',
   },
 };
+
+
+

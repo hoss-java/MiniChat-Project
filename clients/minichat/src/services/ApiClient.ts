@@ -5,6 +5,7 @@
  * Handles JWT token injection, 401 refresh retry logic, and error handling
  * All API calls in the app should use this client
  */
+import { API_CONFIG } from '../config/apiConfig';
 
 /**
  * ApiClientConfig interface
@@ -31,8 +32,8 @@ export class ApiClient {
    * @param config - Configuration with proxyURL and timeout
    */
   constructor(config: ApiClientConfig = {}) {
-    this.proxyURL = config.proxyURL || './proxy.php';
-    this.timeout = config.timeout || 5000;
+    this.proxyURL = config.proxyURL || API_CONFIG.proxyURL;
+    this.timeout = config.timeout || API_CONFIG.timeout;
   }
 
   /**
@@ -62,6 +63,7 @@ export class ApiClient {
     retryAttempt: number = 0
   ): Promise<any> {
     const proxyUrl = `${this.proxyURL}?path=${encodeURIComponent(endpoint)}`;
+
     const options: RequestInit = {
       method,
       headers: { 'Content-Type': 'application/json' },
@@ -166,4 +168,4 @@ export class ApiClient {
  * Create singleton instance of ApiClient
  * Import this in your app to use
  */
-export const apiClient = new ApiClient({ proxyURL: './proxy.php', timeout: 5000 });
+export const apiClient = new ApiClient({ timeout: 5000 });

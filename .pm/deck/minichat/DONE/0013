@@ -1,0 +1,696 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Login Page UI Component
+Tags: frontend, ui, phase1
+Creator: Hossein
+AssignedTo: Hossein
+Priority: HIGH
+Status: DONE
+Estimate: 1d 2h
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:52:20Z
+StartAt: 2026-04-28T13:24:49Z
+EndAt: 2026-04-29T16:36:05Z
+---
+
+The goal of this card is to create a user-friendly login page with form validation, error handling, and redirect on successful login.
+
+# DOD (definition of done):
+- Login form displays with email and password fields
+- Form validation implemented (empty check, email format)
+- Error messages displayed for invalid credentials
+- Loading state shown during submission
+- Redirect to dashboard on successful login
+- Remember me functionality (optional)
+- Responsive design
+
+# TODO:
+- [x] 1. Create LoginPage component
+- [x] 2. Build login form with username and password inputs
+- [x] 3. Add form validation (client-side)
+- [x] 4. Implement error message display
+- [x] 5. Add loading spinner during submission
+- [x] 6. Call login API via auth service
+- [x] 7. Handle login errors (invalid credentials, network error)
+- [x] 8. Redirect to dashboard on success
+- [x] 9. Add link to registration page
+- [x] 10. Style with basic plain CSS
+- [x] 11. Test form submission
+
+# Reports:
+## How to Add a New Page — LoginPage Example
+
+### **Step 1: Create the Page Component**
+
+Create file: `src/pages/YourPage.tsx`
+
+```tsx
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import './YourPage.css';
+
+const YourPage: React.FC = () => {
+  const { state } = useAuth();
+  const { colors } = useTheme();
+  const navigate = useNavigate();
+
+  // Your state, logic, handlers here
+
+  return (
+    <div style={{ backgroundColor: colors.background, color: colors.text }}>
+      {/* Your JSX */}
+    </div>
+  );
+};
+
+export default YourPage;
+```
+
+**Key imports:**
+- `useNavigate` — for navigation between pages
+- `useAuth` — access user state and auth methods
+- `useTheme` — access theme colors and toggle
+
+---
+
+### **Step 2: Create Stylesheet**
+
+Create file: `src/pages/YourPage.css`
+
+Use CSS variables from `index.css`:
+
+```css
+.your-container {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  transition: background-color var(--transition-normal);
+}
+
+.your-button {
+  background-color: var(--color-primary);
+  color: var(--color-background);
+  padding: var(--spacing-md);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-size: var(--font-size-md);
+  font-weight: 600;
+}
+
+.your-button:hover {
+  opacity: 0.9;
+}
+```
+
+**Always use CSS variables** — ensures dark/light theme consistency.
+
+---
+
+### **Step 3: Add Route in App.tsx**
+
+```tsx
+import YourPage from './pages/YourPage';
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AuthProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/your-page" element={<YourPage />} />
+            <Route path="/" element={<Navigate to="/login" />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
+    </ThemeProvider>
+  );
+}
+```
+
+---
+
+### **Step 4: Navigate to Page**
+
+From any component, use `useNavigate()`:
+
+```tsx
+const navigate = useNavigate();
+
+const handleClick = () => {
+  navigate('/your-page');
+};
+```
+
+---
+
+### **LoginPage as Example:**
+
+| Step | File | What We Did |
+|------|------|------------|
+| 1 | `LoginPage.tsx` | Form with validation, useAuth hook, useTheme hook, error handling, loading state |
+| 2 | `LoginPage.css` | Styled with CSS variables (colors, spacing, shadows) for theme consistency |
+| 3 | `App.tsx` | Added route: `<Route path="/login" element={<LoginPage />} />` |
+| 4 | Navigation | Used `useNavigate()` to redirect to `/dashboard` on success |
+
+---
+
+### **Best Practices:**
+
+1. **Always use CSS variables** — don't hard-code colors
+2. **Use useTheme()** for dynamic styling — `style={{ color: colors.text }}`
+3. **Use useAuth()** to access user state — check `state.isAuthenticated`
+4. **One file per page** — `YourPage.tsx` + `YourPage.css`
+5. **Import from contexts** — reuse auth and theme across pages
+6. **Add route in App.tsx** — before testing
+
+
+---
+# Guide: Adding a New Page to Your React App
+
+This guide explains the design pattern and how to structure any new page following the same architecture.
+
+---
+
+## Architecture Overview
+
+Your app follows a **component-based, CSS-separated architecture** with four layers:
+
+| Layer | File | Purpose | Example |
+|-------|------|---------|---------|
+| **Generic UI** | `UIComponents.tsx` | Reusable, theme-agnostic components | Button, Input, Card, Heading |
+| **Page Components** | `[PageName]Components.tsx` | Page-specific component compositions | LoginContainer, LoginHeader, LoginFormInputs |
+| **Page Logic** | `[PageName].tsx` | State, logic, and component assembly | Form validation, API calls, navigation |
+| **Page Styles** | `[PageName].css` | Page-specific CSS only | Layout, spacing, page-unique styling |
+
+---
+
+## Step-by-Step: Adding a New Page (Example: DashboardPage)
+
+### Step 1: Create the Page Structure
+
+Create these four files:
+
+```
+src/
+├── components/
+│   ├── shared/
+│   │   └── UIComponents.tsx
+│   └── DashboardComponents.tsx          ← NEW
+├── pages/
+│   └── DashboardPage.tsx                ← NEW
+├── styles/
+│   ├── index.css
+│   └── DashboardPage.css                ← NEW
+└── contexts/
+    ├── AuthContext.tsx
+    └── ThemeContext.tsx
+```
+
+---
+
+## What Goes Where?
+
+### 1️⃣ UIComponents.tsx (Generic, Reusable)
+
+**Add to `UIComponents.tsx` ONLY if:**
+- The component is **used on multiple pages**
+- The component is **theme-aware** (uses CSS variables)
+- The component is **self-contained** with no business logic
+
+**Examples of what belongs here:**
+```tsx
+// ✅ YES - Generic and reusable
+export const Button: React.FC<{ ... }> = ...
+export const Input: React.FC<{ ... }> = ...
+export const Card: React.FC<{ ... }> = ...
+export const Container: React.FC<{ ... }> = ...
+
+// ✅ YES - Theme-aware, no logic
+export const ErrorMessage: React.FC<{ ... }> = ...
+export const SuccessMessage: React.FC<{ ... }> = ...
+```
+
+**Examples of what does NOT belong here:**
+```tsx
+// ❌ NO - Page-specific composition
+export const DashboardHeader = ...
+
+// ❌ NO - Page-specific logic
+export const UserStats = ...
+```
+
+---
+
+### 2️⃣ DashboardComponents.tsx (Page-Specific Compositions)
+
+**Add to `DashboardComponents.tsx` ONLY if:**
+- The component is **composed of other components** (generic + custom)
+- The component is **unique to this page**
+- The component is **presentational** (no business logic, just props)
+- The component wraps/structures page sections
+
+**Examples of what belongs here:**
+
+```tsx
+// src/components/DashboardComponents.tsx
+import React from 'react';
+import { Container, Card, Heading, Text, Button } from './shared/UIComponents';
+
+interface Colors {
+  primary: string;
+  text: string;
+  // ... other colors
+}
+
+// ✅ Composition of generic components
+export const DashboardContainer: React.FC<{ children: React.ReactNode }> = 
+  ({ children }) => <Container className="dashboard-container">{children}</Container>;
+
+// ✅ Composed section
+export const DashboardHeader: React.FC<{ colors: Colors }> = 
+  ({ colors }) => (
+    <Card className="dashboard-header">
+      <Heading level={1}>Welcome Back</Heading>
+      <Text variant="secondary">Here's your dashboard overview</Text>
+    </Card>
+  );
+
+// ✅ Composed stats section
+export const StatsGrid: React.FC<{ 
+  stats: Array<{ label: string; value: string | number }>;
+  colors: Colors;
+}> = ({ stats, colors }) => (
+  <div className="stats-grid">
+    {stats.map((stat) => (
+      <Card key={stat.label} className="stat-card">
+        <Text variant="secondary">{stat.label}</Text>
+        <Heading level={3}>{stat.value}</Heading>
+      </Card>
+    ))}
+  </div>
+);
+
+// ✅ Composed action buttons section
+export const DashboardActions: React.FC<{ colors: Colors }> = 
+  ({ colors }) => (
+    <div className="dashboard-actions">
+      <Button variant="primary">Create New</Button>
+      <Button variant="secondary">Settings</Button>
+      <Button variant="danger">Logout</Button>
+    </div>
+  );
+```
+
+**What these components do:**
+- They **combine** generic UIComponents
+- They **structure** the page layout
+- They **accept props** (colors, data) but **no business logic**
+- They are **purely presentational**
+
+---
+
+### 3️⃣ DashboardPage.tsx (Page Logic & Assembly)
+
+**Add to `DashboardPage.tsx`:**
+- **State management** (`useState`, `useReducer`)
+- **Side effects** (`useEffect`)
+- **Context hooks** (`useAuth`, `useTheme`)
+- **Business logic** (validation, calculations, data fetching)
+- **Event handlers** (clicks, form submissions)
+- **Component assembly** (combining DashboardComponents)
+
+**Example:**
+
+```tsx
+// src/pages/DashboardPage.tsx
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import {
+  DashboardContainer,
+  DashboardHeader,
+  StatsGrid,
+  DashboardActions,
+} from '../components/DashboardComponents';
+
+const DashboardPage: React.FC = () => {
+  // ✅ State management
+  const [stats, setStats] = useState<Array<{ label: string; value: number }>>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // ✅ Context hooks
+  const { user, logout } = useAuth();
+  const { colors, theme } = useTheme();
+
+  // ✅ Business logic & side effects
+  useEffect(() => {
+    fetchDashboardStats();
+  }, []);
+
+  const fetchDashboardStats = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/dashboard/stats');
+      const data = await response.json();
+      setStats(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // ✅ Event handlers
+  const handleLogout = () => {
+    logout();
+    // Navigate to login
+  };
+
+  const handleCreateNew = () => {
+    // Navigate to create page
+  };
+
+  // ✅ Component assembly
+  return (
+    <DashboardContainer>
+      <DashboardHeader colors={colors} />
+      
+      {isLoading && <p>Loading...</p>}
+      {error && <p style={{ color: colors.error }}>{error}</p>}
+      
+      <StatsGrid stats={stats} colors={colors} />
+      <DashboardActions colors={colors} />
+    </DashboardContainer>
+  );
+};
+
+export default DashboardPage;
+```
+
+---
+
+### 4️⃣ DashboardPage.css (Page-Specific Styles Only)
+
+**Add to `DashboardPage.css`:**
+- **Page layout** (grid, flex, positioning)
+- **Page-specific spacing** and sizing
+- **Page-unique sections** styling
+- **Responsive breakpoints** for this page
+
+**Do NOT add:**
+- Generic component styles (those are in `index.css`)
+- Theme toggle styles (those are in `index.css`)
+- Reusable patterns
+
+**Example:**
+
+```css
+/* src/styles/DashboardPage.css */
+
+/* ======================== */
+/* DASHBOARD PAGE SPECIFIC STYLES */
+/* ======================== */
+
+/* Dashboard Container */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.dashboard-header h1 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  margin: var(--spacing-lg) 0;
+}
+
+.stat-card {
+  text-align: center;
+  padding: var(--spacing-md);
+}
+
+.stat-card h3 {
+  font-size: var(--font-size-lg);
+  color: var(--color-primary);
+  margin-top: var(--spacing-sm);
+}
+
+/* Dashboard Actions */
+.dashboard-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: var(--spacing-lg);
+}
+
+.dashboard-actions .btn {
+  flex: 1;
+  min-width: 150px;
+  max-width: 250px;
+}
+
+/* ======================== */
+/* RESPONSIVE DASHBOARD STYLES */
+/* ======================== */
+
+/* Mobile: max-width 480px */
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: var(--spacing-md);
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-actions {
+    flex-direction: column;
+  }
+
+  .dashboard-actions .btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Tablet: 481px to 768px */
+@media (min-width: 481px) and (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 769px and above */
+@media (min-width: 769px) {
+  .dashboard-container {
+    padding: var(--spacing-xl);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+```
+
+---
+
+## Decision Tree: Where Does This Go?
+
+```
+Does the component...
+
+├─ Get used on MULTIPLE pages?
+│  └─ YES → UIComponents.tsx
+│  └─ NO → Continue below
+│
+├─ Is it a theme-aware generic UI element?
+│  └─ YES → UIComponents.tsx
+│  └─ NO → Continue below
+│
+├─ Does it have business logic or state?
+│  └─ YES → [PageName].tsx (page component)
+│  └─ NO → Continue below
+│
+└─ Is it a composition of other components for THIS page?
+   └─ YES → [PageName]Components.tsx
+   └─ NO → Reconsider your architecture
+```
+
+---
+
+## Complete Checklist: Adding a New Page
+
+### 1. Create Files
+- [ ] `src/components/[PageName]Components.tsx`
+- [ ] `src/pages/[PageName].tsx`
+- [ ] `src/styles/[PageName].css`
+
+### 2. Build UIComponents (if needed)
+- [ ] Add only **generic, reusable components** to `UIComponents.tsx`
+- [ ] Ensure components are **theme-aware** (use CSS variables)
+- [ ] Keep **zero business logic**
+
+### 3. Build Page Components
+- [ ] Create **composition components** in `[PageName]Components.tsx`
+- [ ] Each component should **combine** generic UIComponents
+- [ ] Pass **colors, data, and callbacks** as props
+- [ ] Keep **zero business logic**
+
+### 4. Build Page Logic
+- [ ] Import components from `[PageName]Components.tsx`
+- [ ] Import hooks from contexts
+- [ ] Add **all state and logic**
+- [ ] Add **event handlers and API calls**
+- [ ] Assemble components together
+
+### 5. Build Page Styles
+- [ ] Import `[PageName].css` in your page component
+- [ ] Add **only page-specific styles**
+- [ ] Use **CSS variables** from `index.css`
+- [ ] Add **responsive breakpoints** for this page
+- [ ] **Do NOT duplicate** generic component styles
+
+### 6. Register Route
+- [ ] Add route in `App.tsx` or routing configuration
+- [ ] Test the page
+
+---
+
+## File Templates
+
+### DashboardComponents.tsx Template
+
+```tsx
+import React from 'react';
+import { Container, Card, Heading, Text, Button } from './shared/UIComponents';
+
+interface Colors {
+  primary: string;
+  text: string;
+  textSecondary: string;
+  error: string;
+}
+
+export const DashboardContainer: React.FC<{ children: React.ReactNode }> = 
+  ({ children }) => <Container className="dashboard-container">{children}</Container>;
+
+export const DashboardHeader: React.FC<{ colors: Colors }> = 
+  ({ colors }) => (
+    <Card className="dashboard-header">
+      <Heading level={1}>Page Title</Heading>
+      <Text variant="secondary">Page description</Text>
+    </Card>
+  );
+
+// Add more composed components...
+```
+
+### DashboardPage.tsx Template
+
+```tsx
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
+import {
+  DashboardContainer,
+  DashboardHeader,
+  // ... other components
+} from '../components/DashboardComponents';
+import './DashboardPage.css';
+
+const DashboardPage: React.FC = () => {
+  const [state, setState] = useState(initialValue);
+  const { user } = useAuth();
+  const { colors } = useTheme();
+
+  useEffect(() => {
+    // Side effects
+  }, []);
+
+  const handleAction = () => {
+    // Business logic
+  };
+
+  return (
+    <DashboardContainer>
+      <DashboardHeader colors={colors} />
+      {/* More components */}
+    </DashboardContainer>
+  );
+};
+
+export default DashboardPage;
+```
+
+### DashboardPage.css Template
+
+```css
+/* ======================== */
+/* DASHBOARD PAGE SPECIFIC STYLES */
+/* ======================== */
+
+.dashboard-container {
+  /* Layout styles */
+}
+
+.dashboard-header {
+  /* Header styles */
+}
+
+/* ======================== */
+/* RESPONSIVE STYLES */
+/* ======================== */
+
+@media (max-width: 480px) {
+  /* Mobile styles */
+}
+
+@media (min-width: 769px) {
+  /* Desktop styles */
+}
+```
+
+---
+
+## Summary Table: What Goes Where?
+
+| Item | UIComponents | [Page]Components | [Page].tsx | [Page].css | index.css |
+|------|--------------|------------------|-----------|-----------|-----------|
+| Generic Button | ✅ | ❌ | ❌ | ❌ | ✅ (CSS) |
+| Generic Input | ✅ | ❌ | ❌ | ❌ | ✅ (CSS) |
+| LoginHeader | ❌ | ✅ | ❌ | ❌ | ❌ |
+| Form validation | ❌ | ❌ | ✅ | ❌ | ❌ |
+| API calls | ❌ | ❌ | ✅ | ❌ | ❌ |
+| Page layout CSS | ❌ | ❌ | ❌ | ✅ | ❌ |
+| Theme toggle CSS | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Responsive breakpoints (page) | ❌ | ❌ | ❌ | ✅ | ❌ |
+
+---
