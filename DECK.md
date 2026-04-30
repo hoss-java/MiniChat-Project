@@ -2732,23 +2732,8 @@ gantt
 > | Responsive breakpoints (page) | ❌ | ❌ | ❌ | ✅ | ❌ |
 > </details>
 
-## 001-0002
-> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> The goal of this card is to configure github workflows for this repository.
-> 
-> # DOD (definition of done):
-> 
-> # TODO:
-> - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0014
-> **Registration Page UI Component** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **Registration Page UI Component** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -2765,18 +2750,33 @@ gantt
 > - Responsive design
 > 
 > # TODO:
-> - [] 1. Create RegisterPage component
-> - [] 2. Build registration form (email, password, confirm password)
-> - [] 3. Implement password strength indicator
-> - [] 4. Add password confirmation validation
-> - [] 5. Implement email format validation
-> - [] 6. Add error handling for duplicate emails
-> - [] 7. Call register API via auth service
-> - [] 8. Show success message
-> - [] 9. Redirect to login page
-> - [] 10. Add link to login page
-> - [] 11. Style with basic CSS/Tailwind
-> - [] 12. Test form submission
+> - [x] 1. Create RegisterPage component
+> - [x] 2. Build registration form (email, password, confirm password)
+> - [x] 3. Implement password strength indicator
+> - [x] 4. Add password confirmation validation
+> - [x] 5. Implement email format validation
+> - [x] 6. Add error handling for duplicate emails
+> - [x] 7. Call register API via auth service
+> - [x] 8. Show success message
+> - [x] 9. Redirect to login page
+> - [x] 10. Add link to login page
+> - [x] 11. Style with basic CSS
+> - [x] 12. Test form submission
+> 
+> # Reports:
+> *
+> </details>
+
+## 001-0002
+> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> The goal of this card is to configure github workflows for this repository.
+> 
+> # DOD (definition of done):
+> 
+> # TODO:
+> - [] 1.
 > 
 > # Reports:
 > *
