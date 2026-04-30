@@ -2767,23 +2767,8 @@ gantt
 > *
 > </details>
 
-## 001-0002
-> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> The goal of this card is to configure github workflows for this repository.
-> 
-> # DOD (definition of done):
-> 
-> # TODO:
-> - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0015
-> **Protected Route Wrapper** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **Protected Route Wrapper** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -2798,14 +2783,123 @@ gantt
 > - All protected routes use this component
 > 
 > # TODO:
-> - [] 1. Create ProtectedRoute component
-> - [] 2. Check authentication status from context
-> - [] 3. Show loading spinner while checking
-> - [] 4. Render protected component if authenticated
-> - [] 5. Redirect to login if not authenticated
-> - [] 6. Create route configuration
+> - [x] 1. Create ProtectedRoute component
+> - [x] 2. Check authentication status from context
+> - [x] 3. Show loading spinner while checking
+> - [x] 4. Render protected component if authenticated
+> - [x] 5. Redirect to login if not authenticated
+> - [x] 6. Create route configuration
 > - [] 7. Apply ProtectedRoute to dashboard route
-> - [] 8. Test with authenticated and unauthenticated users
+> - [x] 8. Test with authenticated and unauthenticated users
+> 
+> # Reports:
+> ## What is ProtectedRoute?
+> 
+> A **ProtectedRoute component** is a wrapper that guards access to pages. It checks if a user is logged in before allowing them to see a page — if not logged in, it redirects them to login.
+> 
+> ## Why we need it
+> 
+> Without it, users can manually type `/dashboard` in the URL and see the page even if they're not authenticated. ProtectedRoute prevents this by:
+> 1. Checking Auth Context for valid JWT
+> 2. Allowing access only if authenticated
+> 3. Redirecting to `/login` if not
+> 4. Showing a loading spinner while checking (prevents flickering)
+> 
+> ## For your kanban card report:
+> 
+> > **ProtectedRoute is a React component that validates user authentication before rendering protected pages.** It checks the Auth Context for a valid JWT token and redirects unauthenticated users to the login page. This prevents unauthorized access to dashboard and other restricted routes via direct URL entry. While authentication is being verified, a loading state is displayed to prevent UI flicker.
+> 
+> ## Parts that will be updated or added for ProtectedRoute:
+> 
+> | Part | Action | Why |
+> |------|--------|-----|
+> | **New file:** `components/ProtectedRoute.tsx` | **CREATE** | The ProtectedRoute component itself |
+> | **App.tsx** | **UPDATE** | Wrap dashboard route with `<ProtectedRoute>` |
+> | **AuthContext.tsx** | **CHECK** — may need small update | Ensure it exports `isLoading` state so ProtectedRoute can show spinner |
+> | **New file:** `components/__tests__/ProtectedRoute.test.tsx` | **CREATE** | Tests for redirect logic, loading state, authenticated access |
+> 
+> ## Simple example of what changes:
+> 
+> **Before (App.tsx):**
+> ```tsx
+> <Route path="/dashboard" element={<DashboardPage />} />
+> ```
+> 
+> **After (App.tsx):**
+> ```tsx
+> <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+> ```
+> 
+> 
+> 
+> ```
+> ├── App.css
+> ├── App.tsx
+> ├── components
+> │ ├── LoginComponents.tsx
+> │ ├── <PageName>Components.tsx.template
+> │ ├── RegisterComponents.tsx
+> │ ├── shared
+> │ │ ├── __tests__
+> │ │ │ └── UIComponents.test.tsx
+> │ │ └── UIComponents.tsx
+> │ ├── __tests__
+> │ │ ├── LoginComponents.test.tsx
+> │ │ ├── <PageName>Components.test.tsx.template
+> │ │ └── RegisterComponents.test.tsx
+> │ └── ThemeComponents.tsx
+> ├── config
+> │ ├── apiConfig.ts
+> │ └── __tests__
+> ├── contexts
+> │ ├── AuthContext.tsx
+> │ ├── __tests__
+> │ │ ├── AuthContext.test.tsx
+> │ │ └── ThemeContext.test.tsx
+> │ └── ThemeContext.tsx
+> ├── index.css
+> ├── index.tsx
+> ├── logo.svg
+> ├── __mocks__
+> │ ├── fileMock.js
+> │ ├── react-router-dom.ts
+> │ └── styleMock.js
+> ├── pages
+> │ ├── LoginPage.css
+> │ ├── LoginPage.tsx
+> │ ├── <PageName>Page.css.template
+> │ ├── <PageName>Page.tsx.template
+> │ ├── RegisterPage.css
+> │ ├── RegisterPage.tsx
+> │ └── __tests__
+> │     ├── LoginPage.test.tsx
+> │     └── RegisterPage.test.tsx
+> ├── react-app-env.d.ts
+> ├── reportWebVitals.ts
+> ├── services
+> │ ├── ApiClient.ts
+> │ └── __tests__
+> │     └── ApiClient.test.ts
+> ├── setupTests.ts
+> ├── __tests__
+> │ └── App.test.tsx
+> ├── types
+> │ └── ColorTypes.ts
+> └── utils
+> 
+> ```
+> </details>
+
+## 001-0002
+> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> The goal of this card is to configure github workflows for this repository.
+> 
+> # DOD (definition of done):
+> 
+> # TODO:
+> - [] 1.
 > 
 > # Reports:
 > *
