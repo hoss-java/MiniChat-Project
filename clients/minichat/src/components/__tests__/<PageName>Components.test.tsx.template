@@ -1,0 +1,172 @@
+// src/components/__tests__/<PageName>Components.test.tsx
+
+/**
+ * <PageName>Components Test Suite
+ * 
+ * This test file covers all <PageName>-related UI components.
+ * Each component is tested for:
+ * - Rendering with required props
+ * - Proper child/content rendering
+ * - Event handler callbacks
+ * - Error state display
+ * - Loading state handling
+ * - Disabled state management
+ * - Theme/color prop application
+ * - Navigation links (if applicable)
+ * - Conditional rendering
+ * 
+ * STRUCTURE:
+ * - Setup: imports, mocks, mock data
+ * - Test suite for each component
+ * - Each suite covers: rendering, props, callbacks, states
+ * - Integration tests for multi-component scenarios
+ * - Accessibility tests for compliance
+ * 
+ * USAGE:
+ * 1. Replace <PageName> with your actual page name (e.g., LoginComponents.test.tsx)
+ * 2. Import your actual components at the top
+ * 3. Replace TODO comments with your specific test cases
+ * 4. Run tests with: npm test <PageName>Components.test.tsx
+ */
+
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { BrowserRouter } from 'react-router-dom';
+import {
+  <PageName>Container,
+  <PageName>Card,
+  <PageName>Header,
+  <PageName>Section,
+  <PageName>Actions,
+  <PageName>Loading,
+  <PageName>Empty,
+  // TODO: Add all your page-specific components here
+  // Example: <PageName>FormInputs, <PageName>UserCard, etc.
+} from '../<PageName>Components';
+
+// ============================================================================
+// SETUP: MOCKS AND MOCK DATA
+// ============================================================================
+
+/**
+ * Mock colors object
+ * 
+ * PURPOSE: Represents the color palette passed from ThemeContext
+ * This object is used consistently across all component tests to ensure
+ * components accept and handle the colors prop correctly.
+ * 
+ * STRUCTURE:
+ * - background: Main page background color
+ * - surface: Card/elevated surface color
+ * - border: Border and divider colors
+ * - primary: Primary action color (buttons, links)
+ * - secondary: Secondary action color
+ * - text: Primary text color
+ * - textSecondary: Secondary/muted text color
+ * - error: Error state color
+ * - success: Success state color
+ * - warning: Warning state color
+ * 
+ * USAGE:
+ * Pass mockColors to every component that accepts a colors prop
+ * Example: <<PageName>Header colors={mockColors} />
+ */
+const mockColors = {
+  background: '#ffffff',
+  surface: '#f5f5f5',
+  border: '#e0e0e0',
+  primary: '#007bff',
+  secondary: '#6c757d',
+  text: '#000000',
+  textSecondary: '#666666',
+  error: '#dc3545',
+  success: '#28a745',
+  warning: '#ffc107',
+};
+
+/**
+ * Helper function to render components with BrowserRouter
+ * 
+ * PURPOSE: Wraps component rendering with necessary providers
+ * Required for components that use navigation (Link, useNavigate)
+ * 
+ * WHY WE NEED IT:
+ * - React Router components require a Router context
+ * - Without it, Link components will throw errors
+ * - Simulates real app environment where Router wraps everything
+ * 
+ * USAGE:
+ * Instead of: render(<MyComponent />)
+ * Use: renderWithRouter(<MyComponent />)
+ * 
+ * EXAMPLE:
+ * const { container } = renderWithRouter(
+ *   <<PageName>Container colors={mockColors}>
+ *     <Link to="/home">Home</Link>
+ *   </<PageName>Container>
+ * );
+ */
+const renderWithRouter = (component: React.ReactElement) => {
+  return render(<BrowserRouter>{component}</BrowserRouter>);
+};
+
+// TODO: Add any additional mock functions or utilities your tests need
+// Example:
+// const mockNavigate = jest.fn();
+// jest.mock('react-router-dom', () => ({
+//   ...jest.requireActual('react-router-dom'),
+//   useNavigate: () => mockNavigate,
+// }));
+
+// ============================================================================
+// <PageName>CONTAINER COMPONENT TESTS
+// ============================================================================
+
+/**
+ * <PageName>Container Test Suite
+ * 
+ * COMPONENT PURPOSE:
+ * Main wrapper for the entire page. Applies page-specific layout and
+ * styling via className. Acts as the top-level container for all page content.
+ * 
+ * WHAT WE TEST:
+ * - Component renders without errors
+ * - Children content displays correctly
+ * - CSS class is applied for styling
+ * - Props are accepted without breaking
+ * - Multiple children can be rendered
+ * 
+ * WHY WE TEST THIS:
+ * - Ensures page structure is correct
+ * - Validates CSS class application for styling
+ * - Catches prop type mismatches
+ * - Verifies children rendering works
+ */
+describe('<PageName>Container', () => {
+  /**
+   * TEST 1: Renders children inside container
+   * 
+   * WHAT WE TEST:
+   * - Container successfully renders child elements
+   * - Child content is visible in DOM
+   * 
+   * WHY THIS MATTERS:
+   * - Basic sanity check that component works
+   * - Ensures children aren't filtered or lost
+   * 
+   * HOW TO CUSTOMIZE:
+   * Change the child content to match your actual page structure
+   * Example: Replace with your actual page heading, cards, etc.
+   */
+  test('should render children inside container', () => {
+    // @ts-ignore
+    render(
+      <<PageName>Container colors={mockColors}>
+        <div>Page Content</div>
+      </<PageName>Container>
+    );
+    expect(screen.getByText('Page Content')).toBeInTheDocument();
+  });
+
+});

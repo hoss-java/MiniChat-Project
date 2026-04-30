@@ -7,14 +7,14 @@
 
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-import { AuthProvider, useAuth } from './AuthContext';
-import { apiClient } from '../services/ApiClient';
+import { AuthProvider, useAuth } from '../AuthContext';
+import { apiClient } from '../../services/ApiClient';
 import '@testing-library/jest-dom';
 import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 
 // Mock the ApiClient
-jest.mock('../services/ApiClient');
+jest.mock('../../services/ApiClient');
 
 /**
  * Test component that uses useAuth hook

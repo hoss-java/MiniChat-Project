@@ -7,12 +7,13 @@ import {
   LoginContainer,
   LoginCard,
   LoginHeader,
-  ThemeToggle,
   LoginFormInputs,
   LoginRememberMe,
   LoginSubmitButton,
   RegisterLink,
 } from '../components/LoginComponents';
+import { Colors } from '../types/ColorTypes';
+import { ThemeToggle } from '../components/ThemeComponents';
 import { ErrorMessage } from '../components/shared/UIComponents';
 import './LoginPage.css';
 
@@ -30,7 +31,7 @@ const LoginPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const { login } = useAuth();
-  const { colors, toggleTheme, theme } = useTheme();
+  const { colors } = useTheme();
   const navigate = useNavigate();
 
   const validateForm = (): boolean => {
@@ -67,7 +68,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <LoginContainer colors={colors}>
-      <ThemeToggle colors={colors} theme={theme} onToggle={toggleTheme} />
+      <ThemeToggle />
       <LoginCard colors={colors}>
         <LoginHeader colors={colors} />
         <form onSubmit={handleSubmit} className="login-form">

@@ -41,9 +41,11 @@ interface AuthState {
 interface AuthContextType {
   state: AuthState;
   login: (username: string, password: string) => Promise<void>;
+  register: (email: string, username: string, password: string, passwordConfirm: string) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
 }
+
 
 // ============ INITIAL STATE ============
 
@@ -181,8 +183,60 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	  saveToLocalStorage(newState);
 	};
 
+	/**
+	 * register(email, username, password, passwordConfirm)
+	 * Creates a new user account with email, username, and password.
+	 * Stores JWT token upon successful registration.
+	 * Calls backend POST /auth/register through ApiClient.
+	 * Differentiates error types (invalid input, duplicate account, network, server).
+	 * 
+	 * @param email - User's email address
+	 * @param username - User's username
+	 * @param password - User's password
+	 * @param passwordConfirm - Password confirmation (must match password)
+	 * @throws {Error} "Invalid input. Please check your information" (400)
+	 * @throws {Error} "Email or username already exists" (409)
+	 * @throws {Error} "Network error. Check your connection" (network failure)
+	 * @throws {Error} "Registration failed. Try again later" (5xx)
+	 */
+	const register = async (
+	  email: string,
+	  username: string,
+	  password: string,
+	  passwordConfirm: string
+	): Promise<void> => {
+	  try {
+	    const response = await apiClient.post('/auth/register', {
+	      email,
+	      username,
+	      password,
+	      passwordConfirm,
+	    });
+	    const newState: AuthState = {
+	      user: response.user,
+	      token: response.token,
+	      isAuthenticated: true,
+	    };
+	    setState(newState);
+	    saveToLocalStorage(newState);
+	  } catch (error: any) {
+	    const status = error.response?.status;
+	    const message = error.response?.data?.message;
+
+	    if (status === 400) {
+	      throw new Error(message || 'Invalid input. Please check your information');
+	    } else if (status === 409) {
+	      throw new Error(message || 'Email or username already exists');
+	    } else if (!error.response) {
+	      throw new Error('Network error. Check your connection');
+	    } else {
+	      throw new Error('Registration failed. Try again later');
+	    }
+	  }
+	};
+
   // Bundle state and functions into context value
-  const value: AuthContextType = { state, login, logout, refreshToken };
+  const value: AuthContextType = { state, login, register, logout, refreshToken };
 
   // Provide context to all child components
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

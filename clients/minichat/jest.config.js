@@ -16,9 +16,9 @@ module.exports = {
     }],
   },
   moduleNameMapper: {
-    '^react-router-dom$': '<rootDir>/mocks/react-router-dom.ts',
-    '\\.(css|less|scss|sass)$': '<rootDir>/mocks/styleMock.js',
-    '\\.(svg|png|jpg|jpeg|gif)$': '<rootDir>/mocks/fileMock.js',
+    '^react-router-dom$': '<rootDir>/src/__mocks__/react-router-dom.ts',
+    '\\.(css|less|scss|sass)$': '<rootDir>/src/__mocks__/styleMock.js',
+    '\\.(svg|png|jpg|jpeg|gif)$': '<rootDir>/src/__mocks__/fileMock.js',
   },
 };
 

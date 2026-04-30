@@ -1,0 +1,229 @@
+/* src/pages/<PageName>Page.css */
+/**
+ * PAGE-SPECIFIC STYLES
+ * 
+ * This file contains all CSS for the <PageName> page.
+ * 
+ * STRUCTURE:
+ * 1. Component-specific styles (.page-name-*)
+ * 2. Layout and spacing
+ * 3. Responsive design (@media queries)
+ * 4. Theme/color transitions (use CSS variables from theme)
+ * 
+ * NAMING: Use .page-name-* for all classes
+ * Example: .login-container, .login-card, .login-form
+ * 
+ * CSS VARIABLES AVAILABLE (from your global theme):
+ * - --spacing-xs, --spacing-sm, --spacing-md, --spacing-lg, --spacing-xl
+ * - --font-size-xs, --font-size-sm, --font-size-md, --font-size-lg, --font-size-xl
+ * - --color-border, --color-bg, --color-text
+ * - --radius-sm, --radius-md, --radius-lg
+ * - --shadow-sm, --shadow-md, --shadow-lg
+ * - --transition-fast, --transition-normal, --transition-slow
+ */
+
+/* ======================== */
+/* MAIN CONTAINER STYLES    */
+/* ======================== */
+
+/**
+ * .page-name-container
+ * Main wrapper for the entire page
+ * - Sets layout direction, alignment, and spacing
+ * - Background and min-height should be set here
+ * - Responsive padding
+ */
+.page-name-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--spacing-md);
+  position: relative;
+  transition: background-color var(--transition-normal);
+  /* Add background-color from theme if needed */
+}
+
+/* ======================== */
+/* CARD/SECTION STYLES      */
+/* ======================== */
+
+/**
+ * .page-name-card
+ * Main card wrapper for page content
+ * - Set max-width, padding, and border styles
+ * - Box shadow for depth
+ * - Use CSS variables for consistency
+ */
+.page-name-card {
+  width: 100%;
+  max-width: 500px;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+/**
+ * .page-name-header
+ * Header section with title and subtitle
+ * - Text alignment (usually center)
+ * - Margin below for spacing
+ */
+.page-name-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.page-name-header h1 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 700;
+}
+
+.page-name-header p {
+  font-size: var(--font-size-sm);
+}
+
+/**
+ * .page-name-section
+ * Individual section within the page
+ * - Use for grouping related content
+ * - Add margin/padding between sections
+ */
+.page-name-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.page-name-section h2 {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+/**
+ * .page-name-actions
+ * Container for action buttons (Save, Cancel, etc.)
+ * - Flexbox layout for button alignment
+ * - Consistent spacing between buttons
+ * - Margin-top for separation from content
+ */
+.page-name-actions {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
+  justify-content: center;
+}
+
+.page-name-actions .btn {
+  min-width: 120px;
+}
+
+/**
+ * .page-name-loading
+ * Loading state container
+ * - Center content and show loading message
+ * - Add spinner/animation if needed
+ */
+.page-name-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+}
+
+/**
+ * .page-name-empty
+ * Empty state container
+ * - Similar to loading state
+ * - Shows message and optional action
+ */
+.page-name-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  gap: var(--spacing-md);
+}
+
+/* ======================== */
+/* MOBILE STYLES (max-width: 480px) */
+/* ======================== */
+
+@media (max-width: 480px) {
+  .page-name-container {
+    padding: var(--spacing-sm);
+  }
+
+  .page-name-card {
+    padding: var(--spacing-md);
+    max-width: 100%;
+  }
+
+  .page-name-header h1 {
+    font-size: var(--font-size-lg);
+  }
+
+  .page-name-actions {
+    flex-direction: column;
+  }
+
+  .page-name-actions .btn {
+    width: 100%;
+  }
+}
+
+/* ======================== */
+/* TABLET STYLES (481px - 768px) */
+/* ======================== */
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .page-name-card {
+    max-width: 450px;
+  }
+}
+
+/* ======================== */
+/* DESKTOP STYLES (769px+) */
+/* ======================== */
+
+@media (min-width: 769px) {
+  .page-name-container {
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-lg);
+  }
+
+  .page-name-card {
+    max-width: 550px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .page-name-actions {
+    justify-content: center;
+  }
+}
+
+/* ======================== */
+/* DARK MODE / THEME SUPPORT */
+/* ======================== */
+
+/**
+ * If your theme context provides dark/light mode classes,
+ * add theme-specific overrides here.
+ * 
+ * Example:
+ * [data-theme="dark"] .page-name-card {
+ *   border-color: var(--color-border-dark);
+ *   box-shadow: var(--shadow-dark);
+ * }
+ */

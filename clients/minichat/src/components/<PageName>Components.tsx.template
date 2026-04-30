@@ -1,0 +1,217 @@
+// src/components/<PageName>Components.tsx
+/**
+ * PAGE-SPECIFIC COMPONENTS
+ * 
+ * This file contains wrapper components that compose shared UI components
+ * from UIComponents.tsx. Each component here is tailored to this specific page.
+ * 
+ * DO NOT add generic components here that could be reused across other pages.
+ * If a component is generic, add it to UIComponents.tsx instead.
+ * 
+ * NAMING CONVENTION: <PageName>[ComponentPurpose]
+ * Example: LoginFormInputs, DashboardUserCard, SettingsToggleSection
+ */
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import {
+  // Import only the shared UI components you need
+  Card,
+  Heading,
+  Text,
+  Button,
+  Container,
+  Section,
+  // Add more as needed
+} from './shared/UIComponents';
+import { Colors } from '../types/ColorTypes';
+
+/**
+ * <PageName>Container
+ * 
+ * PURPOSE: Main wrapper for the entire page
+ * - Applies page-specific layout and styling via className
+ * - Passes down colors and other context if needed
+ * 
+ * PROPS:
+ *   colors: Color palette from theme context
+ *   children: Page content
+ * 
+ * STYLING: Applied via .page-name-container in <PageName>Page.css
+ */
+export const <PageName>Container: React.FC<{ colors: Colors; children: React.ReactNode }> =
+  ({ colors, children }) => (
+    <Container className="page-name-container">
+      {children}
+    </Container>
+  );
+
+/**
+ * <PageName>Card
+ * 
+ * PURPOSE: Main card/section container for this page
+ * - Wrapper around shared Card component
+ * - Adds page-specific styling and layout
+ * 
+ * PROPS:
+ *   colors: Color palette from theme context
+ *   children: Card content
+ * 
+ * STYLING: Applied via .page-name-card in <PageName>Page.css
+ */
+export const <PageName>Card: React.FC<{ colors: Colors; children: React.ReactNode }> =
+  ({ colors, children }) => (
+    <Card className="page-name-card">
+      {children}
+    </Card>
+  );
+
+/**
+ * <PageName>Header
+ * 
+ * PURPOSE: Page header section with title and subtitle
+ * - Uses Heading and Text from shared UI
+ * - Displays the main page title and description
+ * 
+ * PROPS:
+ *   colors: Color palette from theme context (use for dynamic styling if needed)
+ * 
+ * STYLING: Applied via .page-name-header in <PageName>Page.css
+ * 
+ * EXAMPLE:
+ *   <<PageName>Header colors={colors} />
+ *   Renders: "Page Title" with "Description text"
+ */
+export const <PageName>Header: React.FC<{ colors: Colors }> =
+  ({ colors }) => (
+    <Section className="page-name-header">
+      <Heading level={1}>Page Title</Heading>
+      <Text variant="secondary">Page description or subtitle</Text>
+    </Section>
+  );
+
+/**
+ * <PageName>Section
+ * 
+ * PURPOSE: A distinct section within the page (optional, if page has multiple sections)
+ * - Wraps content for a specific feature or functionality
+ * - Helps organize complex pages into logical sections
+ * 
+ * PROPS:
+ *   colors: Color palette
+ *   children: Section content
+ *   title: Optional section title
+ * 
+ * STYLING: Applied via .page-name-section in <PageName>Page.css
+ * 
+ * NOTE: Only use if your page has multiple logical sections.
+ * For single-section pages, skip this component.
+ */
+export const <PageName>Section: React.FC<{
+  colors: Colors;
+  children: React.ReactNode;
+  title?: string;
+}> =
+  ({ colors, children, title }) => (
+    <Section className="page-name-section">
+      {title && <Heading level={2}>{title}</Heading>}
+      {children}
+    </Section>
+  );
+
+/**
+ * <PageName>Actions
+ * 
+ * PURPOSE: Button/action section for common page actions
+ * - Groups primary and secondary actions (Save, Cancel, etc.)
+ * - Provides consistent action button layout
+ * 
+ * PROPS:
+ *   colors: Color palette
+ *   onPrimaryClick: Callback for main action (e.g., Save)
+ *   onSecondaryClick: Callback for secondary action (e.g., Cancel)
+ *   isLoading: Shows loading state on primary button
+ * 
+ * STYLING: Applied via .page-name-actions in <PageName>Page.css
+ * 
+ * EXAMPLE:
+ *   <<PageName>Actions
+ *     colors={colors}
+ *     onPrimaryClick={handleSave}
+ *     onSecondaryClick={handleCancel}
+ *     isLoading={isSaving}
+ *   />
+ */
+export const <PageName>Actions: React.FC<{
+  colors: Colors;
+  onPrimaryClick: () => void;
+  onSecondaryClick?: () => void;
+  isLoading?: boolean;
+}> =
+  ({ colors, onPrimaryClick, onSecondaryClick, isLoading }) => (
+    <Section className="page-name-actions">
+      <Button
+        onClick={onPrimaryClick}
+        loading={isLoading}
+        variant="primary"
+      >
+        Save
+      </Button>
+      {onSecondaryClick && (
+        <Button onClick={onSecondaryClick} variant="secondary">
+          Cancel
+        </Button>
+      )}
+    </Section>
+  );
+
+/**
+ * <PageName>Loading
+ * 
+ * PURPOSE: Loading state for the page
+ * - Shows while data is being fetched
+ * - Can be replaced with a skeleton or spinner component if created
+ * 
+ * PROPS:
+ *   colors: Color palette
+ * 
+ * STYLING: Applied via .page-name-loading in <PageName>Page.css
+ * 
+ * NOTE: If you create a shared Spinner/Loader component, use it here.
+ */
+export const <PageName>Loading: React.FC<{ colors: Colors }> =
+  ({ colors }) => (
+    <Section className="page-name-loading">
+      <Text>Loading...</Text>
+    </Section>
+  );
+
+/**
+ * <PageName>Empty
+ * 
+ * PURPOSE: Empty state for the page
+ * - Shows when there's no data to display
+ * - Provides helpful message and action (if applicable)
+ * 
+ * PROPS:
+ *   colors: Color palette
+ *   message: Custom empty state message
+ *   action: Optional action button
+ * 
+ * STYLING: Applied via .page-name-empty in <PageName>Page.css
+ */
+export const <PageName>Empty: React.FC<{
+  colors: Colors;
+  message: string;
+  action?: { label: string; onClick: () => void };
+}> =
+  ({ colors, message, action }) => (
+    <Section className="page-name-empty">
+      <Text variant="secondary">{message}</Text>
+      {action && (
+        <Button onClick={action.onClick} variant="primary">
+          {action.label}
+        </Button>
+      )}
+    </Section>
+  );

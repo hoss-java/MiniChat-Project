@@ -8,7 +8,7 @@
 
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { ThemeProvider, useTheme } from './ThemeContext';
+import { ThemeProvider, useTheme } from '../ThemeContext';
 
 /**
  * Test component that uses useTheme hook

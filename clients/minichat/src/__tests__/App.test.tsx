@@ -1,10 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import App from './App';
+import App from '../App';
 
 // Mock LoginPage locally
-jest.mock('./pages/LoginPage', () => {
+jest.mock('../pages/LoginPage', () => {
   return function MockLoginPage() {
     return <div>Mock Login Page</div>;
   };

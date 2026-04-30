@@ -23,12 +23,18 @@ import {
   LoginContainer,
   LoginCard,
   LoginHeader,
-  ThemeToggle,
   LoginFormInputs,
   LoginRememberMe,
   LoginSubmitButton,
   RegisterLink,
-} from './LoginComponents';
+} from '../LoginComponents';
+import { ThemeToggle} from '../../components/ThemeComponents';
+import * as ThemeContext from '../../contexts/ThemeContext';
+
+// Mock the useTheme hook
+jest.mock('../../contexts/ThemeContext', () => ({
+  useTheme: jest.fn(),
+}));
 
 /**
  * Mock colors object used across all tests
@@ -195,59 +201,74 @@ describe('LoginHeader', () => {
  * 4. Uses primary variant for consistent styling
  * 5. Has theme-toggle class for custom CSS
  */
-describe('ThemeToggle', () => {
-  test('should display moon emoji when theme is light', () => {
-    render(
-      <ThemeToggle colors={mockColors} theme="light" onToggle={() => {}} />
-    );
-    expect(screen.getByRole('button', { name: '🌙' })).toBeInTheDocument();
-  });
+  describe('ThemeToggle', () => {
+    const mockToggleTheme = jest.fn();
 
-  test('should display sun emoji when theme is dark', () => {
-    render(
-      <ThemeToggle colors={mockColors} theme="dark" onToggle={() => {}} />
-    );
-    expect(screen.getByRole('button', { name: '☀️' })).toBeInTheDocument();
-  });
+    beforeEach(() => {
+      jest.clearAllMocks();
+      // Setup default mock return value
+      (ThemeContext.useTheme as jest.Mock).mockReturnValue({
+        theme: 'light',
+        toggleTheme: mockToggleTheme,
+      });
+    });
 
-  test('should call onToggle callback when clicked', () => {
-    const handleToggle = jest.fn();
-    render(
-      <ThemeToggle colors={mockColors} theme="light" onToggle={handleToggle} />
-    );
-    const button = screen.getByRole('button');
+    test('should display moon emoji when theme is light', () => {
+      render(<ThemeToggle />);
+      expect(screen.getByRole('button', { name: '🌙' })).toBeInTheDocument();
+    });
 
-    fireEvent.click(button);
-    expect(handleToggle).toHaveBeenCalledTimes(1);
-  });
+    test('should display sun emoji when theme is dark', () => {
+      (ThemeContext.useTheme as jest.Mock).mockReturnValue({
+        theme: 'dark',
+        toggleTheme: mockToggleTheme,
+      });
+      render(<ThemeToggle />);
+      expect(screen.getByRole('button', { name: '☀️' })).toBeInTheDocument();
+    });
 
-  test('should call onToggle multiple times on multiple clicks', () => {
-    const handleToggle = jest.fn();
-    render(
-      <ThemeToggle colors={mockColors} theme="light" onToggle={handleToggle} />
-    );
-    const button = screen.getByRole('button');
+    test('should call toggleTheme callback when clicked', () => {
+      render(<ThemeToggle />);
+      const button = screen.getByRole('button');
 
-    fireEvent.click(button);
-    fireEvent.click(button);
-    fireEvent.click(button);
-    expect(handleToggle).toHaveBeenCalledTimes(3);
+      fireEvent.click(button);
+      expect(mockToggleTheme).toHaveBeenCalledTimes(1);
+    });
+
+    test('should call toggleTheme multiple times on multiple clicks', () => {
+      render(<ThemeToggle />);
+      const button = screen.getByRole('button');
+
+      fireEvent.click(button);
+      fireEvent.click(button);
+      fireEvent.click(button);
+      expect(mockToggleTheme).toHaveBeenCalledTimes(3);
+    });
+
+    test('should apply theme-toggle class', () => {
+      const { container } = render(<ThemeToggle />);
+      expect(container.querySelector('.theme-toggle')).toBeInTheDocument();
+    });
+
+    test('should use primary variant button style', () => {
+      const { container } = render(<ThemeToggle />);
+      expect(container.querySelector('.btn-primary')).toBeInTheDocument();
+    });
   });
 
   test('should apply theme-toggle class', () => {
     const { container } = render(
-      <ThemeToggle colors={mockColors} theme="light" onToggle={() => {}} />
+      <ThemeToggle />
     );
     expect(container.querySelector('.theme-toggle')).toBeInTheDocument();
   });
 
   test('should use primary variant button style', () => {
     const { container } = render(
-      <ThemeToggle colors={mockColors} theme="light" onToggle={() => {}} />
+      <ThemeToggle />
     );
     expect(container.querySelector('.btn-primary')).toBeInTheDocument();
   });
-});
 
 // ============================================================================
 // LOGIN FORM INPUTS COMPONENT TESTS
@@ -703,7 +724,7 @@ describe('LoginComponents Integration', () => {
             <LoginSubmitButton isLoading={false} colors={mockColors} />
           </LoginCard>
           <RegisterLink colors={mockColors} />
-          <ThemeToggle theme="light" onToggle={() => {}} colors={mockColors} />
+          <ThemeToggle />
         </LoginContainer>
       </BrowserRouter>
     );
@@ -762,16 +783,18 @@ describe('LoginComponents Integration', () => {
   });
 
   test('should theme toggle independently from form state', () => {
-    const handleThemeToggle = jest.fn();
+    const mockToggleTheme = jest.fn();
     const handlePasswordChange = jest.fn();
+
+    // Setup the mock for this specific test
+    (ThemeContext.useTheme as jest.Mock).mockReturnValue({
+      theme: 'light',
+      toggleTheme: mockToggleTheme,
+    });
 
     render(
       <BrowserRouter>
-        <ThemeToggle
-          theme="light"
-          onToggle={handleThemeToggle}
-          colors={mockColors}
-        />
+        <ThemeToggle />
         <LoginFormInputs
           username=""
           password=""
@@ -788,7 +811,7 @@ describe('LoginComponents Integration', () => {
     const passwordInput = screen.getByLabelText('Password');
 
     fireEvent.click(themeButton);
-    expect(handleThemeToggle).toHaveBeenCalled();
+    expect(mockToggleTheme).toHaveBeenCalled();  // ← Changed from handleThemeToggle
     expect(handlePasswordChange).not.toHaveBeenCalled();
 
     fireEvent.change(passwordInput, { target: { value: 'test' } });

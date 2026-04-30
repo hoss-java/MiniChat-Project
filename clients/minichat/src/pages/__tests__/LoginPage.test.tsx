@@ -9,13 +9,14 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
-import LoginPage from './LoginPage';
-import { useAuth } from '../contexts/AuthContext';
-import { useTheme } from '../contexts/ThemeContext';
+import LoginPage from '../LoginPage';
+import { useAuth } from '../../contexts/AuthContext';
+import { useTheme } from '../../contexts/ThemeContext';
+import { ThemeToggle } from '../../components/ThemeComponents';
 
 // Mock hooks
-jest.mock('../contexts/AuthContext');
-jest.mock('../contexts/ThemeContext');
+jest.mock('../../contexts/AuthContext');
+jest.mock('../../contexts/ThemeContext');
 
 // Mock useNavigate
 const mockNavigate = jest.fn();

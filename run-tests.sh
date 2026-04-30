@@ -213,16 +213,28 @@ discover_tests() {
 find_test_file() {
     local test_name=$1
     local file_type=$2
-    local test_dir="${TEST_DIRECTORIES[$file_type]}"  # ← Use the correct directory!
+    local test_dir="${TEST_DIRECTORIES[$file_type]}"
 
-    case "$file_type" in
-        ts)
-            find "$test_dir" -name "${test_name}.test.tsx" -o -name "${test_name}.spec.tsx" | head -1
-            ;;
-        js)
-            find "$test_dir" -name "${test_name}.test.js" -o -name "${test_name}.spec.js" | head -1
-            ;;
-    esac
+    local patterns="${FILE_PATTERNS[$file_type]}"
+    local IFS='|'
+    
+    for pattern in $patterns; do
+        local result=$(find "$test_dir" -name "${test_name}${pattern#\*}" | head -1)
+        if [ -n "$result" ]; then
+            echo "$result"
+            return
+        fi
+    done
+}
+
+# Extract file extensions for a given type from FILE_PATTERNS
+get_file_extensions() {
+    local file_type=$1
+    local patterns="${FILE_PATTERNS[$file_type]}"
+    
+    # Convert patterns like "*.test.ts|*.spec.ts|*.test.tsx|*.spec.tsx" 
+    # into extensions like ".test.ts .spec.ts .test.tsx .spec.tsx"
+    echo "$patterns" | sed 's/\*//g' | tr '|' ' '
 }
 
 # Generic helper to extract test name from test file
@@ -230,20 +242,15 @@ extract_test_name() {
     local test_file=$1
     local file_type=$2
 
-    case "$file_type" in
-        ts)
-            test_file="${test_file%.test.tsx}"
-            test_file="${test_file%.spec.tsx}"
-            ;;
-        js)
-            test_file="${test_file%.test.js}"
-            test_file="${test_file%.spec.js}"
-            test_file="${test_file%.js}"
-            ;;
-    esac
+    local extensions=$(get_file_extensions "$file_type")
+    
+    for ext in $extensions; do
+        test_file="${test_file%$ext}"
+    done
 
     echo "$test_file"
 }
+
 
 # Generic helper to get the test runner command
 get_test_runner_command() {
@@ -286,9 +293,9 @@ run_js_like_test() {
     local test_file=$(find_test_file "$test_name" "$file_type")
 
     if [ -z "$test_file" ] || [ ! -f "$test_file" ]; then
-        echo "Test file not found: $test"
         return 1
     fi
+
 
     local runner=$(get_test_runner_command "$file_type")
     local output=$($runner "$test_file" --no-cache 2>&1)
@@ -497,17 +504,16 @@ run_test() {
     local test="${test_entry%:*}"
     local file_type="${test_entry##*:}"
 
-    # Get the appropriate test runner function
     local runner_func="${TEST_RUNNERS[$file_type]}"
 
     if [ -z "$runner_func" ]; then
-        echo "❌ Unknown file type: $file_type"
+        echo "❌ Unknown file type: $file_type" >&2
         return 1
     fi
 
-    # Call the appropriate runner
     $runner_func "$test"
 }
+
 
 # ============================================================================
 # DISPLAY FUNCTIONS
@@ -730,7 +736,7 @@ main() {
         echo -ne "[$current/$total_tests] Running $test [$file_type]... "
 
         # Run test and capture exit code
-        if run_test "$test_entry" > /dev/null 2>&1; then
+        if run_test "$test_entry" > /dev/null; then
             echo -e "${GREEN}✓ PASSED${NC}"
             PASSED_TESTS+=("$test_entry")
         else

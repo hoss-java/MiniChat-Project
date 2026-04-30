@@ -60,8 +60,13 @@ export const Input: React.FC<{
       placeholder={placeholder}
       disabled={disabled}
       className={`input ${error ? 'input-error' : ''}`}
+      aria-describedby={error ? `${id}-error` : undefined}
     />
-    {error && <span className="error-text">{error}</span>}
+    {error && (
+      <span id={`${id}-error`} className="error-text" role="alert">
+        {error}
+      </span>
+    )}
   </div>
 );
 

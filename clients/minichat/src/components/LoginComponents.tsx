@@ -2,17 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Heading, Text, Input, Checkbox, Button, ErrorMessage, Container, Section } from './shared/UIComponents';
-import { useTheme } from '../contexts/ThemeContext';
-
-interface Colors {
-  background: string;
-  surface: string;
-  border: string;
-  primary: string;
-  text: string;
-  textSecondary: string;
-  error: string;
-}
+import { ThemeToggle } from '../components/ThemeComponents';
+import { Colors } from '../types/ColorTypes';
 
 export const LoginContainer: React.FC<{ colors: Colors; children: React.ReactNode }> = 
   ({ colors, children }) => <Container className="login-container">{children}</Container>;
@@ -26,17 +17,6 @@ export const LoginHeader: React.FC<{ colors: Colors }> = ({ colors }) => (
     <Text variant="secondary">Secure P2P Messaging</Text>
   </Section>
 );
-
-export const ThemeToggle: React.FC<{ colors: Colors; theme: string; onToggle: () => void }> = 
-  ({ colors, theme, onToggle }) => (
-    <Button
-      onClick={onToggle}
-      variant="primary"
-      className="theme-toggle"
-    >
-      {theme === 'light' ? '🌙' : '☀️'}
-    </Button>
-  );
 
 export const LoginFormInputs: React.FC<{
   username: string;

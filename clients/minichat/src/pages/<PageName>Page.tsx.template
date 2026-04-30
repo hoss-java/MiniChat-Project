@@ -1,0 +1,389 @@
+// src/pages/<PageName>Page.tsx
+/**
+ * <PageName> PAGE
+ * 
+ * This is the main page component that orchestrates:
+ * 1. State management (useState for form data, errors, loading)
+ * 2. Effects (useEffect for data fetching, side effects)
+ * 3. Context usage (useTheme, useAuth, custom hooks)
+ * 4. Event handlers (form submission, button clicks)
+ * 5. Conditional rendering (loading, empty, error states)
+ * 
+ * STRUCTURE:
+ * 1. Imports (React, hooks, contexts, components, CSS)
+ * 2. Interfaces (FormData, Errors, Props if needed)
+ * 3. Component definition with hooks
+ * 4. Effect hooks
+ * 5. Handler functions (validate, submit, etc.)
+ * 6. Render logic with conditional rendering
+ */
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+// Import context hooks
+import { useTheme } from '../contexts/ThemeContext';
+import { useAuth } from '../contexts/AuthContext';
+// Import page-specific components
+import {
+  <PageName>Container,
+  <PageName>Card,
+  <PageName>Header,
+  <PageName>Section,
+  <PageName>Actions,
+  <PageName>Loading,
+  <PageName>Empty,
+} from '../components/<PageName>Components';
+// Import shared UI components (if using directly)
+import { ErrorMessage, SuccessMessage } from '../components/shared/UIComponents';
+// Import types
+import { Colors } from '../types/ColorTypes';
+// Import page-specific CSS
+import './<PageName>Page.css';
+
+/**
+ * INTERFACES
+ * Define the shape of your form data, errors, and other state
+ */
+
+interface FormData {
+  // TODO: Add your form fields
+  // Example:
+  // field1: string;
+  // field2: number;
+  // field3: boolean;
+}
+
+interface FormErrors {
+  // TODO: Add error fields that match FormData
+  // Example:
+  // field1?: string;
+  // field2?: string;
+  general?: string;
+}
+
+interface PageState {
+  // TODO: Define the overall page state if needed
+  // Example:
+  // isLoading: boolean;
+  // data: FormData | null;
+  // errors: FormErrors;
+}
+
+/**
+ * MAIN PAGE COMPONENT
+ * 
+ * All state, effects, and logic live here.
+ * Components are composed and passed data/callbacks as props.
+ */
+const <PageName>Page: React.FC = () => {
+  // ========================
+  // STATE MANAGEMENT
+  // ========================
+
+  /**
+   * Form data state
+   * TODO: Replace with your actual form fields
+   * Initialize with empty/default values
+   */
+  const [formData, setFormData] = useState<FormData>({
+    // Example:
+    // field1: '',
+    // field2: 0,
+  });
+
+  /**
+   * Form errors state
+   * Tracks validation errors for each field
+   * Also includes general error for API/async errors
+   */
+  const [errors, setErrors] = useState<FormErrors>({});
+
+  /**
+   * Loading state
+   * - true when submitting form or fetching data
+   * - Used to disable buttons and show loading indicators
+   */
+  const [isLoading, setIsLoading] = useState(false);
+
+  /**
+   * Success message state (optional)
+   * - Shows after successful action
+   * - Can be cleared after timeout
+   */
+  const [successMessage, setSuccessMessage] = useState('');
+
+  /**
+   * Data fetching state (if page loads data)
+   * TODO: Add if your page fetches data on mount
+   * Example:
+   * const [pageData, setPageData] = useState<YourDataType | null>(null);
+   * const [dataLoading, setDataLoading] = useState(true);
+   */
+
+  // ========================
+  // CONTEXT & HOOKS
+  // ========================
+
+  const { colors } = useTheme();
+  const { user } = useAuth(); // TODO: Use relevant context hooks
+  const navigate = useNavigate();
+
+  // ========================
+  // EFFECT HOOKS
+  // ========================
+
+  /**
+   * useEffect: Data Fetching (on mount)
+   * 
+   * TODO: Uncomment and implement if your page loads data
+   * - Fetch data from API
+   * - Update state with response
+   * - Handle errors
+   * - Runs only once on component mount
+   */
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       setDataLoading(true);
+  //       const response = await fetch('/api/endpoint');
+  //       const data = await response.json();
+  //       setPageData(data);
+  //     } catch (error: any) {
+  //       setErrors({ general: error.message || 'Failed to load data' });
+  //     } finally {
+  //       setDataLoading(false);
+  //     }
+  //   };
+  //
+  //   fetchData();
+  // }, []); // Empty dependency array = runs once on mount
+
+  /**
+   * useEffect: Success message auto-clear
+   * 
+   * TODO: Uncomment if using success messages
+   * - Automatically clears success message after 3 seconds
+   * - Dependency on successMessage ensures it re-runs when message changes
+   */
+  // useEffect(() => {
+  //   if (successMessage) {
+  //     const timer = setTimeout(() => setSuccessMessage(''), 3000);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [successMessage]);
+
+  // ========================
+  // VALIDATION FUNCTIONS
+  // ========================
+
+  /**
+   * validateForm
+   * 
+   * TODO: Implement validation logic for your form
+   * - Check required fields
+   * - Validate field formats (email, phone, etc.)
+   * - Set errors state if validation fails
+   * - Return true if valid, false otherwise
+   * 
+   * EXAMPLE:
+   * const validateForm = (): boolean => {
+   *   const newErrors: FormErrors = {};
+   *   if (!formData.field1.trim()) {
+   *     newErrors.field1 = 'Field 1 is required';
+   *   }
+   *   if (formData.field2 < 0) {
+   *     newErrors.field2 = 'Field 2 must be positive';
+   *   }
+   *   setErrors(newErrors);
+   *   return Object.keys(newErrors).length === 0;
+   * };
+   */
+  const validateForm = (): boolean => {
+    const newErrors: FormErrors = {};
+    
+    // TODO: Add your validation logic here
+    // Example:
+    // if (!formData.field1.trim()) {
+    //   newErrors.field1 = 'This field is required';
+    // }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // ========================
+  // EVENT HANDLERS
+  // ========================
+
+  /**
+   * handleInputChange
+   * 
+   * Generic handler for form input changes
+   * TODO: Adapt to your form fields
+   * 
+   * USAGE:
+   * <Input value={formData.field1} onChange={(v) => handleInputChange('field1', v)} />
+   */
+  const handleInputChange = (fieldName: keyof FormData, value: any) => {
+    setFormData(prev => ({
+      ...prev,
+      [fieldName]: value,
+    }));
+    // Clear error for this field when user starts typing
+    if (errors[fieldName as keyof FormErrors]) {
+      setErrors(prev => ({
+        ...prev,
+        [fieldName]: undefined,
+      }));
+    }
+  };
+
+  /**
+   * handleSubmit
+   * 
+   * TODO: Implement form submission logic
+   * - Validate form
+   * - Show loading state
+   * - Make API call to save/update data
+   * - Handle success/error responses
+   * - Navigate or show success message
+   * 
+   * EXAMPLE:
+   * const handleSubmit = async (e: React.FormEvent) => {
+   *   e.preventDefault();
+   *   if (!validateForm()) return;
+   *
+   *   setIsLoading(true);
+   *   try {
+   *     const response = await fetch('/api/endpoint', {
+   *       method: 'POST',
+   *       headers: { 'Content-Type': 'application/json' },
+   *       body: JSON.stringify(formData),
+   *     });
+   *     const result = await response.json();
+   *     setSuccessMessage('Saved successfully!');
+   *     setTimeout(() => navigate('/dashboard'), 1500);
+   *   } catch (error: any) {
+   *     setErrors({ general: error.message || 'Failed to save' });
+   *   } finally {
+   *     setIsLoading(false);
+   *   }
+   * };
+   */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    setIsLoading(true);
+    try {
+      // TODO: Implement your API call here
+      // Example:
+      // const response = await api.post('/endpoint', formData);
+      // setSuccessMessage('Operation successful!');
+      // navigate('/success-page');
+    } catch (error: any) {
+      setErrors({ 
+        general: error.message || 'An error occurred. Please try again.' 
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /**
+   * handleCancel
+   * 
+   * TODO: Implement cancel logic
+   * - Navigate back or reset form
+   * - Clear errors and success messages
+   */
+  const handleCancel = () => {
+    // Option 1: Navigate back
+    navigate(-1);
+    
+    // Option 2: Reset form
+    // setFormData({ /* initial state */ });
+    // setErrors({});
+  };
+
+  // ========================
+  // CONDITIONAL RENDERING
+  // ========================
+
+  /**
+   * TODO: Uncomment if your page fetches data
+   * Show loading spinner while fetching
+   */
+  // if (dataLoading) {
+  //   return (
+  //     <<PageName>Container colors={colors}>
+  //       <<PageName>Loading colors={colors} />
+  //     </<PageName>Container>
+  //   );
+  // }
+
+  /**
+   * TODO: Uncomment if you have empty state
+   * Show empty state when no data
+   */
+  // if (!pageData) {
+  //   return (
+  //     <<PageName>Container colors={colors}>
+  //       <<PageName>Empty
+  //         colors={colors}
+  //         message="No data found. Create one to get started."
+  //         action={{
+  //           label: 'Create New',
+  //           onClick: () => navigate('/create'),
+  //         }}
+  //       />
+  //     </<PageName>Container>
+  //   );
+  // }
+
+  // ========================
+  // MAIN RENDER
+  // ========================
+
+  return (
+    <<PageName>Container colors={colors}>
+      {/* Page Header */}
+      <<PageName>Header colors={colors} />
+
+      {/* Main Card with Form */}
+      <<PageName>Card colors={colors}>
+        {/* General Error Message */}
+        {errors.general && <ErrorMessage message={errors.general} />}
+
+        {/* Success Message */}
+        {successMessage && <SuccessMessage message={successMessage} />}
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="page-name-form">
+          {/* TODO: Add your form components here */}
+          {/* 
+            Example:
+            <<PageName>FormInputs
+              formData={formData}
+              errors={errors}
+              isLoading={isLoading}
+              colors={colors}
+              onInputChange={handleInputChange}
+            />
+          */}
+        </form>
+      </<PageName>Card>
+
+      {/* Action Buttons */}
+      <<PageName>Actions
+        colors={colors}
+        onPrimaryClick={handleSubmit}
+        onSecondaryClick={handleCancel}
+        isLoading={isLoading}
+      />
+    </<PageName>Container>
+  );
+};
+
+export default <PageName>Page;

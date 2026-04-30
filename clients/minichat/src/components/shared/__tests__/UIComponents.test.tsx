@@ -26,7 +26,7 @@ import {
   ErrorMessage,
   SuccessMessage,
   Section,
-} from './UIComponents';
+} from '../UIComponents';
 
 describe('UIComponents', () => {
   

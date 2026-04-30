@@ -5,8 +5,8 @@
  * Tests: JWT injection, 401 refresh retry, error handling, all HTTP methods
  */
 
-import { ApiClient } from './ApiClient';
-import { API_CONFIG } from '../config/apiConfig';
+import { ApiClient } from '../ApiClient';
+import { API_CONFIG } from '../../config/apiConfig';
 
 // Mock fetch globally
 global.fetch = jest.fn();
