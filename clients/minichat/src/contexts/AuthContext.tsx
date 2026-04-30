@@ -47,6 +47,21 @@ interface AuthContextType {
 }
 
 
+/**
+ * AuthState interface
+ * Holds the current authentication state of the app
+ * - user: null if logged out, User object if logged in
+ * - token: null if logged out, JWT string if logged in
+ * - isAuthenticated: boolean flag for easy checking
+ * - isLoading: true while checking auth from localStorage/server, false when done
+ */
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}
+
 // ============ INITIAL STATE ============
 
 /**
@@ -57,7 +72,9 @@ const initialState: AuthState = {
   user: null,
   token: null,
   isAuthenticated: false,
+  isLoading: true, // Start as true until localStorage is checked
 };
+
 
 // ============ CREATE CONTEXT ============
 
@@ -115,7 +132,10 @@ interface AuthProviderProps {
  */
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Initialize state from localStorage on first render
-  const [state, setState] = useState<AuthState>(() => loadFromLocalStorage());
+	const [state, setState] = useState<AuthState>(() => {
+	  const loaded = loadFromLocalStorage();
+	  return { ...loaded, isLoading: false };
+	});
 
 	/**
 	 * login(username, password)
@@ -132,11 +152,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	const login = async (username: string, password: string): Promise<void> => {
 	  try {
 	    const response = await apiClient.post('/auth/login', { username, password });
-	    const newState: AuthState = {
-	      user: response.user,
-	      token: response.token,
-	      isAuthenticated: true,
-	    };
+			const newState: AuthState = {
+			  user: response.user,
+			  token: response.token,
+			  isAuthenticated: true,
+			  isLoading: false,
+			};
+
 	    setState(newState);
 	    saveToLocalStorage(newState);
 	  } catch (error: any) {
@@ -212,11 +234,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	      password,
 	      passwordConfirm,
 	    });
-	    const newState: AuthState = {
-	      user: response.user,
-	      token: response.token,
-	      isAuthenticated: true,
-	    };
+			const newState: AuthState = {
+			  user: response.user,
+			  token: response.token,
+			  isAuthenticated: true,
+			  isLoading: false,
+			};
+
 	    setState(newState);
 	    saveToLocalStorage(newState);
 	  } catch (error: any) {
