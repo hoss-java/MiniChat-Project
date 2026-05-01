@@ -268,11 +268,14 @@ graph TD
 ## Commit Activity
 
 ```mermaid
-bar
-    title Commits by Phase Component
-    x-axis Backend, Frontend, DevOps/Config
-    y-axis Commits
-    bar 13, 15, 8
+graph LR
+    A["🔧 Backend<br/>13 commits"] 
+    B["🎨 Frontend<br/>15 commits"]
+    C["⚙️ DevOps/Config<br/>8 commits"]
+    
+    style A fill:#4A90E2
+    style B fill:#7ED321
+    style C fill:#F5A623
 ```
 
 - **Backend commits:** 13 (auth endpoints, tests, JWT filter)
