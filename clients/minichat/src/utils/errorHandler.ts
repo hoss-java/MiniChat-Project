@@ -5,9 +5,14 @@
  * - message: Human-readable error message
  */
 export class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  public readonly status: number;
+
+  constructor(status: number, message: string) {
     super(message);
+    this.status = status;
     this.name = 'ApiError';
+    // Fix instanceof check in TypeScript
+    Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
 
@@ -21,6 +26,11 @@ export const handleError = (error: any): { status: number; message: string } => 
   if (error instanceof ApiError) {
     return { status: error.status, message: error.message };
   }
-  
-  return { status: 500, message: error.message || 'Unknown error' };
+
+  // Check if error has status property (for non-ApiError objects)
+  if (error?.status && typeof error.status === 'number') {
+    return { status: error.status, message: error.message || 'Unknown error' };
+  }
+
+  return { status: 500, message: error?.message || 'Unknown error' };
 };

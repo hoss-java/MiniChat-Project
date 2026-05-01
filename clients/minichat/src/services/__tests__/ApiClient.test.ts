@@ -241,6 +241,165 @@ describe('ApiClient', () => {
     });
   });
 
+  // ==================== Max Retries Tests ====================
+
+  describe('Max Retries Exceeded', () => {
+    /**
+     * Parametrized Test: Should logout and throw error when max retries exceeded
+     * Scenario: Test various retry attempts that exceed maxRetries threshold
+     */
+    describe.each([
+      [3, 'reaches max retries (3)'],
+      [5, 'exceeds max retries (5)'],
+      [10, 'far exceeds max retries (10)'],
+    ])('with retryAttempt >= maxRetries', (retryAttempt, scenario) => {
+      /**
+       * Test: Should logout user when %s
+       * Scenario: Receive 401 response after %s
+       */
+      it(`should logout user when ${scenario}`, async () => {
+        const mockResponse = {
+          status: 401,
+          ok: false,
+          json: async () => ({ message: 'Unauthorized' }),
+        };
+        (global.fetch as jest.Mock).mockResolvedValueOnce(mockResponse);
+
+        try {
+          await apiClient.request('GET', '/protected-endpoint', null, retryAttempt);
+          fail('Should have thrown ApiError');
+        } catch (error: any) {
+          expect(mockAuthService.logout).toHaveBeenCalled();
+        }
+      });
+
+      /**
+       * Test: Should throw ApiError with retry message when %s
+       * Scenario: After %s attempts, should reject with appropriate message
+       */
+      it(`should throw error with retry message when ${scenario}`, async () => {
+        const mockResponse = {
+          status: 401,
+          ok: false,
+          json: async () => ({ message: 'Unauthorized' }),
+        };
+        (global.fetch as jest.Mock).mockResolvedValueOnce(mockResponse);
+
+        try {
+          await apiClient.request('GET', '/protected-endpoint', null, retryAttempt);
+          fail('Should have thrown ApiError');
+        } catch (error: any) {
+          expect(error.message).toContain(`Session expired after`);
+          expect(error.message).toContain(`retries`);
+          expect(error.status).toBe(401);
+        }
+      });
+
+      /**
+       * Test: Should not attempt refresh when %s
+       * Scenario: Should skip token refresh logic and go straight to logout
+       */
+      it(`should not attempt token refresh when ${scenario}`, async () => {
+        const mockResponse = {
+          status: 401,
+          ok: false,
+          json: async () => ({ message: 'Unauthorized' }),
+        };
+        (global.fetch as jest.Mock).mockResolvedValueOnce(mockResponse);
+
+        try {
+          await apiClient.request('GET', '/protected-endpoint', null, retryAttempt);
+        } catch (error) {
+          // Verify refreshToken was NOT called
+          expect(mockAuthService.refreshToken).not.toHaveBeenCalled();
+        }
+      });
+    });
+
+    /**
+     * Test: Should not exceed max retries when retryAttempt < maxRetries
+     * Scenario: Retry count below threshold should attempt refresh
+     */
+    it('should attempt refresh when retryAttempt < maxRetries', async () => {
+      mockAuthService.refreshToken.mockResolvedValueOnce(undefined);
+
+      const mockUnauthorizedResponse = {
+        status: 401,
+        ok: false,
+        json: async () => ({ message: 'Unauthorized' }),
+      };
+
+      const mockSuccessResponse = {
+        status: 200,
+        ok: true,
+        json: async () => ({ success: true }),
+      };
+
+      // First call returns 401, second call (after refresh) returns 200
+      (global.fetch as jest.Mock)
+        .mockResolvedValueOnce(mockUnauthorizedResponse)
+        .mockResolvedValueOnce(mockSuccessResponse);
+
+      const result = await apiClient.request('GET', '/protected-endpoint', null, 0);
+
+      expect(mockAuthService.refreshToken).toHaveBeenCalled();
+      expect(result).toEqual({ success: true });
+    });
+
+    /**
+     * Test: Should increment retry count on recursive call
+     * Scenario: Each retry should pass incremented retryAttempt to recursive call
+     */
+    it('should increment retry count on each attempt', async () => {
+      mockAuthService.refreshToken.mockResolvedValueOnce(undefined);
+
+      const mockUnauthorizedResponse = {
+        status: 401,
+        ok: false,
+        json: async () => ({ message: 'Unauthorized' }),
+      };
+
+      const mockSuccessResponse = {
+        status: 200,
+        ok: true,
+        json: async () => ({ success: true }),
+      };
+
+      (global.fetch as jest.Mock)
+        .mockResolvedValueOnce(mockUnauthorizedResponse)
+        .mockResolvedValueOnce(mockSuccessResponse);
+
+      await apiClient.request('GET', '/protected-endpoint', null, 1);
+
+      // Verify refreshToken was called (indicating retry attempt was incremented)
+      expect(mockAuthService.refreshToken).toHaveBeenCalled();
+    });
+
+    /**
+     * Test: Should logout if refresh token fails after retry
+     * Scenario: 401 received → refresh attempted → refresh fails → logout
+     */
+    it('should logout if refresh token fails', async () => {
+      mockAuthService.refreshToken.mockRejectedValueOnce(new Error('Refresh failed'));
+
+      const mockUnauthorizedResponse = {
+        status: 401,
+        ok: false,
+        json: async () => ({ message: 'Unauthorized' }),
+      };
+
+      (global.fetch as jest.Mock).mockResolvedValueOnce(mockUnauthorizedResponse);
+
+      try {
+        await apiClient.request('GET', '/protected-endpoint', null, 0);
+        fail('Should have thrown ApiError');
+      } catch (error: any) {
+        expect(mockAuthService.logout).toHaveBeenCalled();
+        expect(error.message).toContain('Session expired');
+      }
+    });
+  });
+
   // ==================== 204 No Content Tests ====================
 
   describe('204 No Content Response', () => {

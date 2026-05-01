@@ -152,6 +152,8 @@ interface AuthProviderProps {
 
 		  if (status === 400) {
 		    throw new Error(message || 'Invalid input. Please check your information');
+  		} else if (status === 401) {
+  			throw new Error(message || 'Invalid credentials');
 		  } else if (status === 409) {
 		    throw new Error(message || 'Email or username already exists');
 		  } else if (!status) {  // ✅ Check if status exists
@@ -265,7 +267,8 @@ interface AuthProviderProps {
 	    saveToLocalStorage(newState);
 	  } catch (error: any) {
 		  setState(initialState);
-		  console.error('Failed to fetch user:', error.message);
+		  saveToLocalStorage(initialState);
+		  console.error('Failed to fetch user:', error.message || 'Unkwon fetchUser error');
 		  throw error;
 		}
 	};
@@ -310,6 +313,8 @@ interface AuthProviderProps {
 
 		  if (status === 400) {
 		    throw new Error(message || 'Invalid input. Please check your information');
+  		} else if (status === 401) {
+  			throw new Error(message || 'Invalid credentials');
 		  } else if (status === 409) {
 		    throw new Error(message || 'Email or username already exists');
 		  } else if (!status) {  // ✅ Check if status exists

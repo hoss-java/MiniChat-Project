@@ -47,6 +47,7 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     if (!validateForm()) return;
     setIsLoading(true);
+    setErrors({}); 
     try {
       await login(username, password);
       if (rememberMe) localStorage.setItem('rememberMe', username);

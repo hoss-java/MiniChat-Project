@@ -171,7 +171,7 @@ describe('RegisterPage', () => {
     test('should render register button with correct text', () => {
       renderRegisterPage();
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       expect(registerBtn).toBeInTheDocument();
       expect(registerBtn).not.toBeDisabled();
     });
@@ -229,7 +229,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, 'Password123!');
       await userEvent.type(confirmInput, 'Password123!');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn); // Changed from fireEvent.click
 
       if (!shouldBeValid) {
@@ -348,7 +348,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       fireEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -369,7 +369,7 @@ describe('RegisterPage', () => {
       renderRegisterPage();
 
       const emailInput = screen.getByLabelText(/email/i);
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
 
       // Submit with empty email (invalid)
       await userEvent.type(emailInput, '');
@@ -400,7 +400,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const form = screen.getByRole('button', { name: /create account/i }).closest('form');
+      const form = screen.getByRole('button', { name: 'Create Account' }).closest('form');
       const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
       const preventDefaultSpy = jest.spyOn(submitEvent, 'preventDefault');
 
@@ -432,7 +432,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       fireEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -465,7 +465,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       fireEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -495,7 +495,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       fireEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -532,7 +532,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       fireEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -562,7 +562,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       // Wait for the success message to appear
@@ -598,7 +598,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       // Message should appear after promise resolves
@@ -676,7 +676,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -704,7 +704,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -731,7 +731,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -762,7 +762,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -794,7 +794,7 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      let registerBtn = screen.getByRole('button', { name: /create account/i });
+      let registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -805,7 +805,7 @@ describe('RegisterPage', () => {
       await userEvent.clear(emailInput);
       await userEvent.type(emailInput, validFormData.email);
       
-      registerBtn = screen.getByRole('button', { name: /create account/i });
+      registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -838,11 +838,11 @@ describe('RegisterPage', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
-        expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: 'Create Account' })).toBeInTheDocument();
       });
 
       // User modifies form - error should still be visible until next submission
@@ -968,7 +968,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       // Wait for success message to appear first
@@ -1005,7 +1005,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, validFormData.password);
       await userEvent.type(confirmInput, validFormData.passwordConfirm);
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -1147,7 +1147,7 @@ describe('Field Interactions & User Input', () => {
     test('should be keyboard accessible', async () => {
       renderRegisterPage();
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       const loginLink = screen.getByRole('link', { name: /sign in/i });
 
       // Button and link should be focusable
@@ -1166,7 +1166,7 @@ describe('Field Interactions & User Input', () => {
       renderRegisterPage();
 
       const emailInput = screen.getByLabelText(/email/i);
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
 
       // Submit with empty email
       await userEvent.click(registerBtn);
@@ -1197,7 +1197,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, 'Password123!');
       await userEvent.type(confirmInput, 'Password123!');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -1228,7 +1228,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, 'Password123!');
       await userEvent.type(confirmInput, 'Password123!');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn); // Use userEvent.click instead of fireEvent
 
       await waitFor(() => {
@@ -1260,7 +1260,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, 'Password123!');
       await userEvent.type(confirmInput, 'Password123!');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -1289,7 +1289,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, 'Password123!');
       await userEvent.type(confirmInput, 'Password123!');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -1323,7 +1323,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, 'Password123!');
       await userEvent.type(confirmInput, 'Password123!');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
 
       // Click button multiple times rapidly
       await userEvent.click(registerBtn);
@@ -1371,7 +1371,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, 'Password123!');
       await userEvent.type(confirmInput, 'Password123!');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       // Should allow international domains
@@ -1394,7 +1394,7 @@ describe('Field Interactions & User Input', () => {
       // Verify the page rendered (which means hooks were called successfully)
       expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
       expect(screen.getByLabelText(/username/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Create Account' })).toBeInTheDocument();
 
       // Verify mockRegister is available (from useAuth)
       expect(mockRegister).toBeDefined();
@@ -1441,7 +1441,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, 'Password123!');
       await userEvent.type(confirmInput, 'Password123!');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn); // Changed from fireEvent to userEvent
 
       // Wait for the 2000ms timeout in the component before navigation
@@ -1474,7 +1474,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, 'short'); // invalid length
       await userEvent.type(confirmInput, 'short');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -1499,7 +1499,7 @@ describe('Field Interactions & User Input', () => {
       const confirmInput = screen.getByLabelText(/confirm password/i);
 
       // Submit with multiple invalid fields (all empty)
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -1529,7 +1529,7 @@ describe('Field Interactions & User Input', () => {
       await userEvent.type(passwordInput, 'Password123!');
       await userEvent.type(confirmInput, 'Password123!');
 
-      const registerBtn = screen.getByRole('button', { name: /create account/i });
+      const registerBtn = screen.getByRole('button', { name: 'Create Account' });
       await userEvent.click(registerBtn);
 
       await waitFor(() => {
@@ -1540,6 +1540,227 @@ describe('Field Interactions & User Input', () => {
 
       // No error messages should be visible
       expect(screen.queryByText('Email is required')).not.toBeInTheDocument();
+    });
+  });
+
+  // ==================== validateForm Tests ====================
+
+  describe('validateForm', () => {
+    /**
+     * Parametrized Test: Should validate email field
+     * Scenario: Test various email formats (valid, empty, invalid format)
+     */
+    describe.each([
+      ['', 'Email is required', 'empty email'],
+      ['invalid-email', 'Email format is invalid', 'invalid format'],
+      ['user@domain', 'Email format is invalid', 'missing TLD'],
+      ['testuser@example.com', null, 'valid email'],
+      ['user+tag@example.co.uk', null, 'valid email with plus'],
+    ])('email validation', (email, expectedError, scenario) => {
+      /**
+       * Test: Should show email error for %s
+       * Scenario: Submit form with %s
+       */
+      test(`should validate ${scenario}`, async () => {
+        renderRegisterPage();
+
+        const emailInput = screen.getByLabelText(/email/i);
+        await userEvent.type(emailInput, email);
+        await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+
+        if (expectedError) {
+          await waitFor(() => {
+            expect(screen.getByText(expectedError)).toBeInTheDocument();
+          });
+        } else {
+          // For valid email, it should not show email error (may show other errors)
+          expect(screen.queryByText('Email format is invalid')).not.toBeInTheDocument();
+          expect(screen.queryByText('Email is required')).not.toBeInTheDocument();
+        }
+      });
+    });
+
+    /**
+     * Parametrized Test: Should validate username field
+     * Scenario: Test username length and presence (empty, too short, too long, valid)
+     */
+    describe.each([
+      ['', 'Username is required', 'empty username'],
+      ['ab', 'Username must be at least 3 characters', 'too short (2 chars)'],
+      ['a'.repeat(51), 'Username must be at most 50 characters', 'too long (51 chars)'],
+      ['validuser', null, 'valid username (9 chars)'],
+      ['abc', null, 'valid username (3 chars - minimum)'],
+      ['a'.repeat(50), null, 'valid username (50 chars - maximum)'],
+    ])('username validation', (username, expectedError, scenario) => {
+      /**
+       * Test: Should validate %s
+       * Scenario: Submit form with %s
+       */
+      test(`should validate ${scenario}`, async () => {
+        renderRegisterPage();
+
+        const usernameInput = screen.getByLabelText(/username/i);
+        await userEvent.type(usernameInput, username);
+        await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+
+        if (expectedError) {
+          await waitFor(() => {
+            expect(screen.getByText(expectedError)).toBeInTheDocument();
+          });
+        } else {
+          expect(screen.queryByText(/username/i, { selector: '.error' })).not.toBeInTheDocument();
+        }
+      });
+    });
+
+    /**
+     * Parametrized Test: Should validate password field
+     * Scenario: Test password presence and length (empty, too short, valid)
+     */
+    describe.each([
+      ['', 'Password is required', 'empty password'],
+      ['12345', 'Password must be at least 6 characters', 'too short (5 chars)'],
+      ['123456', null, 'valid password (6 chars - minimum)'],
+      ['ValidPassword123!', null, 'valid strong password'],
+    ])('password validation', (password, expectedError, scenario) => {
+      /**
+       * Test: Should validate %s
+       * Scenario: Submit form with %s
+       */
+      test(`should validate ${scenario}`, async () => {
+        renderRegisterPage();
+
+        const passwordInput = screen.getByLabelText(/^password$/i);
+        await userEvent.type(passwordInput, password);
+        await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+
+        if (expectedError) {
+          await waitFor(() => {
+            expect(screen.getByText(expectedError)).toBeInTheDocument();
+          });
+        } else {
+          expect(screen.queryByText('Password is required')).not.toBeInTheDocument();
+          expect(screen.queryByText('Password must be at least 6 characters')).not.toBeInTheDocument();
+        }
+      });
+    });
+
+    /**
+     * Parametrized Test: Should validate password confirmation field
+     * Scenario: Test password mismatch and confirmation presence
+     */
+    describe.each([
+      ['Password123!', '', 'Password confirmation is required', 'empty confirmation'],
+      ['Password123!', 'DifferentPassword', 'Passwords do not match', 'mismatched passwords'],
+      ['Password123!', 'Password123!', null, 'matching passwords'],
+    ])('password confirmation validation', (password, passwordConfirm, expectedError, scenario) => {
+      /**
+       * Test: Should validate %s
+       * Scenario: Submit form with %s
+       */
+      test(`should validate ${scenario}`, async () => {
+        renderRegisterPage();
+
+        const passwordInput = screen.getByLabelText(/^password$/i);
+        const confirmInput = screen.getByLabelText(/confirm password/i);
+
+        await userEvent.type(passwordInput, password);
+        await userEvent.type(confirmInput, passwordConfirm);
+        await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+
+        if (expectedError) {
+          await waitFor(() => {
+            expect(screen.getByText(expectedError)).toBeInTheDocument();
+          });
+        } else {
+          expect(screen.queryByText('Password confirmation is required')).not.toBeInTheDocument();
+          expect(screen.queryByText('Passwords do not match')).not.toBeInTheDocument();
+        }
+      });
+    });
+
+    /**
+     * Test: Should prevent form submission when validation fails
+     * Scenario: Submit form with invalid data
+     */
+    test('should prevent form submission when validation fails', async () => {
+      renderRegisterPage();
+
+      const submitButton = screen.getByRole('button', { name: 'Create Account' });
+      await userEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(mockRegister).not.toHaveBeenCalled();
+      });
+    });
+
+    /**
+     * Test: Should allow form submission when all fields are valid
+     * Scenario: Submit form with valid data and register succeeds
+     */
+    test('should allow form submission when all fields are valid', async () => {
+      mockRegister.mockResolvedValueOnce({});
+      renderRegisterPage();
+
+      const emailInput = screen.getByLabelText(/email/i);
+      const usernameInput = screen.getByLabelText(/username/i);
+      const passwordInput = screen.getByLabelText(/^password$/i);
+      const confirmInput = screen.getByLabelText(/confirm password/i);
+
+      await userEvent.type(emailInput, validFormData.email);
+      await userEvent.type(usernameInput, validFormData.username);
+      await userEvent.type(passwordInput, validFormData.password);
+      await userEvent.type(confirmInput, validFormData.passwordConfirm);
+
+      await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+
+      await waitFor(() => {
+        expect(mockRegister).toHaveBeenCalledWith(
+          validFormData.email,
+          validFormData.username,
+          validFormData.password,
+          validFormData.passwordConfirm
+        );
+      });
+    });
+
+    /**
+     * Test: Should clear previous errors when form is corrected
+     * Scenario: Show error → user fixes → error disappears
+     */
+    test('should clear errors when form is corrected', async () => {
+      renderRegisterPage();
+
+      const emailInput = screen.getByLabelText(/email/i);
+
+      // Step 1: Enter invalid email
+      await userEvent.type(emailInput, 'invalid-email');
+      await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+
+      // Step 2: Verify error is shown
+      await waitFor(() => {
+        expect(screen.getByText('Email format is invalid')).toBeInTheDocument();
+      });
+
+      // Step 3: Clear and enter valid email
+      await userEvent.clear(emailInput);
+      await userEvent.type(emailInput, validFormData.email);
+
+      // Step 4: Submit again
+      const usernameInput = screen.getByLabelText(/username/i);
+      const passwordInput = screen.getByLabelText(/^password$/i);
+      const confirmInput = screen.getByLabelText(/confirm password/i);
+
+      await userEvent.type(usernameInput, validFormData.username);
+      await userEvent.type(passwordInput, validFormData.password);
+      await userEvent.type(confirmInput, validFormData.passwordConfirm);
+
+      mockRegister.mockResolvedValueOnce({});
+
+      await userEvent.click(screen.getByRole('button', { name: 'Create Account' }));
+
+      // Step 5: Email error should be cleared
+      expect(screen.queryByText('Email format is invalid')).not.toBeInTheDocument();
     });
   });
 
