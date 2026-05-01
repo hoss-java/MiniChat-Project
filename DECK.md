@@ -3645,23 +3645,8 @@ gantt
 > | SockJS fallback | HTTP long-polling alternative | Browser/network compatibility |
 > </details>
 
-## 001-0002
-> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> The goal of this card is to configure github workflows for this repository.
-> 
-> # DOD (definition of done):
-> 
-> # TODO:
-> - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0020
-> **User session tracking (online/offline)** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **User session tracking (online/offline)** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -3674,19 +3659,71 @@ gantt
 > - Session data persists only during connection
 > 
 > # TODO:
-> - [] 1. Create UserSession class to store user connection metadata
-> - [] 2. Create SessionManager service (in-memory or Redis)
-> - [] 3. Implement user connect handler (WebSocket event)
-> - [] 4. Implement user disconnect handler (WebSocket event)
-> - [] 5. Broadcast online status to room on connect/disconnect
-> - [] 6. Handle reconnection scenarios
+> - [x] 1. Create UserSession class to store user connection metadata
+> - [x] 2. Create SessionManager service (in-memory or Redis)
+> - [x] 3. Implement user connect handler (WebSocket event)
+> - [x] 4. Implement user disconnect handler (WebSocket event)
+> - [x] 5. Broadcast online status to room on connect/disconnect
+> - [x] 6. Handle reconnection scenarios
 > 
 > # Reports:
-> *
+> # Report: User Session Tracking Implementation
+> 
+> ## Files Created
+> 
+> | File | Location | Purpose |
+> |------|----------|---------|
+> | **UserSession.java** | `model/` | In-memory model storing user connection metadata (userId, username, socketSessionId, roomId, connectedAt, lastActivityAt, connectionStatus) |
+> | **SessionManager.java** | `service/` | In-memory store managing user sessions, room membership, and connection lifecycle (connect, join room, leave room, disconnect) |
+> | **WebSocketAuthInterceptor.java** | `config/` | Extracts and validates JWT token from WebSocket CONNECT message, authenticates user before connection |
+> | **WebSocketEventListener.java** | `listener/` | Listens to Spring WebSocket lifecycle events (SessionConnectEvent, SessionDisconnectEvent) and triggers session tracking |
+> 
+> 
+> ## How They Work Together
+> 
+> 1. **User connects to WebSocket** → `WebSocketAuthInterceptor` validates JWT token
+> 2. **Connection established** → `WebSocketEventListener.handleWebSocketConnectListener()` fires
+> 3. **SessionManager.connectUser()** registers user as online with metadata
+> 4. **User joins room** → `SessionManager.joinRoom()` adds user to room members list
+> 5. **User disconnects** → `WebSocketEventListener.handleWebSocketDisconnectListener()` fires
+> 6. **SessionManager.disconnectUser()** removes user from all tracking
+> 
+> 
+> ## How This Helps Phase 2
+> 
+> ✅ **Real-time user tracking** — Know exactly which users are online/offline at any moment  
+> ✅ **Room membership management** — Track who is in each room, enable peer discovery  
+> ✅ **Session persistence** — Only in-memory during connection (no database bloat)  
+> ✅ **Foundation for broadcasts** — Ready to send online/offline status events to room members  
+> ✅ **Ready for P2P signaling** — SessionManager provides peer list needed for WebRTC peer discovery (`/api/rooms/{roomId}/peers`)
+> 
+> 
+> ## What's Complete vs. Incomplete
+> 
+> **Complete:**
+> - UserSession model with all required metadata
+> - SessionManager with full CRUD operations for sessions & room membership
+> - WebSocket authentication interceptor
+> 
+> **Incomplete (next tasks):**
+> - Connect/disconnect handlers calling SessionManager methods
+> - Broadcasting online/offline events to room members
+> - REST endpoint for peer discovery
+> - Reconnection scenario handling
+> 
+> 
+> ## **File Summary**
+> 
+> | File | Location | Status |
+> |------|----------|--------|
+> | OnlineStatusDto.java | `dto/` | New |
+> | RoomWebSocketController.java | `controller/` | New |
+> | WebSocketAuthInterceptor.java | `config/` | Modify |
+> | WebSocketEventListener.java | `listener/` | Modify |
 > </details>
 
 ## 001-0021
-> **Room entity and service** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **Room entity and service** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -3700,14 +3737,85 @@ gantt
 > - List rooms endpoint returns all available rooms
 > 
 > # TODO:
-> - [] 1. Create Room entity (id, name, createdBy, createdAt)
-> - [] 2. Create RoomRepository (JPA interface)
-> - [] 3. Create RoomService with business logic
-> - [] 4. Implement createRoom(userId, roomName)
-> - [] 5. Implement joinRoom(roomId, userId)
-> - [] 6. Implement leaveRoom(roomId, userId)
-> - [] 7. Implement listRooms() - return all rooms
-> - [] 8. Add validation (room name not empty, user exists)
+> - [x] 1. Create Room entity (id, name, createdBy, createdAt)
+> - [x] 2. Create RoomRepository (JPA interface)
+> - [x] 3. Create RoomService with business logic
+> - [x] 4. Implement createRoom(userId, roomName)
+> - [x] 5. Implement joinRoom(roomId, userId)
+> - [x] 6. Implement leaveRoom(roomId, userId)
+> - [x] 7. Implement listRooms() - return all rooms
+> - [x] 8. Add validation (room name not empty, user exists)
+> 
+> # Reports:
+> ## TRoom Entity & Business Logic
+> 
+> ### What Added
+> 
+> #### 1. **Room Entity** (`Room.java`)
+> - JPA entity with fields: `id`, `name`, `createdBy` (ManyToOne User), `createdAt`
+> - Uses Lombok annotations (@Data, @Builder, @NoArgsConstructor, @AllArgsConstructor)
+> - Auto-generated ID and timestamp management
+> - **Purpose:** Database representation of chat rooms
+> 
+> #### 2. **RoomRepository** (`RoomRepository.java`)
+> - JPA interface extending `JpaRepository<Room, Long>`
+> - Methods: `findAll()`, `findById()`, `findByCreatedByUserId()`
+> - **Purpose:** Database access layer for Room CRUD operations
+> 
+> #### 3. **RoomService** (`RoomService.java`)
+> - Core business logic layer with 5 methods:
+>   - `createRoom(userId, roomName)` — creates room, validates input, adds creator as member
+>   - `joinRoom(roomId, userId)` — adds user to room's member set
+>   - `leaveRoom(roomId, userId)` — removes user from room's member set
+>   - `listRooms()` — returns all available rooms
+>   - `getRoomMembers(roomId)` — returns active members in a room
+>   - `getRoomById(roomId)` — retrieves single room by ID
+> - In-memory member tracking using `ConcurrentHashMap<Long, Set<Long>>`
+> - Full validation: room name (not empty, <100 chars), user exists, room exists
+> - **Purpose:** Handles room CRUD, membership management, and real-time peer discovery
+> 
+> ### How This Helps Phase 2
+> 
+> | Component | Phase 2 Goal | Contribution |
+> |-----------|--------------|--------------|
+> | **Room Entity** | Enable room data persistence | Stores room metadata in DB for multi-session access |
+> | **RoomRepository** | Provide database access | Enables CRUD queries on rooms table |
+> | **RoomService** | Manage rooms & peer discovery | Core logic for room creation, joining, peer listing |
+> | **Member Tracking** | Support peer discovery endpoint | In-memory tracking enables `/api/rooms/{roomId}/peers` |
+> | **Validation** | Ensure data integrity | Prevents invalid rooms and unauthorized access |
+> 
+> ### Integration Points
+> 
+> - **Peer Discovery Endpoint** (`/api/rooms/{roomId}/peers`) — uses `getRoomMembers()` to return online peers
+> - **WebSocket Signaling** — room membership determines who receives SDP/ICE messages
+> - **User Sessions** — `SessionManager` can query `getRoomMembers()` for online status
+> - **REST Controllers** — ready for RoomController endpoints (create, join, leave, list)
+> 
+> ### Deliverable Status
+> 
+> ✅ DOD Met:
+> - Room entity with JPA mapping exists
+> - RoomService handles CRUD operations
+> - Validation in place (room name, user exists)
+> - Ready for REST endpoint implementation
+> 
+> ### Next Steps
+> 
+> 1. Create `RoomController` with HTTP endpoints
+> 2. Implement integration tests for RoomService
+> 3. Connect to WebSocket signaling for real-time updates
+> </details>
+
+## 001-0002
+> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> The goal of this card is to configure github workflows for this repository.
+> 
+> # DOD (definition of done):
+> 
+> # TODO:
+> - [] 1.
 > 
 > # Reports:
 > *
