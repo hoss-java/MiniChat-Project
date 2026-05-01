@@ -8,30 +8,23 @@
 
 import React, { createContext, useState, useContext, ReactNode } from 'react';
 import { apiClient } from '../services/ApiClient';
-
+import { authService } from '../services/AuthService';
+import { User } from '../types/UserTypes';
 // ============ INTERFACES ============
-
-/**
- * User interface
- * Represents a logged-in user's data
- */
-interface User {
-  id: string;
-  username: string;
-  email: string;
-}
 
 /**
  * AuthState interface
  * Holds the current authentication state of the app
  * - user: null if logged out, User object if logged in
- * - token: null if logged out, JWT string if logged in
- * - isAuthenticated: boolean flag for easy checking
+ * - token: JWT access token for API requests
+ * - refreshToken: refresh token for obtaining new access tokens
+ * - isAuthenticated: boolean flag indicating login status
+ * - isLoading: boolean flag indicating async operations in progress
  */
 interface AuthState {
   user: User | null;
   token: string | null;
-  refreshToken: string | null;  // Add this
+  refreshToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
 }
@@ -48,22 +41,8 @@ interface AuthContextType {
   logout: () => void;
   refreshToken: () => Promise<void>;
   fetchUser: () => Promise<void>;
-}
-
-
-/**
- * AuthState interface
- * Holds the current authentication state of the app
- * - user: null if logged out, User object if logged in
- * - token: null if logged out, JWT string if logged in
- * - isAuthenticated: boolean flag for easy checking
- * - isLoading: true while checking auth from localStorage/server, false when done
- */
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
+  getProfile: () => Promise<User | null>;
+  updateProfile: (username: string, email: string) => Promise<void>;
 }
 
 // ============ INITIAL STATE ============
@@ -140,10 +119,6 @@ interface AuthProviderProps {
 	    return { ...loaded, isLoading: false };
 	  });
 
-	  React.useEffect(() => {
-	    apiClient.setAuthService({ state, logout, refreshToken });
-	  }, [state]);
-
 	/**
 	 * login(username, password)
 	 * Authenticates user with username and password, stores JWT token.
@@ -158,7 +133,7 @@ interface AuthProviderProps {
 	 */
 	const login = async (username: string, password: string): Promise<void> => {
 	  try {
-	    const response = await apiClient.post('/auth/login', { username, password });
+	    const response = await authService.login(username, password);
 			const newState: AuthState = {
 			  user: response.user,
 			  token: response.accessToken,
@@ -171,30 +146,68 @@ interface AuthProviderProps {
 	    saveToLocalStorage(newState);
 
 	    await fetchUser();
-	  } catch (error: any) {
-	    const status = error.response?.status;
-	    const message = error.response?.data?.message;
+		} catch (error: any) {
+		  const status = error.status;
+		  const message = error.message;
 
-	    if (status === 401) {
-	      throw new Error('Invalid username or password');
-	    } else if (status === 400) {
-	      throw new Error(message || 'Invalid input');
-	    } else if (!error.response) {
-	      throw new Error('Network error. Check your connection');
-	    } else {
-	      throw new Error('Login failed. Try again later');
-	    }
+		  if (status === 400) {
+		    throw new Error(message || 'Invalid input. Please check your information');
+		  } else if (status === 409) {
+		    throw new Error(message || 'Email or username already exists');
+		  } else if (!status) {  // ✅ Check if status exists
+		    throw new Error('Network error. Check your connection');
+		  } else {
+		    throw new Error('Registration failed. Try again later');
+		  }
+		}
+	};
+
+/**
+ * updateProfile(username, email)
+ * Updates current user's profile information on server
+ * Calls backend PUT /auth/profile through AuthService
+ * Updates user state with new profile data
+ * 
+ * @param username - New username (3-50 characters)
+ * @param email - New email address (must be valid)
+ * @throws {Error} Validation error or network failure
+ */
+	const updateProfile = async (username: string, email: string): Promise<void> => {
+	  try {
+	    const response = await authService.updateProfile(username, email);
+	    
+	    const newState: AuthState = {
+	      ...state,
+	      user: { ...state.user!, username: response.username, email: response.email },
+	    };
+	    setState(newState);
+	    saveToLocalStorage(newState);
+	  } catch (error: any) {
+	    const status = error.status;
+	    throw new Error(error.message || 'Profile update failed');
 	  }
 	};
 
+/**
+ * getProfile()
+ * Retrieves current authenticated user's profile data from server
+ * Calls backend GET /auth/me through AuthService
+ * Updates user state with profile information
+ * 
+ * @throws {Error} Error message from server or network failure
+ */
+	const getProfile = async (): Promise<User | null> => {
+	  await fetchUser();
+	  return state.user;
+	};
 
-  /**
-   * logout()
-   * Clears user data and removes token from state and localStorage
-   * Called when user clicks logout button
-   * 
-   * TODO: Call API to invalidate token on server
-   */
+	/**
+	 * logout()
+	 * Clears user authentication state and removes token from localStorage.
+	 * Called when user clicks logout button or session expires.
+	 * 
+	 * @todo Call backend POST /auth/logout to invalidate token on server
+	 */
   const logout = (): void => {
     setState(initialState);
     localStorage.removeItem('authState');
@@ -213,17 +226,21 @@ interface AuthProviderProps {
 	    throw new Error('No refresh token available');
 	  }
 
-	  const response = await apiClient.post(`/auth/refresh?refreshToken=${encodeURIComponent(refreshTokenValue)}`, {});
-	  
-	  const newState: AuthState = {
-	    ...state,
-	    token: response.accessToken,
-	    refreshToken: response.refreshToken,
-	  };
-	  setState(newState);
-	  saveToLocalStorage(newState);
-	};
+	  try {
+	    const response = await authService.refreshTokenRequest(refreshTokenValue);
 
+	    const newState: AuthState = {
+	      ...state,
+	      token: response.accessToken,
+	      refreshToken: response.refreshToken,
+	    };
+	    setState(newState);
+	    saveToLocalStorage(newState);
+	  } catch (error: any) {
+	    const status = error.status;
+	    throw new Error(error.message || 'Token refresh failed');
+	  }
+	};
 
 	/**
 	 * fetchUser()
@@ -235,10 +252,10 @@ interface AuthProviderProps {
 	 */
 	const fetchUser = async (): Promise<void> => {
 	  try {
-	    const response = await apiClient.get('/auth/me');
+	    const response = await authService.getProfile();
 	    
 	    const newState: AuthState = {
-	      user: response,  // Change this — response IS the user object
+	      user: response,  // ✅ Includes publicKey, fingerprint
 	      token: localStorage.getItem('authState') ? JSON.parse(localStorage.getItem('authState')!).token : null,
 	      refreshToken: localStorage.getItem('authState') ? JSON.parse(localStorage.getItem('authState')!).refreshToken : null,
 	      isAuthenticated: true,
@@ -246,9 +263,11 @@ interface AuthProviderProps {
 	    };
 	    setState(newState);
 	    saveToLocalStorage(newState);
-	  } catch (error) {
-	    setState(initialState);
-	  }
+	  } catch (error: any) {
+		  setState(initialState);
+		  console.error('Failed to fetch user:', error.message);
+		  throw error;
+		}
 	};
 
 	/**
@@ -274,12 +293,7 @@ interface AuthProviderProps {
 	  passwordConfirm: string
 	): Promise<void> => {
 	  try {
-	    const response = await apiClient.post('/auth/register', {
-	      email,
-	      username,
-	      password,
-	      passwordConfirm,
-	    });
+	    const response = await authService.register(email, username, password, passwordConfirm);
 			const newState: AuthState = {
 			  user: response.user,
 			  token: response.accessToken,
@@ -290,28 +304,33 @@ interface AuthProviderProps {
 
 	    setState(newState);
 	    saveToLocalStorage(newState);
-	  } catch (error: any) {
-	    const status = error.response?.status;
-	    const message = error.response?.data?.message;
+		} catch (error: any) {
+		  const status = error.status;
+		  const message = error.message;
 
-	    if (status === 400) {
-	      throw new Error(message || 'Invalid input. Please check your information');
-	    } else if (status === 409) {
-	      throw new Error(message || 'Email or username already exists');
-	    } else if (!error.response) {
-	      throw new Error('Network error. Check your connection');
-	    } else {
-	      throw new Error('Registration failed. Try again later');
-	    }
-	  }
+		  if (status === 400) {
+		    throw new Error(message || 'Invalid input. Please check your information');
+		  } else if (status === 409) {
+		    throw new Error(message || 'Email or username already exists');
+		  } else if (!status) {  // ✅ Check if status exists
+		    throw new Error('Network error. Check your connection');
+		  } else {
+		    throw new Error('Registration failed. Try again later');
+		  }
+		}
 	};
 
-  React.useEffect(() => {
-    apiClient.setAuthService({ state, logout, refreshToken });
-  }, [state]); // Re-run when state changes
+	/**
+	 * useEffect hook
+	 * Syncs AuthContext state with ApiClient for JWT injection and token refresh
+	 * Runs whenever state changes to ensure ApiClient has latest token and refresh logic
+	 */
+	React.useEffect(() => {
+	  apiClient.setAuthService({ state, logout, refreshToken });
+	}, [state]);
 
   // Bundle state and functions into context value
-  const value: AuthContextType = { state, login, register, logout, refreshToken, fetchUser };
+  const value: AuthContextType = { state, login, register, logout, refreshToken, fetchUser, getProfile, updateProfile};
 
   // Provide context to all child components
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

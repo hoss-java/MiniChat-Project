@@ -55,8 +55,6 @@ const TestComponent = () => {
   );
 };
 
-
-
 describe('AuthContext', () => {
   beforeEach(() => {
     localStorage.clear();
@@ -226,7 +224,8 @@ describe('AuthContext', () => {
    */
   test('register should throw error on duplicate email', async () => {
     (apiClient.post as jest.Mock).mockRejectedValueOnce({
-      response: { status: 409, data: { message: 'Email already exists' } },
+      status: 409,
+      message: 'Email already exists',
     });
 
     render(

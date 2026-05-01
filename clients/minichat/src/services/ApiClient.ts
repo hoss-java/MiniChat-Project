@@ -6,6 +6,8 @@
  * All API calls in the app should use this client
  */
 import { API_CONFIG } from '../config/apiConfig';
+import { ApiError } from '../utils/errorHandler';
+
 
 /**
  * ApiClientConfig interface
@@ -21,7 +23,7 @@ interface ApiClientConfig {
  * Manages all HTTP requests through proxy.php
  * Automatically injects JWT token, handles token refresh on 401
  */
-export class ApiClient {
+class ApiClient {
   private proxyURL: string;
   private timeout: number;
   private maxRetries: number = 3;
@@ -96,13 +98,13 @@ export class ApiClient {
         // No token at all, force logout
         if (!this.authService.state?.token) {
           await this.authService.logout();
-          throw new Error('Session expired. Please login again.');
+          throw new ApiError(401, 'Session expired. Please login again.');
         }
 
         // Max retries exceeded
         if (retryAttempt >= this.maxRetries) {
           await this.authService.logout();
-          throw new Error(`Session expired after ${this.maxRetries} retries. Please login again.`);
+          throw new ApiError(401, `Session expired after ${this.maxRetries} retries. Please login again.`);
         }
 
         // Try to refresh token and retry request
@@ -111,13 +113,13 @@ export class ApiClient {
           return this.request(method, endpoint, data, retryAttempt + 1);
         } catch (refreshError) {
           await this.authService.logout();
-          throw new Error(`Session expired. Please login again.`);
+          throw new ApiError(401, `Session expired. Please login again.`);
         }
       }
 
       // Handle other HTTP errors
       if (!response.ok) {
-        throw new Error(responseData.message || responseData.error || `HTTP ${response.status}`);
+        throw new ApiError(response.status, responseData.message || responseData.error || `HTTP ${response.status}`);
       }
 
       return responseData;
@@ -172,4 +174,6 @@ export class ApiClient {
  * Create singleton instance of ApiClient
  * Import this in your app to use
  */
+export { ApiClient, ApiError };
 export const apiClient = new ApiClient({ timeout: 5000 });
+
