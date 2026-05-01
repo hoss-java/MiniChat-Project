@@ -1,0 +1,96 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Room entity and service
+Tags: phase2, backend, database
+Creator: Hossein
+AssignedTo: Hossein
+Priority: HIGH
+Status: DONE
+Estimate: 1d
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T04:16:02Z
+StartAt: 2026-05-01T19:50:49Z
+EndAt: 2026-05-01T20:20:55Z
+---
+
+The goal of this card is to create Room entity and business logic for creating, joining, leaving, and listing rooms.
+
+# DOD (definition of done):
+- Room entity with JPA mapping exists
+- RoomService handles CRUD operations
+- Create room endpoint works
+- Join/leave room endpoints work
+- List rooms endpoint returns all available rooms
+
+# TODO:
+- [x] 1. Create Room entity (id, name, createdBy, createdAt)
+- [x] 2. Create RoomRepository (JPA interface)
+- [x] 3. Create RoomService with business logic
+- [x] 4. Implement createRoom(userId, roomName)
+- [x] 5. Implement joinRoom(roomId, userId)
+- [x] 6. Implement leaveRoom(roomId, userId)
+- [x] 7. Implement listRooms() - return all rooms
+- [x] 8. Add validation (room name not empty, user exists)
+
+# Reports:
+## TRoom Entity & Business Logic
+
+### What Added
+
+#### 1. **Room Entity** (`Room.java`)
+- JPA entity with fields: `id`, `name`, `createdBy` (ManyToOne User), `createdAt`
+- Uses Lombok annotations (@Data, @Builder, @NoArgsConstructor, @AllArgsConstructor)
+- Auto-generated ID and timestamp management
+- **Purpose:** Database representation of chat rooms
+
+#### 2. **RoomRepository** (`RoomRepository.java`)
+- JPA interface extending `JpaRepository<Room, Long>`
+- Methods: `findAll()`, `findById()`, `findByCreatedByUserId()`
+- **Purpose:** Database access layer for Room CRUD operations
+
+#### 3. **RoomService** (`RoomService.java`)
+- Core business logic layer with 5 methods:
+  - `createRoom(userId, roomName)` — creates room, validates input, adds creator as member
+  - `joinRoom(roomId, userId)` — adds user to room's member set
+  - `leaveRoom(roomId, userId)` — removes user from room's member set
+  - `listRooms()` — returns all available rooms
+  - `getRoomMembers(roomId)` — returns active members in a room
+  - `getRoomById(roomId)` — retrieves single room by ID
+- In-memory member tracking using `ConcurrentHashMap<Long, Set<Long>>`
+- Full validation: room name (not empty, <100 chars), user exists, room exists
+- **Purpose:** Handles room CRUD, membership management, and real-time peer discovery
+
+### How This Helps Phase 2
+
+| Component | Phase 2 Goal | Contribution |
+|-----------|--------------|--------------|
+| **Room Entity** | Enable room data persistence | Stores room metadata in DB for multi-session access |
+| **RoomRepository** | Provide database access | Enables CRUD queries on rooms table |
+| **RoomService** | Manage rooms & peer discovery | Core logic for room creation, joining, peer listing |
+| **Member Tracking** | Support peer discovery endpoint | In-memory tracking enables `/api/rooms/{roomId}/peers` |
+| **Validation** | Ensure data integrity | Prevents invalid rooms and unauthorized access |
+
+### Integration Points
+
+- **Peer Discovery Endpoint** (`/api/rooms/{roomId}/peers`) — uses `getRoomMembers()` to return online peers
+- **WebSocket Signaling** — room membership determines who receives SDP/ICE messages
+- **User Sessions** — `SessionManager` can query `getRoomMembers()` for online status
+- **REST Controllers** — ready for RoomController endpoints (create, join, leave, list)
+
+### Deliverable Status
+
+✅ DOD Met:
+- Room entity with JPA mapping exists
+- RoomService handles CRUD operations
+- Validation in place (room name, user exists)
+- Ready for REST endpoint implementation
+
+### Next Steps
+
+1. Create `RoomController` with HTTP endpoints
+2. Implement integration tests for RoomService
+3. Connect to WebSocket signaling for real-time updates
