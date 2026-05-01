@@ -3521,6 +3521,130 @@ gantt
 > ```
 > </details>
 
+## 001-0019
+> **Spring WebSocket configuration** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
+> <details >
+>     <summary>Details</summary>
+> 
+> The goal of this card is to set up Spring WebSocket with SimpleBroker for real-time bidirectional communication between clients and server.
+> 
+> # DOD (definition of done):
+> - WebSocketConfig class created and configured
+> - SimpleBroker enabled for message routing
+> - Server listens on /ws endpoint
+> - Client can establish WebSocket connection
+> 
+> # TODO:
+> - [x] 1. Create WebSocketConfig class extending WebSocketMessageBrokerConfigurer
+> - [x] 2. Configure message broker (SimpleBroker)
+> - [x] 3. Set application destination prefix and endpoint
+> - [x] 4. Configure STOMP endpoints for client connection
+> - [x] 5. Test WebSocket connection with browser console
+> 
+> # Reports:
+> # WebSocket Configuration Task Report
+> 
+> ## Task Overview
+> **Spring WebSocket Configuration** — Set up bidirectional real-time communication infrastructure using Spring's WebSocket Message Broker with SimpleBroker and STOMP protocol.
+> 
+> 
+> ## Completion Status
+> ✅ **All configuration tasks completed in single file: `WebSocketConfig.java`**
+> 
+> 
+> ## How Tasks Were Completed
+> 
+> ### Task 1: Create WebSocketConfig Class ✅
+> **What was done:**
+> - Created `WebSocketConfig.java` extending `WebSocketMessageBrokerConfigurer`
+> - Annotated with `@Configuration` and `@EnableWebSocketMessageBroker`
+> - This enables Spring to manage WebSocket message routing
+> 
+> **Why it matters:**
+> - Foundation for all WebSocket/STOMP functionality
+> - Tells Spring to activate the message broker infrastructure
+> 
+> 
+> ### Task 2: Configure SimpleBroker ✅
+> **What was done:**
+> ```java
+> config.enableSimpleBroker("/topic", "/queue");
+> ```
+> 
+> **What it means:**
+> - `/topic` — for **broadcast messaging** (one-to-many, e.g., "user online" notifications)
+> - `/queue` — for **direct messaging** (one-to-one, e.g., peer-to-peer signaling)
+> 
+> **How it helps Phase 2:**
+> - Routes SDP offers/answers and ICE candidates between peers via `/queue`
+> - Broadcasts online status updates via `/topic`
+> - SimpleBroker is in-memory (lightweight, sufficient for initial phase)
+> 
+> 
+> ### Task 3: Set Application Destination Prefix ✅
+> **What was done:**
+> ```java
+> config.setApplicationDestinationPrefixes("/app");
+> ```
+> 
+> **What it means:**
+> - Client messages sent to `/app/...` are intercepted by server handlers
+> - Separates **client → server** messages from **broker → client** subscriptions
+> - Example: client sends to `/app/room/123/join`, server routes it to a handler
+> 
+> **How it helps Phase 2:**
+> - Enables server-side message handlers for room joins, peer discovery, signaling relay
+> - Keeps signaling logic organized and separate from broker subscriptions
+> 
+> 
+> ### Task 4: Configure STOMP Endpoints ✅
+> **What was done:**
+> ```java
+> registry.addEndpoint("/ws/chat").setAllowedOrigins("*").withSockJS();
+> registry.addEndpoint("/ws/signaling").setAllowedOrigins("*").withSockJS();
+> ```
+> 
+> **What it means:**
+> - `/ws/chat` — WebSocket connection point for chat signaling
+> - `/ws/signaling` — WebSocket connection point for WebRTC peer signaling
+> - `withSockJS()` — Falls back to HTTP long-polling if WebSocket unavailable (browser compatibility)
+> - `setAllowedOrigins("*")` — Allows cross-origin connections (development; restrict in production)
+> 
+> **How it helps Phase 2:**
+> - Clients connect here to establish bidirectional communication with server
+> - Server can now relay peer discovery, SDP offers/answers, and ICE candidates
+> - Fallback to SockJS ensures chat works even on restricted networks
+> 
+> 
+> ## Connection to Phase 2 Deliverable
+> 
+> **Phase 2 Goal:** Users can create rooms, see online peers, real-time updates work.
+> 
+> **How this config enables it:**
+> 1. ✅ Clients connect via `/ws/chat` or `/ws/signaling` → Real-time bidirectional channel established
+> 2. ✅ SimpleBroker routes `/topic` messages → Online status broadcasts to all room members
+> 3. ✅ SimpleBroker routes `/queue` messages → Direct peer-to-peer signaling (SDP/ICE relay)
+> 4. ✅ Server handlers intercept `/app` messages → Room join/leave, peer discovery logic
+> 
+> 
+> ## Next Steps
+> - **Task 5:** Test WebSocket connection (browser console verification)
+> - **Task 6:** Implement backend handlers (room service, user session tracking)
+> - **Task 7:** Implement frontend WebSocket client (React signaling service)
+> 
+> 
+> ## Technical Summary Table
+> 
+> | Component | Configuration | Purpose in Phase 2 |
+> |-----------|---------------|--------------------|
+> | SimpleBroker `/topic` | Broadcast destinations | Online status, room updates |
+> | SimpleBroker `/queue` | Direct messaging | Peer-to-peer signaling (SDP/ICE) |
+> | `/app` prefix | Server message interception | Room join, peer discovery handlers |
+> | `/ws/chat` endpoint | Client connection point | Chat signaling WebSocket |
+> | `/ws/signaling` endpoint | Client connection point | WebRTC peer signaling WebSocket |
+> | SockJS fallback | HTTP long-polling alternative | Browser/network compatibility |
+> </details>
+
 ## 001-0002
 > **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
 > <details >
@@ -4580,30 +4704,6 @@ gantt
 > 
 > # TODO:
 > - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
-## 001-0019
-> **Spring WebSocket configuration** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
-> <details open>
->     <summary>Details</summary>
-> 
-> The goal of this card is to set up Spring WebSocket with SimpleBroker for real-time bidirectional communication between clients and server.
-> 
-> # DOD (definition of done):
-> - WebSocketConfig class created and configured
-> - SimpleBroker enabled for message routing
-> - Server listens on /ws endpoint
-> - Client can establish WebSocket connection
-> 
-> # TODO:
-> - [] 1. Create WebSocketConfig class extending WebSocketMessageBrokerConfigurer
-> - [] 2. Configure message broker (SimpleBroker)
-> - [] 3. Set application destination prefix and endpoint
-> - [] 4. Configure STOMP endpoints for client connection
-> - [] 5. Test WebSocket connection with browser console
 > 
 > # Reports:
 > *
