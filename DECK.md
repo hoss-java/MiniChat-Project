@@ -3806,23 +3806,8 @@ gantt
 > 3. Connect to WebSocket signaling for real-time updates
 > </details>
 
-## 001-0002
-> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> The goal of this card is to configure github workflows for this repository.
-> 
-> # DOD (definition of done):
-> 
-> # TODO:
-> - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0022
-> **Peer discovery endpoint** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **Peer discovery endpoint** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -3835,12 +3820,45 @@ gantt
 > - Works with session tracking from Phase 2 card 1
 > 
 > # TODO:
-> - [] 1. Create RoomController endpoint GET /api/rooms/{roomId}/peers
-> - [] 2. Query SessionManager for online users in room
-> - [] 3. Build peer response (userId, username, online status)
-> - [] 4. Add authentication check (JWT)
-> - [] 5. Handle room not found error
-> - [] 6. Test endpoint returns correct peer list
+> - [x] 1. Create RoomController endpoint GET /api/rooms/{roomId}/peers
+> - [x] 2. Query SessionManager for online users in room
+> - [x] 3. Build peer response (userId, username, online status)
+> - [x] 4. Add authentication check (JWT)
+> - [x] 5. Handle room not found error
+> - [-] 6. Test endpoint returns correct peer list
+> 
+> # Reports:
+> 
+> ## **What Added**
+> 
+> - **RoomController.java** with one endpoint that queries SessionManager for online peers in a room
+> - Returns **OnlineStatusDto** with userId, username, connection status, roomId, and last activity timestamp
+> - Added JWT authentication (`@PreAuthorize`) to protect the endpoint
+> - Added error handling for invalid roomId format and room not found (404)
+> 
+> ## **How It Helps Phase 2**
+> 
+> **Peer discovery** is the first step in WebRTC setup. Before two peers can exchange SDP offers/answers and ICE candidates, they need to **know who's online in the room**.
+> 
+> This endpoint:
+> - Lets frontend fetch the **real-time list of connected peers** without polling WebSocket
+> - Provides **accurate online status** (SessionManager tracks live connections)
+> - Enables **peer selection** before initiating WebRTC connections in Phase 3
+> - Secures the discovery with **JWT authentication** (only logged-in users can see peers)
+> 
+> **Result:** Frontend now has a clean REST API to discover peers → ready for P2P WebRTC data channel setup in Phase 3.
+> </details>
+
+## 001-0002
+> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> The goal of this card is to configure github workflows for this repository.
+> 
+> # DOD (definition of done):
+> 
+> # TODO:
+> - [] 1.
 > 
 > # Reports:
 > *
