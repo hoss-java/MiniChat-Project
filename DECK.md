@@ -2890,23 +2890,8 @@ gantt
 > ```
 > </details>
 
-## 001-0002
-> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> The goal of this card is to configure github workflows for this repository.
-> 
-> # DOD (definition of done):
-> 
-> # TODO:
-> - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0016
-> **Basic Dashboard Page** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **Basic Dashboard Page** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -2922,16 +2907,110 @@ gantt
 > - Responsive design
 > 
 > # TODO:
-> - [] 1. Create Dashboard component
-> - [] 2. Get user data from auth context
-> - [] 3. Display welcome message with username
-> - [] 4. Show user profile information
-> - [] 5. Add logout button
-> - [] 6. Implement logout functionality
-> - [] 7. Clear token from localStorage on logout
-> - [] 8. Redirect to login after logout
-> - [] 9. Style dashboard page
-> - [] 10. Test logout functionality
+> - [x] 1. Create Dashboard component
+> - [x] 2. Get user data from auth context
+> - [x] 3. Display welcome message with username
+> - [x] 4. Show user profile information
+> - [x] 5. Add logout button
+> - [x] 6. Implement logout functionality
+> - [x] 7. Clear token from localStorage on logout
+> - [x] 8. Redirect to login after logout
+> - [x] 9. Style dashboard page
+> - [x] 10. Test logout functionality
+> 
+> # Reports:
+> * The current files map
+> ```
+> ├── .env
+> ├── .gitignore
+> ├── jest.config.js
+> ├── package.json
+> ├── package-lock.json
+> ├── public
+> │ ├── favicon.ico
+> │ ├── index.html
+> │ ├── logo192.png
+> │ ├── logo512.png
+> │ ├── manifest.json
+> │ └── robots.txt
+> ├── README.md
+> ├── setup-folders.sh
+> ├── src
+> │ ├── App.css
+> │ ├── App.tsx
+> │ ├── components
+> │ │ ├── DashboardComponents.tsx
+> │ │ ├── LoginComponents.tsx
+> │ │ ├── <PageName>Components.tsx.template
+> │ │ ├── ProtectedRoute.tsx
+> │ │ ├── RegisterComponents.tsx
+> │ │ ├── shared
+> │ │ │ ├── __tests__
+> │ │ │ │ └── UIComponents.test.tsx
+> │ │ │ └── UIComponents.tsx
+> │ │ ├── __tests__
+> │ │ │ ├── DashboardComponents.test.tsx
+> │ │ │ ├── LoginComponents.test.tsx
+> │ │ │ ├── <PageName>Components.test.tsx.template
+> │ │ │ ├── ProtectedRoute.test.tsx
+> │ │ │ └── RegisterComponents.test.tsx
+> │ │ └── ThemeComponents.tsx
+> │ ├── config
+> │ │ ├── apiConfig.ts
+> │ │ └── __tests__
+> │ ├── contexts
+> │ │ ├── AuthContext.tsx
+> │ │ ├── __tests__
+> │ │ │ ├── AuthContext.test.tsx
+> │ │ │ └── ThemeContext.test.tsx
+> │ │ └── ThemeContext.tsx
+> │ ├── index.css
+> │ ├── index.tsx
+> │ ├── logo.svg
+> │ ├── __mocks__
+> │ │ ├── fileMock.js
+> │ │ ├── react-router-dom.ts
+> │ │ └── styleMock.js
+> │ ├── pages
+> │ │ ├── DashboardPage.css
+> │ │ ├── DashboardPage.tsx
+> │ │ ├── LoginPage.css
+> │ │ ├── LoginPage.tsx
+> │ │ ├── <PageName>Page.css.template
+> │ │ ├── <PageName>Page.tsx.template
+> │ │ ├── RegisterPage.css
+> │ │ ├── RegisterPage.tsx
+> │ │ └── __tests__
+> │ │     ├── DashboardPage.test.tsx
+> │ │     ├── LoginPage.test.tsx
+> │ │     └── RegisterPage.test.tsx
+> │ ├── react-app-env.d.ts
+> │ ├── reportWebVitals.ts
+> │ ├── services
+> │ │ ├── ApiClient.ts
+> │ │ └── __tests__
+> │ │     └── ApiClient.test.ts
+> │ ├── setupTests.ts
+> │ ├── __tests__
+> │ │ └── App.test.tsx
+> │ ├── types
+> │ │ └── ColorTypes.ts
+> │ └── utils
+> └── tsconfig.json
+> 
+> ```
+> </details>
+
+## 001-0002
+> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> The goal of this card is to configure github workflows for this repository.
+> 
+> # DOD (definition of done):
+> 
+> # TODO:
+> - [] 1.
 > 
 > # Reports:
 > *
