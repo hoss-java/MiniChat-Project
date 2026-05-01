@@ -31,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     private static final List<String> PUBLIC_ENDPOINTS = Arrays.asList(
+        "/api/auth/test-ws",
         "/api/auth/login",
         "/api/auth/register",
         "/api/auth/refresh",

@@ -29,6 +29,11 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+    @GetMapping("/test-ws")
+    public ResponseEntity<String> testWs() {
+        return ResponseEntity.ok("WebSocket is configured and server is running");
+    }
+
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(request));
