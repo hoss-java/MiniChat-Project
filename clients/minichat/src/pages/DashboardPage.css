@@ -1,0 +1,330 @@
+/* src/pages/DashboardPage.css */
+/* ======================== */
+/* DASHBOARD PAGE SPECIFIC STYLES */
+/* ======================== */
+
+/* Dashboard Container */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+  padding: var(--spacing-md);
+  position: relative;
+  transition: background-color var(--transition-normal);
+}
+
+/* Dashboard Header */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) 0;
+  margin-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dashboard-welcome h1 {
+  font-size: var(--font-size-xl);
+  margin-bottom: var(--spacing-sm);
+  font-weight: 700;
+}
+
+.dashboard-welcome p {
+  font-size: var(--font-size-sm);
+}
+
+/* Dashboard Main Layout */
+.dashboard-main {
+  display: flex;
+  gap: var(--spacing-lg);
+  flex: 1;
+}
+
+/* Dashboard Sidebar */
+.dashboard-sidebar {
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding-right: var(--spacing-md);
+  border-right: 1px solid var(--color-border);
+}
+
+/* Dashboard User Info */
+.dashboard-user-info {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.dashboard-user-info h3 {
+  font-size: var(--font-size-md);
+  margin-top: var(--spacing-sm);
+}
+
+/* Create Room Button */
+.create-room-btn {
+  width: 100%;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+}
+
+/* Dashboard Room List */
+.dashboard-room-list {
+  flex: 1;
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.dashboard-room-list h3 {
+  font-size: var(--font-size-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.dashboard-room-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.room-item {
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.room-item:hover {
+  background-color: var(--color-surface);
+}
+
+/* Dashboard Content */
+.dashboard-content {
+  flex: 1;
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.dashboard-empty-state {
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+/* Logout Button */
+.logout-btn {
+  width: 100%;
+  padding: var(--spacing-md);
+  margin-top: auto;
+}
+
+/* ======================== */
+/* RESPONSIVE DASHBOARD STYLES */
+/* ======================== */
+
+/* Tablet: 768px and below */
+@media (max-width: 768px) {
+  .dashboard-main {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding-right: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    gap: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+  }
+
+  .dashboard-user-info,
+  .create-room-btn,
+  .dashboard-room-list {
+    flex-shrink: 0;
+  }
+
+  .dashboard-room-list {
+    min-width: 250px;
+  }
+
+  .logout-btn {
+    margin-top: 0;
+    padding: var(--spacing-sm);
+    font-size: 0;
+    white-space: nowrap;
+    min-width: 44px;
+    flex-shrink: 0;
+  }
+}
+
+/* Mobile: 480px and below */
+@media (max-width: 480px) {
+  .dashboard-container {
+    padding: var(--spacing-sm);
+  }
+
+  .dashboard-header {
+    padding: var(--spacing-sm) 0;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .dashboard-welcome h1 {
+    font-size: var(--font-size-lg);
+  }
+
+  .dashboard-main {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding-right: 0;
+    padding-bottom: var(--spacing-md);
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+    gap: var(--spacing-sm);
+  }
+
+  /* Icon-button styling for sidebar items on mobile */
+  .dashboard-sidebar .dashboard-user-info {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .dashboard-sidebar .dashboard-room-list {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .dashboard-sidebar .create-room-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0;
+  }
+
+  .dashboard-sidebar .logout-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0;
+    margin-top: 0;
+    font-size: 0;
+  }
+
+  /* Hide text content in sidebar items */
+  .dashboard-sidebar .dashboard-user-info h3,
+  .dashboard-sidebar .dashboard-user-info p,
+  .dashboard-sidebar .dashboard-room-list h3,
+  .dashboard-sidebar .dashboard-room-list p,
+  .dashboard-sidebar .dashboard-room-list ul {
+    display: none !important;
+  }
+
+  /* Show only icons in buttons */
+  .dashboard-sidebar .create-room-btn span.show-on-mobile {
+    display: inline !important;
+    font-size: var(--font-size-lg);
+  }
+
+  .dashboard-sidebar .create-room-btn span.hide-on-mobile {
+    display: none !important;
+  }
+
+  /* Dashboard content adjustments */
+  .dashboard-content {
+    min-height: 300px;
+    padding: var(--spacing-md);
+  }
+
+  .dashboard-empty-state p {
+    font-size: var(--font-size-sm);
+  }
+}
+
+.sidebar-mobile .dashboard-user-info,
+.sidebar-mobile .dashboard-room-list,
+.sidebar-mobile .create-room-btn,
+.sidebar-mobile .logout-btn {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  padding: 0 !important;
+  margin: 0 !important; 
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.sidebar-mobile .dashboard-user-info h3,
+.sidebar-mobile .dashboard-user-info p,
+.sidebar-mobile .dashboard-room-list h3,
+.sidebar-mobile .dashboard-room-list p,
+.sidebar-mobile .dashboard-room-list ul {
+  display: none !important;
+}
+
+.sidebar-mobile .create-room-btn span.hide-on-mobile {
+  display: none !important;
+}
+
+.sidebar-mobile .create-room-btn span.show-on-mobile {
+  display: inline !important;
+  font-size: var(--font-size-lg);
+}
+
+.sidebar-mobile .dashboard-user-info span.show-on-mobile,
+.sidebar-mobile .dashboard-room-list span.show-on-mobile {
+  display: inline !important;
+  font-size: var(--font-size-lg);
+}
+
+.sidebar-mobile .logout-btn span.hide-on-mobile {
+  display: none !important;
+}
+.sidebar-mobile .logout-btn span.show-on-mobile {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: var(--font-size-lg);
+}

@@ -59,6 +59,15 @@
   --color-border: #374151;
 }
 
+/* Utility Classes */
+.hide-on-mobile {
+  display: block;
+}
+
+.show-on-mobile {
+  display: none;
+}
+
 html, body, #root {
   width: 100%;
   height: 100%;

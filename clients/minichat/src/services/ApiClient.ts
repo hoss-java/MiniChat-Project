@@ -64,6 +64,10 @@ export class ApiClient {
   ): Promise<any> {
     const proxyUrl = `${this.proxyURL}?path=${encodeURIComponent(endpoint)}`;
 
+    // Get token from authService OR localStorage as fallback
+    const token = this.authService?.state?.token || 
+    JSON.parse(localStorage.getItem('authState') || '{}').token;
+
     const options: RequestInit = {
       method,
       headers: { 'Content-Type': 'application/json' },

@@ -18,6 +18,7 @@ import { apiClient } from '../services/ApiClient';
 interface User {
   id: string;
   username: string;
+  email: string;
 }
 
 /**
@@ -30,7 +31,9 @@ interface User {
 interface AuthState {
   user: User | null;
   token: string | null;
+  refreshToken: string | null;  // Add this
   isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
 /**
@@ -44,6 +47,7 @@ interface AuthContextType {
   register: (email: string, username: string, password: string, passwordConfirm: string) => Promise<void>;
   logout: () => void;
   refreshToken: () => Promise<void>;
+  fetchUser: () => Promise<void>;
 }
 
 
@@ -71,10 +75,10 @@ interface AuthState {
 const initialState: AuthState = {
   user: null,
   token: null,
+  refreshToken: null,
   isAuthenticated: false,
-  isLoading: true, // Start as true until localStorage is checked
+  isLoading: true,
 };
-
 
 // ============ CREATE CONTEXT ============
 
@@ -130,12 +134,15 @@ interface AuthProviderProps {
  *   <App />
  * </AuthProvider>
  */
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  // Initialize state from localStorage on first render
-	const [state, setState] = useState<AuthState>(() => {
-	  const loaded = loadFromLocalStorage();
-	  return { ...loaded, isLoading: false };
-	});
+	export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+	  const [state, setState] = useState<AuthState>(() => {
+	    const loaded = loadFromLocalStorage();
+	    return { ...loaded, isLoading: false };
+	  });
+
+	  React.useEffect(() => {
+	    apiClient.setAuthService({ state, logout, refreshToken });
+	  }, [state]);
 
 	/**
 	 * login(username, password)
@@ -154,13 +161,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	    const response = await apiClient.post('/auth/login', { username, password });
 			const newState: AuthState = {
 			  user: response.user,
-			  token: response.token,
+			  token: response.accessToken,
+			  refreshToken: response.refreshToken,
 			  isAuthenticated: true,
 			  isLoading: false,
 			};
 
 	    setState(newState);
 	    saveToLocalStorage(newState);
+
+	    await fetchUser();
 	  } catch (error: any) {
 	    const status = error.response?.status;
 	    const message = error.response?.data?.message;
@@ -196,13 +206,49 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	 * Calls backend POST /auth/refresh through ApiClient
 	 */
 	const refreshToken = async (): Promise<void> => {
-	  const response = await apiClient.post('/auth/refresh', {});
+	  const storedState = JSON.parse(localStorage.getItem('authState') || '{}');
+	  const refreshTokenValue = storedState.refreshToken;
+	  
+	  if (!refreshTokenValue) {
+	    throw new Error('No refresh token available');
+	  }
+
+	  const response = await apiClient.post(`/auth/refresh?refreshToken=${encodeURIComponent(refreshTokenValue)}`, {});
+	  
 	  const newState: AuthState = {
 	    ...state,
-	    token: response.token,
+	    token: response.accessToken,
+	    refreshToken: response.refreshToken,
 	  };
 	  setState(newState);
 	  saveToLocalStorage(newState);
+	};
+
+
+	/**
+	 * fetchUser()
+	 * Retrieves the current authenticated user's data from the server.
+	 * Called on app mount if a valid token exists in localStorage.
+	 * Updates the auth state with user information and sets isLoading to false.
+	 * 
+	 * @throws {Error} Network or server errors are caught silently; auth state is cleared on failure
+	 */
+	const fetchUser = async (): Promise<void> => {
+	  try {
+	    const response = await apiClient.get('/auth/me');
+	    
+	    const newState: AuthState = {
+	      user: response,  // Change this — response IS the user object
+	      token: localStorage.getItem('authState') ? JSON.parse(localStorage.getItem('authState')!).token : null,
+	      refreshToken: localStorage.getItem('authState') ? JSON.parse(localStorage.getItem('authState')!).refreshToken : null,
+	      isAuthenticated: true,
+	      isLoading: false,
+	    };
+	    setState(newState);
+	    saveToLocalStorage(newState);
+	  } catch (error) {
+	    setState(initialState);
+	  }
 	};
 
 	/**
@@ -236,7 +282,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	    });
 			const newState: AuthState = {
 			  user: response.user,
-			  token: response.token,
+			  token: response.accessToken,
+			  refreshToken: null,
 			  isAuthenticated: true,
 			  isLoading: false,
 			};
@@ -259,8 +306,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 	  }
 	};
 
+  React.useEffect(() => {
+    apiClient.setAuthService({ state, logout, refreshToken });
+  }, [state]); // Re-run when state changes
+
   // Bundle state and functions into context value
-  const value: AuthContextType = { state, login, register, logout, refreshToken };
+  const value: AuthContextType = { state, login, register, logout, refreshToken, fetchUser };
 
   // Provide context to all child components
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

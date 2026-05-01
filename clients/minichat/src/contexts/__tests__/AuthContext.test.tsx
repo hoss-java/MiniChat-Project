@@ -5,7 +5,7 @@
  * Tests login, logout, token refresh, and localStorage persistence
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { AuthProvider, useAuth } from '../AuthContext';
 import { apiClient } from '../../services/ApiClient';
@@ -21,16 +21,41 @@ jest.mock('../../services/ApiClient');
  * Used to test context functionality in component
  */
 const TestComponent = () => {
-  const { state, login, logout } = useAuth();
+  const { state, login, logout, register, refreshToken, fetchUser } = useAuth();
+  const [error, setError] = React.useState<string | null>(null);
+
+  const handleRefreshToken = async () => {
+    try {
+      await refreshToken();
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
+  const handleRegister = async () => {
+    try {
+      setError(null);
+      await register('test@test.com', 'user', 'pass', 'pass');
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
+
   return (
     <div>
       <div data-testid="username">{state.user?.username || 'Not logged in'}</div>
       <div data-testid="is-authenticated">{state.isAuthenticated.toString()}</div>
+      <div data-testid="error">{error || ''}</div>
       <button onClick={() => login('testuser', 'password')}>Login</button>
       <button onClick={() => logout()}>Logout</button>
+      <button onClick={handleRegister}>Register</button>
+      <button onClick={handleRefreshToken}>Refresh Token</button>
+      <button onClick={() => fetchUser()}>Fetch User</button>
     </div>
   );
 };
+
+
 
 describe('AuthContext', () => {
   beforeEach(() => {
@@ -59,9 +84,11 @@ describe('AuthContext', () => {
   test('login should update state and localStorage', async () => {
     const mockResponse = {
       user: { id: '1', username: 'testuser' },
-      token: 'mock-jwt-token',
+      accessToken: 'mock-jwt-token',
+      refreshToken: 'mock-refresh-token',
     };
     (apiClient.post as jest.Mock).mockResolvedValue(mockResponse);
+    (apiClient.get as jest.Mock).mockResolvedValue({ id: '1', username: 'testuser' });
 
     render(
       <AuthProvider>
@@ -70,17 +97,17 @@ describe('AuthContext', () => {
     );
 
     const loginButton = screen.getByText('Login');
-    loginButton.click();
+    await userEvent.click(loginButton);
 
     await waitFor(() => {
       expect(screen.getByTestId('username')).toHaveTextContent('testuser');
       expect(screen.getByTestId('is-authenticated')).toHaveTextContent('true');
     });
 
-    // Check localStorage
     const saved = JSON.parse(localStorage.getItem('authState') || '{}');
     expect(saved.user.username).toBe('testuser');
     expect(saved.token).toBe('mock-jwt-token');
+    expect(saved.refreshToken).toBe('mock-refresh-token');
   });
 
   /**
@@ -162,4 +189,149 @@ describe('AuthContext', () => {
 
     consoleError.mockRestore();
   });
+
+  /**
+   * Test: Register with valid credentials
+   */
+  test('register should create account and update state', async () => {
+    const mockResponse = {
+      user: { id: '1', username: 'newuser', email: 'new@test.com' },
+      accessToken: 'mock-jwt-token',
+    };
+    (apiClient.post as jest.Mock).mockResolvedValue(mockResponse);
+    (apiClient.get as jest.Mock).mockResolvedValue({ id: '1', username: 'newuser', email: 'new@test.com' });
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    const registerButton = screen.getByText('Register');
+    await userEvent.click(registerButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('username')).toHaveTextContent('newuser');
+      expect(screen.getByTestId('is-authenticated')).toHaveTextContent('true');
+    });
+
+    const saved = JSON.parse(localStorage.getItem('authState') || '{}');
+    expect(saved.user.email).toBe('new@test.com');
+    expect(saved.token).toBe('mock-jwt-token');
+  });
+
+
+  /**
+   * Test: Register with duplicate email
+   */
+  test('register should throw error on duplicate email', async () => {
+    (apiClient.post as jest.Mock).mockRejectedValueOnce({
+      response: { status: 409, data: { message: 'Email already exists' } },
+    });
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    const registerButton = screen.getByText('Register');
+    await userEvent.click(registerButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('error')).toHaveTextContent('Email already exists');
+    });
+  });
+
+  /**
+   * Test: Refresh token
+   */
+  test('refreshToken should update access token', async () => {
+    const mockState = {
+      user: { id: '1', username: 'testuser', email: 'test@test.com' },
+      token: 'old-token',
+      refreshToken: 'refresh-token-value',
+      isAuthenticated: true,
+    };
+    localStorage.setItem('authState', JSON.stringify(mockState));
+
+    (apiClient.post as jest.Mock).mockResolvedValue({
+      accessToken: 'new-token',
+      refreshToken: 'new-refresh-token',
+    });
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    const refreshButton = screen.getByText('Refresh Token');
+    await userEvent.click(refreshButton);
+
+    await waitFor(() => {
+      const saved = JSON.parse(localStorage.getItem('authState') || '{}');
+      expect(saved.token).toBe('new-token');
+      expect(saved.refreshToken).toBe('new-refresh-token');
+    });
+  });
+
+  /**
+   * Test: Fetch user
+   */
+  test('fetchUser should load user data', async () => {
+    (apiClient.get as jest.Mock).mockResolvedValue({
+      id: '1',
+      username: 'testuser',
+      email: 'test@test.com',
+    });
+    localStorage.setItem('authState', JSON.stringify({
+      token: 'mock-token',
+      refreshToken: 'mock-refresh',
+      isAuthenticated: true,
+    }));
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    const fetchButton = screen.getByText('Fetch User');
+    await userEvent.click(fetchButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('username')).toHaveTextContent('testuser');
+    });
+  });
+
+  /**
+   * Test: Refresh token with no refresh token available
+   */
+  test('refreshToken should throw error if no refresh token', async () => {
+    localStorage.setItem('authState', JSON.stringify({
+      user: null,
+      token: null,
+      refreshToken: null,
+      isAuthenticated: false,
+    }));
+
+    const consoleError = jest.spyOn(console, 'error').mockImplementation();
+
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>
+    );
+
+    const refreshButton = screen.getByText('Refresh Token');
+    await userEvent.click(refreshButton);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('is-authenticated')).toHaveTextContent('false');
+    });
+
+    consoleError.mockRestore();
+  });
+
 });

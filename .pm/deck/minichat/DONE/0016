@@ -1,0 +1,123 @@
+---
+#...
+# Git-deck card header
+# OBS! DON'T REMOVE CARD HEADERS
+#...
+Title: Basic Dashboard Page
+Tags: frontend, ui, phase1
+Creator: Hossein
+AssignedTo: Hossein
+Priority: MEDIUM
+Status: DONE
+Estimate: 4h
+DueDate:
+# Time tracker settings
+CreateAt: 2026-04-24T03:54:43Z
+StartAt: 2026-04-30T07:15:42Z
+EndAt: 2026-05-01T11:34:48Z
+---
+
+The goal of this card is to create a basic dashboard page that displays a welcome message with user information and logout functionality.
+
+# DOD (definition of done):
+- Dashboard page renders only for authenticated users
+- Welcome message displays with username
+- User profile information displayed
+- Logout button present and functional
+- Logout clears token and redirects to login
+- Basic layout and styling applied
+- Responsive design
+
+# TODO:
+- [x] 1. Create Dashboard component
+- [x] 2. Get user data from auth context
+- [x] 3. Display welcome message with username
+- [x] 4. Show user profile information
+- [x] 5. Add logout button
+- [x] 6. Implement logout functionality
+- [x] 7. Clear token from localStorage on logout
+- [x] 8. Redirect to login after logout
+- [x] 9. Style dashboard page
+- [x] 10. Test logout functionality
+
+# Reports:
+* The current files map
+```
+├── .env
+├── .gitignore
+├── jest.config.js
+├── package.json
+├── package-lock.json
+├── public
+│ ├── favicon.ico
+│ ├── index.html
+│ ├── logo192.png
+│ ├── logo512.png
+│ ├── manifest.json
+│ └── robots.txt
+├── README.md
+├── setup-folders.sh
+├── src
+│ ├── App.css
+│ ├── App.tsx
+│ ├── components
+│ │ ├── DashboardComponents.tsx
+│ │ ├── LoginComponents.tsx
+│ │ ├── <PageName>Components.tsx.template
+│ │ ├── ProtectedRoute.tsx
+│ │ ├── RegisterComponents.tsx
+│ │ ├── shared
+│ │ │ ├── __tests__
+│ │ │ │ └── UIComponents.test.tsx
+│ │ │ └── UIComponents.tsx
+│ │ ├── __tests__
+│ │ │ ├── DashboardComponents.test.tsx
+│ │ │ ├── LoginComponents.test.tsx
+│ │ │ ├── <PageName>Components.test.tsx.template
+│ │ │ ├── ProtectedRoute.test.tsx
+│ │ │ └── RegisterComponents.test.tsx
+│ │ └── ThemeComponents.tsx
+│ ├── config
+│ │ ├── apiConfig.ts
+│ │ └── __tests__
+│ ├── contexts
+│ │ ├── AuthContext.tsx
+│ │ ├── __tests__
+│ │ │ ├── AuthContext.test.tsx
+│ │ │ └── ThemeContext.test.tsx
+│ │ └── ThemeContext.tsx
+│ ├── index.css
+│ ├── index.tsx
+│ ├── logo.svg
+│ ├── __mocks__
+│ │ ├── fileMock.js
+│ │ ├── react-router-dom.ts
+│ │ └── styleMock.js
+│ ├── pages
+│ │ ├── DashboardPage.css
+│ │ ├── DashboardPage.tsx
+│ │ ├── LoginPage.css
+│ │ ├── LoginPage.tsx
+│ │ ├── <PageName>Page.css.template
+│ │ ├── <PageName>Page.tsx.template
+│ │ ├── RegisterPage.css
+│ │ ├── RegisterPage.tsx
+│ │ └── __tests__
+│ │     ├── DashboardPage.test.tsx
+│ │     ├── LoginPage.test.tsx
+│ │     └── RegisterPage.test.tsx
+│ ├── react-app-env.d.ts
+│ ├── reportWebVitals.ts
+│ ├── services
+│ │ ├── ApiClient.ts
+│ │ └── __tests__
+│ │     └── ApiClient.test.ts
+│ ├── setupTests.ts
+│ ├── __tests__
+│ │ └── App.test.tsx
+│ ├── types
+│ │ └── ColorTypes.ts
+│ └── utils
+└── tsconfig.json
+
+```
