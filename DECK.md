@@ -3129,23 +3129,8 @@ gantt
 > - localStorage persistence
 > </details>
 
-## 001-0002
-> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> The goal of this card is to configure github workflows for this repository.
-> 
-> # DOD (definition of done):
-> 
-> # TODO:
-> - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0018
-> **Frontend Unit Tests - Auth Service and Context** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **Frontend Unit Tests - Auth Service and Context** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -3162,20 +3147,174 @@ gantt
 > - Code coverage above 80%
 > 
 > # TODO:
-> - [] 1. Setup testing library and dependencies (Jest, React Testing Library)
-> - [] 2. Create test file for AuthContext
-> - [] 3. Test initial auth state
-> - [] 4. Test login action
-> - [] 5. Test logout action
-> - [] 6. Test token persistence in localStorage
-> - [] 7. Test token retrieval on page refresh
-> - [] 8. Create test file for API service
-> - [] 9. Test login API call
-> - [] 10. Test register API call
-> - [] 11. Test error handling
-> - [] 12. Test JWT injection in headers
-> - [] 13. Run code coverage analysis
-> - [] 14. Fix failing tests
+> - [x] 1. Setup testing library and dependencies (Jest, React Testing Library)
+> - [x] 2. Create test file for AuthContext
+> - [x] 3. Test initial auth state
+> - [x] 4. Test login action
+> - [x] 5. Test logout action
+> - [x] 6. Test token persistence in localStorage
+> - [x] 7. Test token retrieval on page refresh
+> - [x] 8. Create test file for API service
+> - [x] 9. Test login API call
+> - [x] 10. Test register API call
+> - [x] 11. Test error handling
+> - [x] 12. Test JWT injection in headers
+> - [x] 13. Run code coverage analysis
+> - [ ] 14. Fix failing tests
+> 
+> * Added TODOs according to the coverage report
+> - [x] 15. Add missing AuthContext tests (lines 150-160, 177-187, 200-201, 240-241, 267-269, 312, 315-318)
+> - [x] 16. Add missing errorHandler tests (lines 21-25)
+> - [x] 17. Add missing AuthService function coverage (line 57)
+> - [x] 18. Add missing RegisterPage tests (lines 77, 79, 91)
+> - [x] 19. Add missing ApiClient tests (lines 106-107)
+> - [x] 20. Create integration test (AuthFlow.integration.test.tsx)
+> - [x] 21. Achieve 80%+ coverage on all files
+> 
+> # Reports:
+> * Currrent covarage status
+> ```
+> | File | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s |
+> |------|---------|----------|---------|---------|-------------------|
+> | **All files** | **94.24** | **84.5** | **94.05** | **91.97** | — |
+> | src/App.tsx | 100 | 100 | 100 | 100 | — |
+> | src/components/DashboardComponents.tsx | 100 | 100 | 100 | 100 | — |
+> | src/components/LoginComponents.tsx | 100 | 100 | 100 | 100 | — |
+> | src/components/ProtectedRoute.tsx | 100 | 100 | 100 | 100 | — |
+> | src/components/RegisterComponents.tsx | 100 | 100 | 100 | 100 | — |
+> | src/components/ThemeComponents.tsx | 100 | 100 | 100 | 100 | — |
+> | src/components/shared/UIComponents.tsx | 100 | 100 | 100 | 100 | — |
+> | src/config/apiConfig.ts | 100 | 100 | 100 | 100 | — |
+> | src/contexts/AuthContext.tsx | 71.13 | 28.57 | 78.94 | 69.41 | 150-160, 177-187, 200-201, 240-241, 267-269, 312, 315-318 |
+> | src/contexts/ThemeContext.tsx | 100 | 100 | 100 | 100 | — |
+> | src/pages/DashboardPage.tsx | 100 | 100 | 100 | 100 | — |
+> | src/pages/LoginPage.tsx | 100 | 100 | 100 | 100 | — |
+> | src/pages/RegisterPage.tsx | 96.51 | 92.5 | 100 | 95.23 | 77, 79, 91 |
+> | src/services/ApiClient.ts | 96.29 | 97.82 | 100 | 96.07 | 106-107 |
+> | src/services/AuthService.ts | 93.33 | 100 | 83.33 | 92.85 | 57 |
+> | src/utils/errorHandler.ts | 75 | 20 | 66.66 | 66.66 | 21-25 |
+> 
+> **Test Results:** 437 passed, 12 test suites passed ✅
+> 
+> ```
+> 
+> ## **Files That Need Work**
+> 
+> | Priority | File | Current Coverage | Issue | Action |
+> |----------|------|------------------|-------|--------|
+> | 🔴 High | `src/contexts/AuthContext.tsx` | 71.13% | Below 80% threshold | Add tests for lines: 150-160, 177-187, 200-201, 240-241, 267-269, 312, 315-318 |
+> | 🟡 Medium | `src/utils/errorHandler.ts` | 75% | Below 80% threshold | Add tests for lines: 21-25 |
+> | 🟡 Medium | `src/services/AuthService.ts` | 93.33% (Funcs: 83.33%) | Missing function coverage | Add test for line 57 |
+> | 🟡 Medium | `src/pages/RegisterPage.tsx` | 96.51% | Edge cases uncovered | Add tests for lines: 77, 79, 91 |
+> | 🟡 Medium | `src/services/ApiClient.ts` | 96.29% | Edge cases uncovered | Add tests for lines: 106-107 |
+> 
+> 
+> ## **Integration Tests (Non-E2E)**
+> 
+> **Create:** `src/__tests__/integration/AuthFlow.integration.test.tsx`
+> 
+> This should test the **full auth flow** with all components working together:
+> 
+> - [ ] User registers → AuthService calls ApiClient → AuthContext stores token → token in localStorage
+> - [ ] User logs in → token retrieved from localStorage → ProtectedRoute allows access
+> - [ ] User logs out → token cleared from localStorage → AuthContext resets → redirected to login
+> - [ ] Page refresh with valid token → token restored → user stays logged in
+> - [ ] Page refresh with expired token → token cleared → redirected to login
+> - [ ] Invalid credentials → error displayed → AuthContext unchanged
+> - [ ] Concurrent requests → JWT injected in all headers → responses handled correctly
+> 
+> **Test structure:**
+> ```typescript
+> describe('Auth Integration Flow', () => {
+>   // Mock ApiClient
+>   // Mock localStorage
+>   // Test register → login → dashboard → logout
+>   // Test page refresh scenarios
+>   // Test error scenarios
+> })
+> ```
+> 
+> This tests **AuthContext + AuthService + ApiClient + Components** together without being full E2E (no browser, just components + services).
+> 
+> Which file should I help you fix first?
+> 
+> ```
+> ├── App.css
+> ├── App.tsx
+> ├── components
+> │ ├── DashboardComponents.tsx
+> │ ├── LoginComponents.tsx
+> │ ├── <PageName>Components.tsx.template
+> │ ├── ProtectedRoute.tsx
+> │ ├── RegisterComponents.tsx
+> │ ├── shared
+> │ │ ├── __tests__
+> │ │ │ └── UIComponents.test.tsx
+> │ │ └── UIComponents.tsx
+> │ ├── __tests__
+> │ │ ├── DashboardComponents.test.tsx
+> │ │ ├── LoginComponents.test.tsx
+> │ │ ├── <PageName>Components.test.tsx.template
+> │ │ ├── ProtectedRoute.test.tsx
+> │ │ └── RegisterComponents.test.tsx
+> │ └── ThemeComponents.tsx
+> ├── config
+> │ ├── apiConfig.ts
+> │ └── __tests__
+> ├── contexts
+> │ ├── AuthContext.tsx
+> │ ├── __tests__
+> │ │ ├── AuthContext.test.tsx
+> │ │ └── ThemeContext.test.tsx
+> │ └── ThemeContext.tsx
+> ├── index.css
+> ├── index.tsx
+> ├── logo.svg
+> ├── __mocks__
+> │ ├── fileMock.js
+> │ ├── react-router-dom.ts
+> │ └── styleMock.js
+> ├── pages
+> │ ├── DashboardPage.css
+> │ ├── DashboardPage.tsx
+> │ ├── LoginPage.css
+> │ ├── LoginPage.tsx
+> │ ├── <PageName>Page.css.template
+> │ ├── <PageName>Page.tsx.template
+> │ ├── RegisterPage.css
+> │ ├── RegisterPage.tsx
+> │ └── __tests__
+> │     ├── DashboardPage.test.tsx
+> │     ├── LoginPage.test.tsx
+> │     └── RegisterPage.test.tsx
+> ├── react-app-env.d.ts
+> ├── reportWebVitals.ts
+> ├── services
+> │ ├── ApiClient.ts
+> │ ├── AuthService.ts
+> │ └── __tests__
+> │     └── ApiClient.test.ts
+> ├── setupTests.ts
+> ├── __tests__
+> │ └── App.test.tsx
+> ├── types
+> │ ├── ColorTypes.ts
+> │ └── UserTypes.ts
+> └── utils
+>     └── errorHandler.ts
+> ```
+> </details>
+
+## 001-0002
+> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> The goal of this card is to configure github workflows for this repository.
+> 
+> # DOD (definition of done):
+> 
+> # TODO:
+> - [] 1.
 > 
 > # Reports:
 > *
