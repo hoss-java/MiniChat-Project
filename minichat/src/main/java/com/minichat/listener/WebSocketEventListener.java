@@ -28,14 +28,32 @@ public class WebSocketEventListener {
     @Scheduled(fixedRate = 60000) // Run every 60 seconds
     public void cleanupIdleSessions() {
         sessionManager.cleanupIdleSessions(300); // 5 minutes idle timeout
-        log.debug("Idle session cleanup task executed");
     }
+
     
     @EventListener
     public void handleWebSocketConnectListener(SessionConnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
+
+        // Extract from STOMP headers if not in session attributes
         Long userId = (Long) headerAccessor.getSessionAttributes().get("userId");
         String username = (String) headerAccessor.getSessionAttributes().get("username");
+
+        if (userId == null) {
+            String userIdStr = headerAccessor.getFirstNativeHeader("userId");
+            if (userIdStr != null) {
+                userId = Long.parseLong(userIdStr);
+                headerAccessor.getSessionAttributes().put("userId", userId);
+            }
+        }
+
+        if (username == null) {
+            username = headerAccessor.getFirstNativeHeader("username");
+            if (username != null) {
+                headerAccessor.getSessionAttributes().put("username", username);
+            }
+        }
+
         String socketSessionId = headerAccessor.getSessionId();
         
         if (userId != null && username != null) {

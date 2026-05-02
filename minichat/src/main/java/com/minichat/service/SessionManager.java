@@ -77,9 +77,16 @@ public class SessionManager {
     public void disconnectUser(Long userId) {
         UserSession session = userSessions.remove(userId);
         if (session != null) {
-            String roomId = session.getRoomId();
+            String roomId = session.getRoomId();  // Get roomId BEFORE it's set to null
             if (roomId != null) {
                 leaveRoom(userId, roomId);
+                Set<Long> members = roomMembers.get(roomId);
+                if (members != null) {
+                    members.remove(userId);
+                    if (members.isEmpty()) {
+                        roomMembers.remove(roomId);
+                    }
+                }
             }
             log.info("User disconnected: userId={}", userId);
         }
@@ -230,5 +237,14 @@ public class SessionManager {
                 log.info("Idle session cleaned up: userId={}, roomId={}", userId, roomId);
             }
         });
+    }
+
+    /**
+     * Clear all sessions (for testing)
+     */
+    public void clearAllSessions() {
+        userSessions.clear();
+        roomMembers.clear();
+        log.info("All sessions cleared");
     }
 }

@@ -31,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION_HEADER = "Authorization";
 
     private static final List<String> PUBLIC_ENDPOINTS = Arrays.asList(
+        "/ws/",
         "/api/auth/test-ws",
         "/api/auth/login",
         "/api/auth/register",
@@ -50,7 +51,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String requestPath = request.getRequestURI();
         
         if (isPublicEndpoint(requestPath)) {
-            log.debug("Public endpoint accessed: {}", requestPath);
             filterChain.doFilter(request, response);
             return;
         }
@@ -71,7 +71,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
-                    log.debug("User authenticated: {}", username);
                 } else {
                     // Token invalid or expired
                     sendUnauthorizedError(response, "Invalid or expired token");

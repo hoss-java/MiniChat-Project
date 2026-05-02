@@ -40,21 +40,25 @@ public class RoomWebSocketController {
         @DestinationVariable String roomId,
         SimpMessageHeaderAccessor headerAccessor
     ) {
-        String username = headerAccessor.getUser().getName();
         Long userId = extractUserIdFromHeader(headerAccessor);
-        
+
+        String username = (String) headerAccessor.getSessionAttributes().get("username");
+
+        log.info("joinRoom called - userId={}, username={}, headerAccessor.getUser()={}",
+            userId, username, headerAccessor.getUser());
+
         if (userId == null) {
             log.warn("Cannot extract userId for user: {}", username);
             return;
         }
-        
-        // Add user to room in SessionManager
+
+        if (username == null) {
+            log.warn("✗ EARLY EXIT: Cannot extract username");
+            return;
+        }
+
         sessionManager.joinRoom(userId, roomId);
-        
-        // Broadcast online status to all room members
         broadcastRoomStatus(roomId, userId, username, "online");
-        
-        log.info("User joined room: userId={}, roomId={}", userId, roomId);
     }
     
     /**
@@ -114,13 +118,11 @@ public class RoomWebSocketController {
             sendErrorToClient(headerAccessor, "You are not in this room");
             return;
         }
-        log.debug("[SIGNALING] Sender validated - senderId={}, roomId={}", senderId, roomId);
         
         // Validation: Parse recipient ID
         Long recipientId;
         try {
             recipientId = Long.parseLong(message.getTo());
-            log.debug("[SIGNALING] Recipient ID parsed - recipientId={}", recipientId);
         } catch (NumberFormatException e) {
             log.error("[SIGNALING] Invalid recipient ID format - to={}, error={}", 
                 message.getTo(), e.getMessage());
@@ -135,7 +137,6 @@ public class RoomWebSocketController {
             sendErrorToClient(headerAccessor, "Peer not found or left room");
             return;
         }
-        log.debug("[SIGNALING] Recipient validated - recipientId={}, roomId={}", recipientId, roomId);
         
         // Validation: Message type
         String messageType = message.getType().toLowerCase();
@@ -144,7 +145,6 @@ public class RoomWebSocketController {
             sendErrorToClient(headerAccessor, "Invalid message type");
             return;
         }
-        log.debug("[SIGNALING] Message type validated - type={}", messageType);
         
         // Relay: Send to recipient
         try {
@@ -182,8 +182,6 @@ public class RoomWebSocketController {
                 "/queue/error",
                 Map.of("error", errorMessage, "timestamp", LocalDateTime.now())
             );
-            log.debug("[SIGNALING] Error sent to client - username={}, error={}", 
-                username, errorMessage);
         } catch (Exception e) {
             log.error("[SIGNALING] Failed to send error to client: {}", e.getMessage());
         }
@@ -206,28 +204,43 @@ public class RoomWebSocketController {
             "/topic/room/" + roomId + "/status",
             statusMessage
         );
-        
-        log.debug("Broadcasted {} status for user {} in room {}", status, userId, roomId);
     }
     
     /**
      * Extract userId from WebSocket session header or principal
      */
     private Long extractUserIdFromHeader(SimpMessageHeaderAccessor headerAccessor) {
+        // Log all session attributes
+        Map<String, Object> sessionAttrs = headerAccessor.getSessionAttributes();
+        if (sessionAttrs != null) {
+            for (String key : sessionAttrs.keySet()) {
+                log.info("  Session attr: {} = {}", key, sessionAttrs.get(key));
+            }
+        }
+
         // Try to get from session attributes (set by WebSocketAuthInterceptor on CONNECT)
         Object userIdObj = headerAccessor.getSessionAttributes().get("userId");
+        log.info("userIdObj from session: {} (type: {})",
+            userIdObj,
+            userIdObj != null ? userIdObj.getClass().getSimpleName() : "NULL");
+
         if (userIdObj instanceof Long) {
-            return (Long) userIdObj;
+            Long userId = (Long) userIdObj;
+            return userId;
         }
+
+        log.warn("✗ userId NOT found in session attributes or wrong type");
         
         // Fallback: extract from principal name (username), then lookup user
-        // Note: This requires additional repository call, so prefer session attributes
         if (headerAccessor.getUser() != null) {
             String username = headerAccessor.getUser().getName();
             log.warn("userId not in session, falling back to username: {}", username);
             // Could add UserRepository.findByUsername(username).getId() here if needed
+        } else {
+            log.warn("Fallback failed: headerAccessor.getUser() is NULL");
         }
-        
+
         return null;
     }
+
 }
