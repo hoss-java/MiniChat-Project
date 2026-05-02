@@ -119,7 +119,25 @@ public class SessionManager {
     public int getRoomMemberCount(String roomId) {
         return roomMembers.getOrDefault(roomId, new HashSet<>()).size();
     }
-    
+
+    /**
+     * Check if user is in a specific room
+     */
+    public boolean isUserInRoom(Long userId, String roomId) {
+        Set<Long> members = roomMembers.getOrDefault(roomId, new HashSet<>());
+        return members.contains(userId);
+    }
+
+    /**
+     * Get all rooms a user is currently in
+     */
+    public List<String> getUserRooms(Long userId) {
+        return roomMembers.entrySet().stream()
+            .filter(entry -> entry.getValue().contains(userId))
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toList());
+    }
+
     /**
      * Get user session by userId
      */
