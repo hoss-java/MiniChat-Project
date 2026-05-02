@@ -3849,23 +3849,8 @@ gantt
 > **Result:** Frontend now has a clean REST API to discover peers → ready for P2P WebRTC data channel setup in Phase 3.
 > </details>
 
-## 001-0002
-> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> The goal of this card is to configure github workflows for this repository.
-> 
-> # DOD (definition of done):
-> 
-> # TODO:
-> - [] 1.
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0023
-> **Signaling message handler** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> **Signaling message handler** ![status](https://img.shields.io/badge/status-DONE-brightgreen)
 > <details >
 >     <summary>Details</summary>
 > 
@@ -3879,14 +3864,69 @@ gantt
 > - Only intended recipient receives message
 > 
 > # TODO:
-> - [] 1. Create SignalingMessage class (type, from, to, data)
-> - [] 2. Create @MessageMapping handler for signaling messages
-> - [] 3. Implement offer relay logic (send to specific peer)
-> - [] 4. Implement answer relay logic
-> - [] 5. Implement ICE candidate relay logic
-> - [] 6. Add validation (sender authorized, receiver in room)
-> - [] 7. Add error handling (peer not found, connection lost)
-> - [] 8. Log signaling traffic for debugging
+> - [x] 1. Create SignalingMessage class (type, from, to, data)
+> - [x] 2. Create @MessageMapping handler for signaling messages
+> - [x] 3. Implement offer relay logic (send to specific peer)
+> - [x] 4. Implement answer relay logic
+> - [x] 5. Implement ICE candidate relay logic
+> - [x] 6. Add validation (sender authorized, receiver in room)
+> - [x] 7. Add error handling (peer not found, connection lost)
+> - [x] 8. Log signaling traffic for debugging
+> 
+> # Reports:
+> ## **Signaling Message Handler Implementation**
+> **Task 1-8: Create @MessageMapping handler for signaling messages + relay logic + validation + error handling + logging**
+> 
+> 
+> ## **Files Updated**
+> 
+> | File | Changes |
+> |------|---------|
+> | **RoomWebSocketController.java** | Added `relaySignalingMessage()` method with full SDP/ICE relay, validation, error handling, and detailed logging |
+> | **SessionManager.java** | Added `isUserInRoom()` and `getUserRooms()` methods for room membership validation |
+> | **SignalingMessage.java** | Removed incorrect method (was DTO only) |
+> 
+> 
+> ## **What We Built**
+> 
+> **Single @MessageMapping handler** that:
+> 1. **Relays offers/answers/ICE** — all message types handled in one method
+> 2. **Validates sender** — must be in room
+> 3. **Validates recipient** — must be in same room and exist
+> 4. **Routes to recipient** — `convertAndSendToUser()` to `/queue/signal`
+> 5. **Handles errors** — peer not found, connection lost, invalid format
+> 6. **Logs all traffic** — `[SIGNALING]` prefix for debugging (info/warn/error/debug levels)
+> 
+> 
+> ## **How It Helps Phase 2**
+> 
+> ✓ **Peer Discovery** — clients now know who's in room (from join/leave broadcasts)
+> ✓ **Signaling Relay** — WebSocket relays SDP offers, answers, ICE candidates between peers
+> ✓ **P2P Handshake Ready** — foundation for WebRTC connection negotiation (Phase 3)
+> ✓ **Error Resilience** — messages dropped safely if peer leaves, no silent failures
+> ✓ **Debugging** — detailed logs for troubleshooting connection issues
+> 
+> 
+> ## **DOD (Definition of Done) Met**
+> - ✅ SDP offer/answer messages relay correctly
+> - ✅ ICE candidates forward from sender to receiver
+> - ✅ Message format consistent: `{ type, from, to, data }`
+> - ✅ No messages lost (errors logged, client notified)
+> - ✅ Only intended recipient receives message (validated before send)
+> 
+> **Task 1-8: COMPLETE**
+> </details>
+
+## 001-0002
+> **Configuer github workflows.** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
+> <details >
+>     <summary>Details</summary>
+> The goal of this card is to configure github workflows for this repository.
+> 
+> # DOD (definition of done):
+> 
+> # TODO:
+> - [] 1.
 > 
 > # Reports:
 > *
