@@ -3932,35 +3932,6 @@ gantt
 > *
 > </details>
 
-## 001-0024
-> **Integration tests - WebSocket flow** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
-> <details >
->     <summary>Details</summary>
-> 
-> The goal of this card is to write integration tests that verify WebSocket connection, room join, peer discovery, and message relay work end-to-end.
-> 
-> # DOD (definition of done):
-> - Test user connects to WebSocket
-> - Test user joins room and broadcasts online status
-> - Test peer discovery returns correct list
-> - Test SDP offer/answer relay between two peers
-> - Test ICE candidate forwarding
-> - All tests pass
-> 
-> # TODO:
-> - [] 1. Set up WebSocket test client (TestRestTemplate or WebSocketStompClient)
-> - [] 2. Write test for WebSocket connection
-> - [] 3. Write test for room join and online broadcast
-> - [] 4. Write test for peer discovery endpoint
-> - [] 5. Write test for offer/answer relay
-> - [] 6. Write test for ICE candidate relay
-> - [] 7. Write test for peer disconnect and offline broadcast
-> - [] 8. Add error case tests (invalid room, unauthorized access)
-> 
-> # Reports:
-> *
-> </details>
-
 ## 001-0025
 > **WebSocket client setup** ![status](https://img.shields.io/badge/status-NOT--STARTED-lightgrey)
 > <details >
@@ -4873,4 +4844,86 @@ gantt
 > 
 > # Reports:
 > *
+> </details>
+
+## 001-0024
+> **Integration tests - WebSocket flow** ![status](https://img.shields.io/badge/status-ONGOING-yellow)
+> <details open>
+>     <summary>Details</summary>
+> 
+> The goal of this card is to write integration tests that verify WebSocket connection, room join, peer discovery, and message relay work end-to-end.
+> 
+> # DOD (definition of done):
+> - Test user connects to WebSocket
+> - Test user joins room and broadcasts online status
+> - Test peer discovery returns correct list
+> - Test SDP offer/answer relay between two peers
+> - Test ICE candidate forwarding
+> - All tests pass
+> 
+> # TODO:
+> **Unit Tests:**
+> - [x] 0a. Write RoomServiceUnitTest.java (8-10 tests)
+> - [x] 0b. Write SessionManagerUnitTest.java (6-8 tests)
+> - [x] 0c. Write RoomControllerUnitTest.java (5-6 tests)
+> - [x] 0d. Write UserSessionUnitTest.java (4-5 tests)
+> 
+> **Integration Tests:**
+> - [x] 1. Set up WebSocket test client → **WebSocketConfigIntegrationTest.java**
+> - [x] 2. Write test for WebSocket connection → **WebSocketConnectionIntegrationTest.java** (3-4 tests)
+> - [ ] 3. Write test for room join and online broadcast → **RoomJoinIntegrationTest.java** (3-4 tests)
+> - [ ] 4. Write test for peer discovery endpoint → **PeerDiscoveryIntegrationTest.java** (3-4 tests)
+> - [ ] 5. Write test for offer/answer relay → **SignalingMessageRelayIntegrationTest.java** (2-3 tests)
+> - [ ] 6. Write test for ICE candidate relay → **SignalingMessageRelayIntegrationTest.java** (2-3 tests)
+> - [ ] 7. Write test for peer disconnect and offline broadcast → **DisconnectIntegrationTest.java** (2-3 tests)
+> - [ ] 8. Add error case tests (invalid room, unauthorized access) → **RoomWebSocketControllerIntegrationTest.java**
+> 
+> **Unit tests (RoomService, SessionManager, RoomController, UserSession)** — can run in parallel with integration tests.
+> 
+> # Reports:
+> ## Phase 2 Tests — Unit + Integration
+> 
+> ### **Unit Tests to Add**
+> 
+> ```
+> test/java/com/minichat
+> ├── service
+> │   ├── RoomServiceUnitTest.java
+> │   └── SessionManagerUnitTest.java
+> ├── controller
+> │   └── RoomControllerUnitTest.java
+> └── model
+>     └── UserSessionUnitTest.java
+> ```
+> 
+> ### **Integration Tests to Add**
+> 
+> ```
+> test/java/com/minichat
+> ├── controller
+> │   └── RoomWebSocketControllerIntegrationTest.java
+> ├── websocket
+> │   ├── WebSocketConnectionIntegrationTest.java
+> │   ├── RoomJoinIntegrationTest.java
+> │   ├── PeerDiscoveryIntegrationTest.java
+> │   ├── SignalingMessageRelayIntegrationTest.java
+> │   └── DisconnectIntegrationTest.java
+> └── config
+>     └── WebSocketIntegrationTestConfig.java
+> ```
+> 
+> ### **Test Count by Type**
+> 
+> | File | Unit | Integration |
+> |------|------|-------------|
+> | RoomService | 8-10 | — |
+> | SessionManager | 6-8 | — |
+> | RoomController | 5-6 | — |
+> | UserSession | 4-5 | — |
+> | WebSocket Connection | — | 3-4 |
+> | Room Join | — | 3-4 |
+> | Peer Discovery | — | 3-4 |
+> | Signaling Relay | — | 4-5 |
+> | Disconnect | — | 2-3 |
+> | **Total** | **~23-29** | **~15-20** |
 > </details>
